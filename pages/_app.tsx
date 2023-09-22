@@ -5,6 +5,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'
+import { Header } from '@/components'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState<boolean>(false)
@@ -18,7 +19,12 @@ export default function App({ Component, pageProps }: AppProps) {
   } else {
     return (
       <Providers pageProps={pageProps}>
-        <Component {...pageProps} />
+        <div className="h-screen flex">
+          <div className="flex-1 overflow-auto">
+            <Header />
+            <Component {...pageProps} />
+          </div>
+        </div>
 
         <ToastContainer
           position="bottom-center"
