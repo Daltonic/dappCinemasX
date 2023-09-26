@@ -1,36 +1,148 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { MovieStruct } from '@/utils/type.dt'
+import { truncate } from '@/utils/helper'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
 
-const MovieCards = ({ movies }) => {
+const MovieCards: React.FC<{ movies: MovieStruct[]; title: string }> = ({
+  movies,
+  title,
+}) => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true, // Enable autoplay
+    autoplaySpeed: 5000,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+      // Add more breakpoints as needed
+    ],
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
-      {movies.map((movie: any, i: number) => (
-        <Link
-          key={i}
-          href={`/movie/${movie.id}`}
-          className="flex justify-start flex-row space-x-8  sm:space-x-0
-          sm:flex-col p-3 space-y-2 shadow-lg w-auto rounded-lg border border-gray-200"
-        >
-          <div className="flex h-full w-auto">
+    <>
+      <h2 className="text-xl font-semibold uppercase my-4">{title}</h2>
+
+      <Slider {...settings}>
+        {movies.map((movie: MovieStruct, i: number) => (
+          <div key={i} className="px-2 py-4">
+            <MovieCard movie={movie} />
+          </div>
+        ))}
+      </Slider>
+    </>
+  )
+}
+
+const MovieCard: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
+  return (
+    <div
+      className="relative block overflow-hidden shadow-lg
+      hover:shadow-xl transition duration-300 transform"
+    >
+      <div className="flex">
+        <div className="w-1/2 h-80">
+          <div className="relative h-full">
+            <Link
+              href={`/movie/${movie.id}`}
+              className="absolute bottom-0 left-0 right-0 h-full
+              flex justify-center items-center bg-black z-40
+              hover:opacity-75 opacity-0 transition-opacity duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+                className="w-12 h-12"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 3l14 9-14 9V3z"
+                />
+              </svg>
+            </Link>
+
             <Image
               src={movie.imageUrl}
-              className="rounded-lg object-cover h-64 w-full"
-              width={100}
-              height={64}
-              alt="movie name"
+              alt={movie.name}
+              layout="fill"
+              objectFit="cover"
             />
           </div>
-          <div className="flex flex-col">
-            <h3 className="font-bold md:text-lg my-2">{movie.name}</h3>
-            <p className="text-gray-600 font-light text-md">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum
-              ratione esse quos vero! Dolorum labore animi harum accusamus vel
-              quaerat ducimus officiis enim minima ipsa, ad blanditiis quod
-              assumenda esse?
+        </div>
+        <div className="relative flex flex-col w-1/2 bg-white h-80">
+          <div className="flex flex-col p-4">
+            <Link
+              href={`/movie/${movie.id}`}
+              className="text-xl font-semibold capitalize"
+            >
+              {truncate({
+                text: movie.name,
+                startChars: 17,
+                endChars: 0,
+                maxLength: 21,
+              })}
+            </Link>
+            <small className=" mb-2">01 hours 46 minutes</small>
+
+            <p className="flex flex-col text-gray-600 text-sm space-y-1 mt-2 max-h-44 overflow-hidden">
+              <span>
+                {truncate({
+                  text: movie.description,
+                  startChars: 54,
+                  endChars: 0,
+                  maxLength: 57,
+                })}
+              </span>
+              <span>
+                <strong>Genre:</strong> Action
+              </span>
+              <span>
+                <strong>Cast:</strong> 50 Cent, Andy Garcia, Dolph Ludngren, Iko
+                Uwais, Jason Statham, Megan Fox, Randy Couture, Sylvester
+                Stallone, Tony Jaa
+              </span>
+              <span>
+                <strong>Release Date:</strong> September 22, 2023
+              </span>
             </p>
           </div>
-        </Link>
-      ))}
+          <Link
+            className="absolute bottom-0 left-0 right-0 bg-transparent py-2 px-3.5
+            text-black hover:text-red-600 flex justify-start items-center space-x-1
+            transition duration-300 ease-in-out border-t border-gray-300 text-sm"
+            href={`/movie/${movie.id}`}
+          >
+            <AiOutlineInfoCircle /> <span>Details</span>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

@@ -9,8 +9,8 @@ const Header: React.FC = () => {
   const [toggleMenu, setToggleMenu] = useState(false)
 
   return (
-    <div className="flex flex-col justify-start border-b border-gray-200 p-2">
-      <div className="flex content-center items-center justify-between w-full">
+    <div className="flex flex-col justify-start border-b border-gray-200">
+      <div className="flex content-center items-center justify-between w-full sm:w-4/5 p-2 sm:px-0 mx-auto">
         <div className="flex p-2 sm:hidden">
           <Link href="/">
             Dapp<span className="text-red-500">Cinemas</span>

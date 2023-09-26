@@ -1,6 +1,5 @@
 import { MovieStruct } from './type.dt'
-
-const { faker } = require('@faker-js/faker')
+import { faker } from '@faker-js/faker'
 
 export const generateMovieData = (count: number) => {
   const movies: MovieStruct[] = []

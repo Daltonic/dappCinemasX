@@ -7,3 +7,10 @@ export interface MovieStruct {
   timestamp: number
   deleted: boolean
 }
+
+export interface TruncateParams {
+  text: string
+  startChars: number
+  endChars: number
+  maxLength: number
+}
