@@ -16,23 +16,15 @@ import {
   trustWallet,
   coinbaseWallet,
   rainbowWallet,
-  walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import {
-  mainnet,
-  polygon,
-  polygonMumbai,
-  optimism,
-  arbitrum,
-  hardhat,
-} from 'wagmi/chains'
+import { mainnet, polygonMumbai, hardhat } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 
 const { chains, publicClient } = configureChains(
-  [mainnet, polygon, polygonMumbai, optimism, arbitrum, hardhat],
+  [mainnet, polygonMumbai, hardhat],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }),
     publicProvider(),
@@ -49,7 +41,6 @@ const connectors = connectorsForWallets([
       trustWallet({ projectId, chains }),
       coinbaseWallet({ appName: 'Coinbase', chains }),
       rainbowWallet({ projectId, chains }),
-      walletConnectWallet({ projectId, chains }),
     ],
   },
 ])

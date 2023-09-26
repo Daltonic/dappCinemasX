@@ -40,10 +40,10 @@ const Offers: React.FC = () => {
           </div>
 
           <div className="w-full sm:w-4/12 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-4">Dapp Movies Zone</h2>
+            <h2 className="text-xl font-semibold mb-4">Dapp Cinemas Zone</h2>
             <div className="mb-4">
               <span className="font-semibold">
-                3 big reasons to join the Kada Movies Zone Community
+                3 big reasons to join the Kada Cinemas Zone Community
                 <a href="#"></a>
               </span>
             </div>

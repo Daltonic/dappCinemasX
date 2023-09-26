@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { TbSearch } from 'react-icons/tb'
+import { ConnectBtn } from '.'
 
 const Menu: React.FC = () => {
   return (
@@ -26,14 +27,8 @@ const Menu: React.FC = () => {
         <Link className="p-2 shadow-md w-full bg-white" href="/add/movies">
           Add Movie
         </Link>
-        <div className="flex mt-4 list-none">
-          <button
-            type="button"
-            className="inline-block px-6 py-2 border-2 border-red-600  font-medium text-xs leading-tight uppercase rounded-full hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out hover:bg-gradient-to-r from-cyan-500 to-red-500 hover:text-white hover:border-white"
-          >
-            Connect Wallet
-          </button>
-        </div>
+
+        <ConnectBtn />
       </div>
     </div>
   )
