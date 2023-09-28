@@ -2,6 +2,7 @@ import { ToastContainer } from 'react-toastify'
 import '@/styles/globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@rainbow-me/rainbowkit/styles.css'
+import "react-datepicker/dist/react-datepicker.css";
 import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'

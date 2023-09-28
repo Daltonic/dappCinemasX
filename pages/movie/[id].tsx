@@ -1,4 +1,4 @@
-import { Banner, Details, TimeslotList } from '@/components'
+import { Banner, BookModal, Details, TimeslotList } from '@/components'
 import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
 
@@ -15,6 +15,7 @@ export default function Page({ movieData }: { movieData: MovieStruct }) {
       <Banner movie={movie as FeaturedStruct} ticket />
       <Details movie={movie} />
       <TimeslotList slots={timeSlots} />
+      <BookModal movie={movie} />
     </div>
   )
 }

@@ -10,6 +10,7 @@ import FeaturedMovie from './FeaturedMovie'
 import Contact from './Contact'
 import TimeslotList from './TimeslotList'
 import Details from './Details'
+import BookModal from './BookModal'
 
 export {
   Menu,
@@ -24,4 +25,5 @@ export {
   Contact,
   TimeslotList,
   Details,
+  BookModal,
 }
