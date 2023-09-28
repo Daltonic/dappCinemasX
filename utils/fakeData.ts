@@ -8,7 +8,7 @@ export const generateMovieData = (count: number) => {
     const movie: MovieStruct = {
       id: i + 1,
       name: faker.word.words(5),
-      imageUrl: faker.image.urlLoremFlickr(),
+      imageUrl: faker.image.urlPicsumPhotos(),
       genre: faker.word.words(3),
       description: faker.lorem.paragraph(),
       timestamp: Date.now(),

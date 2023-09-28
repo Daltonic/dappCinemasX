@@ -8,6 +8,14 @@ export interface MovieStruct {
   deleted: boolean
 }
 
+export interface FeaturedStruct {
+  id: number
+  name: string
+  imageUrl: string
+  caption: string
+  description?: string
+}
+
 export interface TruncateParams {
   text: string
   startChars: number

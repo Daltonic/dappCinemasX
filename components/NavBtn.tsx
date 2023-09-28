@@ -29,7 +29,7 @@ const NavBtn = () => {
               {({ active }) => (
                 <button
                   className={`flex justify-start items-center bg-white space-x-1 ${
-                    active ? 'text-white bg-red-600' : 'text-red-600'
+                    active ? 'text-white bg-red-600' : 'text-black'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm
                   hover:bg-red-600 hover:text-white`}
                 >
@@ -41,7 +41,7 @@ const NavBtn = () => {
               {({ active }) => (
                 <button
                   className={`flex justify-start items-center bg-white space-x-1 ${
-                    active ? 'text-white bg-red-600' : 'text-red-600'
+                    active ? 'text-white bg-red-600' : 'text-black'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm
                 hover:bg-red-600 hover:text-white`}
                 >
@@ -53,7 +53,7 @@ const NavBtn = () => {
               {({ active }) => (
                 <button
                   className={`flex justify-start items-center bg-white space-x-1 ${
-                    active ? 'text-white bg-red-600' : 'text-red-600'
+                    active ? 'text-white bg-red-600' : 'text-black'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm
                 hover:bg-red-600 hover:text-white`}
                 >

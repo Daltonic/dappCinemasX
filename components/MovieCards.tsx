@@ -44,7 +44,9 @@ const MovieCards: React.FC<{ movies: MovieStruct[]; title: string }> = ({
 
   return (
     <>
-      <h2 className="text-xl font-semibold uppercase my-4">{title}</h2>
+      <h2 className="text-xl font-semibold uppercase my-8 text-center">
+        {title}
+      </h2>
 
       <Slider {...settings}>
         {movies.map((movie: MovieStruct, i: number) => (
@@ -68,9 +70,9 @@ const MovieCard: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
           <div className="relative h-full">
             <Link
               href={`/movie/${movie.id}`}
-              className="absolute bottom-0 left-0 right-0 h-full
-              flex justify-center items-center bg-black z-40
-              hover:opacity-75 opacity-0 transition-opacity duration-300"
+              className="absolute bottom-0 left-0 right-0 h-full z-40
+              flex justify-center items-center hover:opacity-75 opacity-0
+              bg-gradient-to-b from-transparent to-black transition-opacity duration-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +94,7 @@ const MovieCard: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
               src={movie.imageUrl}
               alt={movie.name}
               layout="fill"
+              sizes=""
               objectFit="cover"
             />
           </div>
