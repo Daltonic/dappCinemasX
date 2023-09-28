@@ -1,8 +1,10 @@
 import { ToastContainer } from 'react-toastify'
+import { Provider } from 'react-redux'
+import { store } from '@/store'
 import '@/styles/globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@rainbow-me/rainbowkit/styles.css'
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css'
 import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'
@@ -20,27 +22,29 @@ export default function App({ Component, pageProps }: AppProps) {
   } else {
     return (
       <Providers pageProps={pageProps}>
-        <div className="min-h-screen flex">
-          <div className="flex-1 overflow-auto">
-            <Header />
-            <Component {...pageProps} />
-            <Footer />
-            <NavBtn />
+        <Provider store={store}>
+          <div className="min-h-screen flex">
+            <div className="flex-1 overflow-auto">
+              <Header />
+              <Component {...pageProps} />
+              <Footer />
+              <NavBtn />
+            </div>
           </div>
-        </div>
 
-        <ToastContainer
-          position="bottom-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
+        </Provider>
       </Providers>
     )
   }

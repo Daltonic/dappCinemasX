@@ -1,14 +1,19 @@
-import { MovieStruct } from '@/utils/type.dt'
+import { globalActions } from '@/store/globalSlices'
+import { MovieStruct, RootState } from '@/utils/type.dt'
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { FaTimes } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux'
 
 const BookModal: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
+  const { bookModal } = useSelector((states: RootState) => states.globalStates)
   const [selectedDay, setSelectedDay] = useState(null)
   const [tickets, setTickets] = useState('')
+  const dispatch = useDispatch()
+  const { setBookModal } = globalActions
 
   const closeModal = () => {
-    // setGlobalState('deleteSlotModal', 'scale-0')
+    dispatch(setBookModal('scale-0'))
   }
 
   const handleSelectedDay = async (date: Date) => {
@@ -25,7 +30,7 @@ const BookModal: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
-    bg-black bg-opacity-50 transform z-50 transition-transform duration-300 scale-100`}
+    bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${bookModal}`}
     >
       <div className="bg-white shadow-lg shadow-slate-900 rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <div className="flex flex-col">

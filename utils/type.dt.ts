@@ -23,3 +23,12 @@ export interface TruncateParams {
   endChars: number
   maxLength: number
 }
+
+export interface GlobalState {
+  wallet: string
+  bookModal: string
+}
+
+export interface RootState {
+  globalStates: GlobalState
+}
