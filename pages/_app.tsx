@@ -5,7 +5,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'
-import { Header } from '@/components'
+import { Footer, Header, NavBtn } from '@/components'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState<boolean>(false)
@@ -23,6 +23,8 @@ export default function App({ Component, pageProps }: AppProps) {
           <div className="flex-1 overflow-auto">
             <Header />
             <Component {...pageProps} />
+            <Footer />
+            <NavBtn />
           </div>
         </div>
 

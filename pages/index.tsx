@@ -1,4 +1,4 @@
-import { Banner, Footer, NavBtn, Offers } from '@/components'
+import { Banner, Offers } from '@/components'
 import MovieCards from '@/components/MovieCards'
 import { generateMovieData } from '@/utils/fakeData'
 import { MovieStruct } from '@/utils/type.dt'
@@ -10,8 +10,6 @@ export default function Home({ moviesData }: { moviesData: MovieStruct[] }) {
       <Banner />
       <MovieCards title="Top movies showing this week" movies={movies} />
       <Offers />
-      <Footer />
-      <NavBtn />
     </div>
   )
 }
