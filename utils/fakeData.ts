@@ -10,6 +10,7 @@ export const generateMovieData = (count: number) => {
       name: faker.word.words(5),
       imageUrl: faker.image.urlPicsumPhotos(),
       genre: faker.word.words(3),
+      caption: faker.word.words(3),
       description: faker.lorem.paragraph(),
       timestamp: Date.now(),
       deleted: false,

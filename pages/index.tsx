@@ -3,7 +3,7 @@ import MovieCards from '@/components/MovieCards'
 import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
 
-export default function Home({ moviesData }: { moviesData: MovieStruct[] }) {
+export default function Page({ moviesData }: { moviesData: MovieStruct[] }) {
   const movies = moviesData
 
   const getRandomMovie = (movies: any) => {

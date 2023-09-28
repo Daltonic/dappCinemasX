@@ -1,6 +1,9 @@
 import { FeaturedStruct } from '@/utils/type.dt'
 
-const Banner: React.FC<{ movie: FeaturedStruct }> = ({ movie }) => {
+const Banner: React.FC<{ movie: FeaturedStruct; ticket?: boolean }> = ({
+  movie,
+  ticket,
+}) => {
   return (
     <div
       style={{ backgroundImage: 'url(' + movie.imageUrl + ')' }}
@@ -12,7 +15,7 @@ const Banner: React.FC<{ movie: FeaturedStruct }> = ({ movie }) => {
           <h3 className="text-3xl font-bold uppercase">{movie.name}</h3>
           <p className="text-xl font-medium uppercase">{movie.caption}</p>
         </div>
-        <div>
+        <div className="flex justify-start space-x-2">
           <button
             className="bg-transparent font-bold border-2 border-red-600
             py-2 px-8 text-red-600 rounded-full
@@ -21,6 +24,17 @@ const Banner: React.FC<{ movie: FeaturedStruct }> = ({ movie }) => {
           >
             WATCH
           </button>
+
+          {ticket && (
+            <button
+              className="bg-red-600 font-bold text-white border-2 border-red-600
+            py-2 px-8 rounded-full
+            transition duration-300 ease-in-out
+            hover:bg-transparent hover:text-red-600"
+            >
+              Buy Ticket
+            </button>
+          )}
         </div>
       </div>
     </div>

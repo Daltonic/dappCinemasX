@@ -8,6 +8,8 @@ import ConnectBtn from './ConnectBtn'
 import NavBtn from './NavBtn'
 import FeaturedMovie from './FeaturedMovie'
 import Contact from './Contact'
+import TimeslotList from './TimeslotList'
+import Details from './Details'
 
 export {
   Menu,
@@ -20,4 +22,6 @@ export {
   NavBtn,
   FeaturedMovie,
   Contact,
+  TimeslotList,
+  Details,
 }

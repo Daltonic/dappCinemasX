@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
   } else {
     return (
       <Providers pageProps={pageProps}>
-        <div className="h-screen flex">
+        <div className="min-h-screen flex">
           <div className="flex-1 overflow-auto">
             <Header />
             <Component {...pageProps} />
