@@ -12,6 +12,8 @@ import TimeslotList from './TimeslotList'
 import Details from './Details'
 import BookModal from './BookModal'
 import Spacer from './Spacer'
+import MoviesTable from './MoviesTable'
+import MovieActions from './MovieActions'
 
 export {
   Menu,
@@ -28,4 +30,6 @@ export {
   Details,
   BookModal,
   Spacer,
+  MoviesTable,
+  MovieActions,
 }

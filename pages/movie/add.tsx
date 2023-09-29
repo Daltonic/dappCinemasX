@@ -1,8 +1,9 @@
 import { MovieParams } from '@/utils/type.dt'
+import { NextPage } from 'next'
 import { ChangeEvent, useState } from 'react'
 import { toast } from 'react-toastify'
 
-export default function Page() {
+const Page: NextPage = () => {
   const [movie, setMovie] = useState<MovieParams>({
     poster: '',
     banner: '',
@@ -180,3 +181,5 @@ export default function Page() {
     </div>
   )
 }
+
+export default Page

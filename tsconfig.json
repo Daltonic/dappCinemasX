@@ -18,6 +18,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "test/CrowdFunding.test.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "test/CrowdFunding.test.js", "components/TagInput.jsx"],
   "exclude": ["node_modules"]
 }

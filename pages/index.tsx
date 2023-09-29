@@ -2,8 +2,9 @@ import { Banner, Contact, FeaturedMovie, Offers } from '@/components'
 import MovieCards from '@/components/MovieCards'
 import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
+import { NextPage } from 'next'
 
-export default function Page({ moviesData }: { moviesData: MovieStruct[] }) {
+const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
   const movies = moviesData
 
   const getRandomMovie = (movies: any) => {
@@ -72,6 +73,8 @@ export default function Page({ moviesData }: { moviesData: MovieStruct[] }) {
     </div>
   )
 }
+
+export default Page
 
 export const getServerSideProps = async () => {
   const moviesData: MovieStruct[] = generateMovieData(5)

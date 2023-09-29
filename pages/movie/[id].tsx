@@ -1,8 +1,9 @@
 import { Banner, BookModal, Details, TimeslotList } from '@/components'
 import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
+import { NextPage } from 'next'
 
-export default function Page({ movieData }: { movieData: MovieStruct }) {
+const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
   const movie = movieData
 
   const timeSlots = [
@@ -19,6 +20,8 @@ export default function Page({ movieData }: { movieData: MovieStruct }) {
     </div>
   )
 }
+
+export default Page
 
 export const getServerSideProps = async () => {
   const movieData: MovieStruct = generateMovieData(1)[0]
