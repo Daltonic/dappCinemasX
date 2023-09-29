@@ -9,6 +9,17 @@ export interface MovieStruct {
   deleted: boolean
 }
 
+export interface MovieParams {
+  poster: string
+  banner: string
+  name: string
+  genre: string
+  casts: string
+  description: string
+  released: string
+  duration: string
+}
+
 export interface FeaturedStruct {
   id: number
   name: string

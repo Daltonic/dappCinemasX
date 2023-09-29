@@ -11,6 +11,7 @@ import Contact from './Contact'
 import TimeslotList from './TimeslotList'
 import Details from './Details'
 import BookModal from './BookModal'
+import Spacer from './Spacer'
 
 export {
   Menu,
@@ -26,4 +27,5 @@ export {
   TimeslotList,
   Details,
   BookModal,
+  Spacer,
 }

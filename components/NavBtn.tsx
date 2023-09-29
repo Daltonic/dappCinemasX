@@ -1,6 +1,7 @@
 import React from 'react'
 import { HiChevronDown } from 'react-icons/hi'
 import { Menu } from '@headlessui/react'
+import Link from 'next/link'
 
 const NavBtn = () => {
   return (
@@ -27,38 +28,41 @@ const NavBtn = () => {
           >
             <Menu.Item>
               {({ active }) => (
-                <button
+                <Link
+                  href={'/'}
                   className={`flex justify-start items-center bg-white space-x-1 ${
                     active ? 'text-white bg-red-600' : 'text-black'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm
                   hover:bg-red-600 hover:text-white`}
                 >
                   <span>Home</span>
-                </button>
+                </Link>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <button
+                <Link
+                  href={'/movie/add'}
                   className={`flex justify-start items-center bg-white space-x-1 ${
                     active ? 'text-white bg-red-600' : 'text-black'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm
                 hover:bg-red-600 hover:text-white`}
                 >
                   <span>Add Movie</span>
-                </button>
+                </Link>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <button
+                <Link
+                  href={'/movie/manage'}
                   className={`flex justify-start items-center bg-white space-x-1 ${
                     active ? 'text-white bg-red-600' : 'text-black'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm
                 hover:bg-red-600 hover:text-white`}
                 >
                   <span>Manage Movies</span>
-                </button>
+                </Link>
               )}
             </Menu.Item>
           </Menu.Items>

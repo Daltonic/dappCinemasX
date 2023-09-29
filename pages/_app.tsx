@@ -8,7 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'
-import { Footer, Header, NavBtn } from '@/components'
+import { Footer, Header, NavBtn, Spacer } from '@/components'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState<boolean>(false)
@@ -24,9 +24,10 @@ export default function App({ Component, pageProps }: AppProps) {
       <Providers pageProps={pageProps}>
         <Provider store={store}>
           <div className="min-h-screen flex">
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto relative">
               <Header />
               <Component {...pageProps} />
+              <Spacer />
               <Footer />
               <NavBtn />
             </div>
