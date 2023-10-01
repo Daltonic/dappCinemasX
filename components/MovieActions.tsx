@@ -41,7 +41,8 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
       >
         <Menu.Item>
           {({ active }) => (
-            <button
+            <Link
+              href={`/movie/edit/` + movie.id}
               className={`flex justify-start items-center space-x-1 ${
                 active ? 'bg-gray-200 text-black' : 'text-gray-900'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -49,7 +50,7 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
             >
               <FiEdit size={17} />
               <span>Edit</span>
-            </button>
+            </Link>
           )}
         </Menu.Item>
         <Menu.Item>
