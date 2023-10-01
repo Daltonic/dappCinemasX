@@ -38,6 +38,7 @@ export interface TruncateParams {
 export interface GlobalState {
   wallet: string
   bookModal: string
+  withdrawalModal: string
 }
 
 export interface RootState {

@@ -8,4 +8,7 @@ export const globalActions = {
   setBookModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.bookModal = action.payload
   },
+  setWithdrawalModal: (state: GlobalState, action: PayloadAction<string>) => {
+    state.withdrawalModal = action.payload
+  },
 }

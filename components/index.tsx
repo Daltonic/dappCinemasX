@@ -14,6 +14,7 @@ import BookModal from './BookModal'
 import Spacer from './Spacer'
 import MoviesTable from './MoviesTable'
 import MovieActions from './MovieActions'
+import Withdrawal from './Withdrawal'
 
 export {
   Menu,
@@ -32,4 +33,5 @@ export {
   Spacer,
   MoviesTable,
   MovieActions,
+  Withdrawal,
 }

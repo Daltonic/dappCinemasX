@@ -1,6 +1,6 @@
 import { MovieParams } from '@/utils/type.dt'
 import { NextPage } from 'next'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
 
 const Page: NextPage = () => {
@@ -25,7 +25,7 @@ const Page: NextPage = () => {
     }))
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     for (let key in movie) {
