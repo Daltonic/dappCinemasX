@@ -1,4 +1,4 @@
-import { TimeslotsTable } from '@/components'
+import { DeleteSlot, TimeslotsTable } from '@/components'
 import { generateFakeTimeSlots } from '@/utils/fakeData'
 import { TimeSlotStruct } from '@/utils/type.dt'
 import { NextPage } from 'next'
@@ -32,6 +32,7 @@ const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
           Withdraw
         </Link>
       </div>
+      <DeleteSlot />
     </div>
   )
 }

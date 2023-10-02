@@ -53,9 +53,12 @@ export interface GlobalState {
   wallet: string
   bookModal: string
   deleteModal: string
+  deleteSlotModal: string
   withdrawalModal: string
   movies: MovieStruct[]
   movie: MovieStruct | null
+  timeslots: TimeSlotStruct[]
+  timeslot: TimeSlotStruct | null
 }
 
 export interface RootState {

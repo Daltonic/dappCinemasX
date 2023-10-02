@@ -5,6 +5,9 @@ export const globalStates: GlobalState = {
   bookModal: 'scale-0',
   withdrawalModal: 'scale-0',
   deleteModal: 'scale-0',
+  deleteSlotModal: 'scale-0',
   movies: [],
   movie: null,
+  timeslots: [],
+  timeslot: null,
 }

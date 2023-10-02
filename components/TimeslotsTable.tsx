@@ -2,6 +2,7 @@ import { formatDate, formatTime } from '@/utils/helper'
 import { TimeSlotStruct } from '@/utils/type.dt'
 import Link from 'next/link'
 import React from 'react'
+import { TimeslotActions } from '.'
 
 const TimeslotsTable: React.FC<{ slots: TimeSlotStruct[] }> = ({ slots }) => {
   return (
@@ -83,7 +84,9 @@ const TimeslotsTable: React.FC<{ slots: TimeSlotStruct[] }> = ({ slots }) => {
               <td className="px-6 py-4 whitespace-nowrap">
                 {slot.seats}/{slot.capacity}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">Action</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <TimeslotActions slot={slot} index={i} />
+              </td>
             </tr>
           ))}
         </tbody>

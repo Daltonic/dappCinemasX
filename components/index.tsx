@@ -17,6 +17,8 @@ import MovieActions from './MovieActions'
 import Withdrawal from './Withdrawal'
 import DeleteMovie from './DeleteMovie'
 import TimeslotsTable from './TimeslotsTable'
+import TimeslotActions from './TimeslotActions'
+import DeleteSlot from './DeleteSlot'
 
 export {
   Menu,
@@ -38,4 +40,6 @@ export {
   Withdrawal,
   DeleteMovie,
   TimeslotsTable,
+  TimeslotActions,
+  DeleteSlot,
 }

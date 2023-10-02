@@ -1,4 +1,4 @@
-import { GlobalState, MovieStruct } from '@/utils/type.dt'
+import { GlobalState, MovieStruct, TimeSlotStruct } from '@/utils/type.dt'
 import { PayloadAction } from '@reduxjs/toolkit'
 
 export const globalActions = {
@@ -11,6 +11,9 @@ export const globalActions = {
   setDeleteModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.deleteModal = action.payload
   },
+  setDeleteSlotModal: (state: GlobalState, action: PayloadAction<string>) => {
+    state.deleteSlotModal = action.payload
+  },
   setWithdrawalModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.withdrawalModal = action.payload
   },
@@ -19,5 +22,17 @@ export const globalActions = {
   },
   setMovie: (state: GlobalState, action: PayloadAction<MovieStruct | null>) => {
     state.movie = action.payload
+  },
+  setTimeslots: (
+    state: GlobalState,
+    action: PayloadAction<TimeSlotStruct[]>
+  ) => {
+    state.timeslots = action.payload
+  },
+  setTimeslot: (
+    state: GlobalState,
+    action: PayloadAction<TimeSlotStruct | null>
+  ) => {
+    state.timeslot = action.payload
   },
 }
