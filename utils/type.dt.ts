@@ -66,6 +66,8 @@ export interface GlobalState {
   deleteModal: string
   deleteSlotModal: string
   withdrawalModal: string
+  findHolderModal: string
+  holders: string[]
   movies: MovieStruct[]
   movie: MovieStruct | null
   timeslots: TimeSlotStruct[]

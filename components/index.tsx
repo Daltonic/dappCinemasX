@@ -19,6 +19,7 @@ import DeleteMovie from './DeleteMovie'
 import TimeslotsTable from './TimeslotsTable'
 import TimeslotActions from './TimeslotActions'
 import DeleteSlot from './DeleteSlot'
+import FindHolder from './FindHolder'
 
 export {
   Menu,
@@ -42,4 +43,5 @@ export {
   TimeslotsTable,
   TimeslotActions,
   DeleteSlot,
+  FindHolder,
 }

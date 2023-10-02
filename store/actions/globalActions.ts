@@ -14,8 +14,14 @@ export const globalActions = {
   setDeleteSlotModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.deleteSlotModal = action.payload
   },
+  setFindHolderModal: (state: GlobalState, action: PayloadAction<string>) => {
+    state.findHolderModal = action.payload
+  },
   setWithdrawalModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.withdrawalModal = action.payload
+  },
+  setHolders: (state: GlobalState, action: PayloadAction<string[]>) => {
+    state.holders = action.payload
   },
   setMovies: (state: GlobalState, action: PayloadAction<MovieStruct[]>) => {
     state.movies = action.payload

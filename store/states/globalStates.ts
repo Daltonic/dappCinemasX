@@ -6,6 +6,8 @@ export const globalStates: GlobalState = {
   withdrawalModal: 'scale-0',
   deleteModal: 'scale-0',
   deleteSlotModal: 'scale-0',
+  findHolderModal: 'scale-0',
+  holders: [],
   movies: [],
   movie: null,
   timeslots: [],

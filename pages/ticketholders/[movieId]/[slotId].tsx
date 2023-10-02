@@ -1,3 +1,5 @@
+import { FindHolder } from '@/components'
+import { globalActions } from '@/store/globalSlices'
 import { generateTickets } from '@/utils/fakeData'
 import { truncate } from '@/utils/helper'
 import { TicketStruct } from '@/utils/type.dt'
@@ -5,10 +7,14 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 
 const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
   const router = useRouter()
   const { movieId, slotId } = router.query
+  const dispatch = useDispatch()
+
+  const { setFindHolderModal } = globalActions
   const tickets = ticketsData
 
   return (
@@ -64,6 +70,7 @@ const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
           className="bg-transparent font-bold border-2 border-red-600
             py-2 px-8 text-red-600 rounded-full hover:text-white
             transition duration-300 ease-in-out hover:bg-red-600"
+          onClick={() => dispatch(setFindHolderModal('scale-100'))}
         >
           Find Holders
         </button>
@@ -78,6 +85,8 @@ const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
           Back to slots
         </Link>
       </div>
+
+      <FindHolder />
     </div>
   )
 }
