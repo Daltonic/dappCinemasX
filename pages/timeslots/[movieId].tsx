@@ -20,18 +20,20 @@ const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
             py-2 px-8 text-red-600 rounded-full hover:text-white
             transition duration-300 ease-in-out hover:bg-red-600"
         >
-          Add Time
+          Add Slot
         </button>
+
         <Link
-          href={'/manage/movies'}
+          href={`/movie/manage`}
           className="bg-red-600 font-bold text-white border-2 border-red-600
             py-2 px-8 rounded-full
             transition duration-300 ease-in-out
             hover:bg-transparent hover:text-red-600"
         >
-          Withdraw
+          Back to slots
         </Link>
       </div>
+
       <DeleteSlot />
     </div>
   )

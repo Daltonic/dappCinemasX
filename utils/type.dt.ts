@@ -42,6 +42,17 @@ export interface TimeSlotStruct {
   balance: number
 }
 
+export interface TicketStruct {
+  id: number
+  movieId: number
+  slotId: number
+  owner: string
+  cost: number
+  timestamp: number
+  day: number
+  refunded: boolean
+}
+
 export interface TruncateParams {
   text: string
   startChars: number

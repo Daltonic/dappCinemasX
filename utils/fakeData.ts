@@ -1,10 +1,10 @@
-import { MovieStruct, TimeSlotStruct } from './type.dt'
+import { MovieStruct, TicketStruct, TimeSlotStruct } from './type.dt'
 import { faker } from '@faker-js/faker'
 
-export const generateMovieData = (count: number): MovieStruct[] => {
+export const generateMovieData = (n: number): MovieStruct[] => {
   const movies: MovieStruct[] = []
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < n; i++) {
     const movie: MovieStruct = {
       id: i + 1,
       name: faker.word.words(5),
@@ -21,7 +21,7 @@ export const generateMovieData = (count: number): MovieStruct[] => {
   return movies
 }
 
-export function generateFakeTimeSlots(n: number): TimeSlotStruct[] {
+export const generateFakeTimeSlots = (n: number): TimeSlotStruct[] => {
   const timeSlots: TimeSlotStruct[] = []
 
   for (let i = 0; i < n; i++) {
@@ -51,4 +51,28 @@ export function generateFakeTimeSlots(n: number): TimeSlotStruct[] {
   }
 
   return timeSlots
+}
+
+export const generateTickets = (n: number): TicketStruct[] => {
+  const tickets: TicketStruct[] = []
+
+  for (let i = 0; i < n; i++) {
+    const ticket: TicketStruct = {
+      id: i,
+      movieId: faker.number.int({ min: 1, max: 100 }),
+      slotId: faker.number.int({ min: 1, max: 50 }),
+      owner: faker.string.hexadecimal({
+        length: { min: 42, max: 42 },
+        prefix: '0x',
+      }),
+      cost: faker.number.float({ min: 0.02, max: 0.5 }),
+      timestamp: faker.date.past().getTime(),
+      day: faker.date.future().getTime(),
+      refunded: faker.datatype.boolean(),
+    }
+
+    tickets.push(ticket)
+  }
+
+  return tickets
 }
