@@ -36,11 +36,9 @@ const ConnectBtn: React.FC = () => {
               if (!connected) {
                 return (
                   <button
-                    className="bg-transparent border border-red-600
-                        py-2 px-6 text-red-600 rounded-full
-                        transition duration-300 ease-in-out
-                        hover:text-white
-                        hover:bg-red-600"
+                    className="bg-transparent border border-gray-300 hover:bg-red-600
+                        py-2 px-6 text-black hover:text-white rounded-full
+                        transition duration-300 ease-in-out"
                     onClick={openConnectModal}
                     type="button"
                   >
@@ -52,11 +50,9 @@ const ConnectBtn: React.FC = () => {
               if (chain.unsupported) {
                 return (
                   <button
-                    className="bg-transparent border border-red-600
-                        py-2 px-6 text-red-600 rounded-full
-                        transition duration-300 ease-in-out
-                        hover:text-white
-                        hover:bg-red-600"
+                    className="bg-transparent border border-gray-300 hover:bg-red-600
+                        py-2 px-6 text-black hover:text-white rounded-full
+                        transition duration-300 ease-in-out"
                     onClick={openChainModal}
                     type="button"
                   >
@@ -70,11 +66,9 @@ const ConnectBtn: React.FC = () => {
                   <button
                     onClick={openChainModal}
                     style={{ display: 'flex', alignItems: 'center' }}
-                    className="bg-transparent border border-red-600
-                          py-2 px-6 text-red-600 rounded-full
-                          transition duration-300 ease-in-out
-                          hover:text-white
-                          hover:bg-red-600"
+                    className="bg-transparent border border-gray-300 hover:bg-red-600
+                    py-2 px-6 text-black hover:text-white rounded-full
+                    transition duration-300 ease-in-out"
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -102,18 +96,16 @@ const ConnectBtn: React.FC = () => {
                   </button>
 
                   <button
-                    className="bg-transparent border border-red-600
-                    py-2 px-6 text-red-600 rounded-full
-                    transition duration-300 ease-in-out
-                    hover:text-white
-                    hover:bg-red-600"
+                    className="bg-transparent border border-gray-300 hover:bg-red-600
+                    py-2 px-6 text-black hover:text-white rounded-full
+                    transition duration-300 ease-in-out"
                     onClick={openAccountModal}
                     type="button"
                   >
                     {account.displayName}
-                    {account.displayBalance
+                    {/* {account.displayBalance
                       ? ` (${account.displayBalance})`
-                      : ''}
+                      : ''} */}
                   </button>
                 </div>
               )

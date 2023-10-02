@@ -16,3 +16,23 @@ export const truncate = ({
   }
   return text
 }
+
+export const formatDate = (timestamp: number): string => {
+  const date = new Date(timestamp)
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+  return new Intl.DateTimeFormat('en-US', options).format(date)
+}
+
+export const formatTime = (timestamp: number): string => {
+  const date = new Date(timestamp)
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+  return new Intl.DateTimeFormat('en-US', options).format(date)
+}

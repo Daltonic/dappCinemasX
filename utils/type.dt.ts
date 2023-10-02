@@ -28,6 +28,20 @@ export interface FeaturedStruct {
   description?: string
 }
 
+export interface TimeSlotStruct {
+  id: number
+  movieId: number
+  ticketCost: number
+  startTime: number
+  endTime: number
+  capacity: number
+  seats: number
+  deleted: boolean
+  completed: boolean
+  day: number
+  balance: number
+}
+
 export interface TruncateParams {
   text: string
   startChars: number

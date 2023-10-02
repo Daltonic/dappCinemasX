@@ -16,6 +16,7 @@ import MoviesTable from './MoviesTable'
 import MovieActions from './MovieActions'
 import Withdrawal from './Withdrawal'
 import DeleteMovie from './DeleteMovie'
+import TimeslotsTable from './TimeslotsTable'
 
 export {
   Menu,
@@ -36,4 +37,5 @@ export {
   MovieActions,
   Withdrawal,
   DeleteMovie,
+  TimeslotsTable,
 }
