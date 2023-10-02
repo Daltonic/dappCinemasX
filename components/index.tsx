@@ -15,6 +15,7 @@ import Spacer from './Spacer'
 import MoviesTable from './MoviesTable'
 import MovieActions from './MovieActions'
 import Withdrawal from './Withdrawal'
+import DeleteMovie from './DeleteMovie'
 
 export {
   Menu,
@@ -34,4 +35,5 @@ export {
   MoviesTable,
   MovieActions,
   Withdrawal,
+  DeleteMovie,
 }

@@ -1,4 +1,4 @@
-import { MoviesTable, Withdrawal } from '@/components'
+import { DeleteMovie, MoviesTable, Withdrawal } from '@/components'
 import { globalActions } from '@/store/globalSlices'
 import { generateMovieData } from '@/utils/fakeData'
 import { MovieStruct } from '@/utils/type.dt'
@@ -37,6 +37,7 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
         </button>
       </div>
       <Withdrawal />
+      <DeleteMovie />
     </div>
   )
 }

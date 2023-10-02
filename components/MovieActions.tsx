@@ -6,19 +6,19 @@ import { BsTrash3 } from 'react-icons/bs'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 import Link from 'next/link'
 import { MovieStruct } from '@/utils/type.dt'
+import { useDispatch } from 'react-redux'
+import { globalActions } from '@/store/globalSlices'
 
 const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
   movie,
   index,
 }) => {
-  const openEditMovie = () => {
-    // setGlobalState('movie', movie)
-    // setGlobalState('updateMovieModal', 'scale-100')
-  }
+  const dispatch = useDispatch()
+  const { setMovie, setDeleteModal } = globalActions
 
   const openDeleteMovie = () => {
-    // setGlobalState('movie', movie)
-    // setGlobalState('deleteMovieModal', 'scale-100')
+    dispatch(setMovie(movie))
+    dispatch(setDeleteModal('scale-100'))
   }
 
   return (
@@ -46,7 +46,6 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
               className={`flex justify-start items-center space-x-1 ${
                 active ? 'bg-gray-200 text-black' : 'text-gray-900'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-              onClick={openEditMovie}
             >
               <FiEdit size={17} />
               <span>Edit</span>

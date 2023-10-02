@@ -38,7 +38,10 @@ export interface TruncateParams {
 export interface GlobalState {
   wallet: string
   bookModal: string
+  deleteModal: string
   withdrawalModal: string
+  movies: MovieStruct[]
+  movie: MovieStruct | null
 }
 
 export interface RootState {
