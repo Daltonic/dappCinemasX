@@ -2,6 +2,7 @@ import Menu from './Menu'
 import Banner from './Banner'
 import Header from './Header'
 import MovieCards from './MovieCards'
+import MovieCard from './MovieCard'
 import Offers from './Offers'
 import Footer from './Footer'
 import ConnectBtn from './ConnectBtn'
@@ -20,6 +21,7 @@ import TimeslotsTable from './TimeslotsTable'
 import TimeslotActions from './TimeslotActions'
 import DeleteSlot from './DeleteSlot'
 import FindHolder from './FindHolder'
+import TheaterPlayer from './TheaterPlayer'
 
 export {
   Menu,
@@ -28,6 +30,7 @@ export {
   Offers,
   Footer,
   MovieCards,
+  MovieCard,
   ConnectBtn,
   NavBtn,
   FeaturedMovie,
@@ -44,4 +47,5 @@ export {
   TimeslotActions,
   DeleteSlot,
   FindHolder,
+  TheaterPlayer,
 }

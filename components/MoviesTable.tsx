@@ -54,7 +54,7 @@ const MoviesTable: React.FC<{ movies: MovieStruct[] }> = ({ movies }) => {
                   height={50}
                 />
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-red-600 capitalize">
+              <td className="px-6 py-4 whitespace-nowrap text-green-600 capitalize">
                 <Link href={'/movie/' + movie.id}>{movie.name}</Link>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">{movie.genre}</td>

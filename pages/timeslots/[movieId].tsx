@@ -20,19 +20,19 @@ const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
       <div className="flex justify-center items-center space-x-2 mt-4">
         <Link
           href={`/timeslots/${movieId}/add`}
-          className="bg-transparent font-bold border-2 border-red-600
-            py-2 px-8 text-red-600 rounded-full hover:text-white
-            transition duration-300 ease-in-out hover:bg-red-600"
+          className="bg-transparent font-bold border-2 border-green-600
+            py-2 px-8 text-green-600 rounded-full hover:text-white
+            transition duration-300 ease-in-out hover:bg-green-600"
         >
           Add Slot
         </Link>
 
         <Link
           href={`/movie/manage`}
-          className="bg-red-600 font-bold text-white border-2 border-red-600
+          className="bg-green-600 font-bold text-white border-2 border-green-600
             py-2 px-8 rounded-full
             transition duration-300 ease-in-out
-            hover:bg-transparent hover:text-red-600"
+            hover:bg-transparent hover:text-green-600"
         >
           Back to slots
         </Link>
