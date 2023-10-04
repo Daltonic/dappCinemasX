@@ -255,7 +255,7 @@ const Page: NextPage = () => {
 
           <div className="flex flex-col space-y-4 justify-between items-center mt-6">
             <button
-              className="p-3 bg-green-600 rounded-full text-white shadow-lg"
+              className="p-3 bg-red-600 rounded-full text-white shadow-lg"
               type="submit"
             >
               <AiOutlinePlus size={17} />
@@ -264,9 +264,9 @@ const Page: NextPage = () => {
             <button
               onClick={saveMovieSlot}
               type="button"
-              className="bg-green-600 font-bold text-white border-2 border-green-600
+              className="bg-red-600 font-bold text-white border-2 border-red-600
               py-2 px-8 rounded-full transition duration-300 ease-in-out
-              hover:bg-transparent hover:text-green-600 w-full"
+              hover:bg-transparent hover:text-red-600 w-full"
             >
               Submit
             </button>

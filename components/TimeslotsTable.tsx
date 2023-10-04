@@ -64,7 +64,7 @@ const TimeslotsTable: React.FC<{ slots: TimeSlotStruct[] }> = ({ slots }) => {
           {slots.map((slot: TimeSlotStruct, i: number) => (
             <tr key={i}>
               <td className="px-6 py-4 whitespace-nowrap">{i + 1}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-green-600 capitalize">
+              <td className="px-6 py-4 whitespace-nowrap text-red-600 capitalize">
                 <Link href={`/timeslot/${slot.movieId}/${slot.id}`}>
                   {formatDate(slot.day)}
                 </Link>

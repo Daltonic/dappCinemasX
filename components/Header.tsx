@@ -13,7 +13,7 @@ const Header: React.FC = () => {
       <div className="flex content-center items-center justify-between w-full sm:w-4/5 p-2 sm:px-0 mx-auto">
         <div className="flex p-2">
           <Link href="/">
-            Dapp <span className="text-green-600"> Cinemas</span>
+            Dapp <span className="text-red-600"> Cinemas</span>
           </Link>
         </div>
 

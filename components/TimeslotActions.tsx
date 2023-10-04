@@ -41,7 +41,7 @@ const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
           {({ active }) => (
             <button
               className={`flex justify-start items-center space-x-1 ${
-                active ? 'bg-green-500 text-white' : 'text-green-500'
+                active ? 'bg-red-500 text-white' : 'text-red-500'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
               onClick={openDeleteSlot}
             >

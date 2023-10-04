@@ -76,7 +76,7 @@ const FindHolder = () => {
 
           {addresses.length > 0 && (
             <div className="flex flex-col justify-center items-center rounded-xl mb-5">
-              <div className="text-green-800 font-medium">
+              <div className="text-red-800 font-medium">
                 Found {addresses.length} match(es)
               </div>
               <div className="mt-2">

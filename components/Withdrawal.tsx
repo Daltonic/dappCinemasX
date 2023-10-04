@@ -60,7 +60,7 @@ const Withdrawal: React.FC = () => {
             <div className="flex justify-center items-center rounded-full overflow-hidden h-10 w-64 shadow-md shadow-slate-300 p-4">
               <p className="text-slate-700">
                 {' '}
-                Dapp <span className="text-green-700">Cinemas</span>
+                Dapp <span className="text-red-700">Cinemas</span>
               </p>
             </div>
           </div>
@@ -98,8 +98,8 @@ const Withdrawal: React.FC = () => {
           <button
             type="submit"
             className="flex flex-row justify-center items-center w-full text-white text-md
-            bg-green-600 py-2 px-5 rounded-full drop-shadow-xl border border-transparent
-            hover:bg-transparent hover:border-green-500 hover:text-green-500 focus:outline-none mt-5"
+            bg-red-600 py-2 px-5 rounded-full drop-shadow-xl border border-transparent
+            hover:bg-transparent hover:border-red-500 hover:text-red-500 focus:outline-none mt-5"
           >
             Wire Fund
           </button>

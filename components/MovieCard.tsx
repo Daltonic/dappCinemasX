@@ -84,7 +84,7 @@ const MovieCard: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
           </div>
           <Link
             className="absolute bottom-0 left-0 right-0 bg-transparent py-2 px-3.5
-              text-black hover:text-green-600 flex justify-start items-center space-x-1
+              text-black hover:text-red-600 flex justify-start items-center space-x-1
               transition duration-300 ease-in-out border-t border-gray-200 text-sm"
             href={`/movie/${movie.id}`}
           >

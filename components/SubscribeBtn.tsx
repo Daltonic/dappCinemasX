@@ -17,7 +17,7 @@ const SubscribeBtn: React.FC = () => {
                 text-gray-500 hover:text-white ${
                   subscribed
                     ? 'text-gray-500 hover:text-white'
-                    : 'bg-green-600 text-white'
+                    : 'bg-red-600 text-white'
                 }`}
               >
                 <FaUserLock />
@@ -46,10 +46,10 @@ const SubscribeBtn: React.FC = () => {
                     text-gray-500 hover:text-white ${
                       !subscribed
                         ? 'text-gray-500 hover:text-white'
-                        : 'bg-green-600 text-white'
+                        : 'bg-red-600 text-white'
                     }`}
               >
-                <FaDollarSign className="text-green-700" />
+                <FaDollarSign className="text-red-700" />
                 <span className="truncate text-sm font-medium md:pr-1.5 pr-1.5">
                   8.44 Plus
                 </span>

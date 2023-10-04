@@ -21,8 +21,8 @@ const TimeslotList = ({ slots }) => {
 
       <div>
         <button
-          className="bg-green-600 text-white px-4 py-2 rounded-full
-            hover:bg-green-500 transition duration-300 mt-4"
+          className="bg-red-600 text-white px-4 py-2 rounded-full
+            hover:bg-red-500 transition duration-300 mt-4"
           onClick={() => dispatch(setBookModal('scale-100'))}
         >
           Book Ticket

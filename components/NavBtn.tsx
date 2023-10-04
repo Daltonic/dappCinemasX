@@ -16,7 +16,7 @@ const NavBtn = () => {
       {({ open }) => (
         <>
           <Menu.Button
-            className="p-3 bg-green-600 rounded-full text-white shadow-lg
+            className="p-3 bg-red-600 rounded-full text-white shadow-lg
           fixed right-10 bottom-10"
           >
             <HiChevronDown
@@ -39,9 +39,9 @@ const NavBtn = () => {
                   <Link
                     href={item.href}
                     className={`flex justify-start items-center bg-white space-x-1 ${
-                      active ? 'text-white bg-green-600' : 'text-black'
+                      active ? 'text-white bg-red-600' : 'text-black'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm
-                    hover:bg-green-600 hover:text-white`}
+                    hover:bg-red-600 hover:text-white`}
                   >
                     <span>{item.label}</span>
                   </Link>

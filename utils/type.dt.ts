@@ -3,7 +3,11 @@ export interface MovieStruct {
   name: string
   imageUrl: string
   genre: string
+  banner?: string
   caption?: string
+  casts?: string
+  relased?: string
+  running?: string
   description: string
   timestamp: number
   deleted: boolean

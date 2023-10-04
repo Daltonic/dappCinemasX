@@ -169,9 +169,9 @@ const Page: NextPage = () => {
 
           <div className="flex justify-center">
             <button
-              className="w-full text-white text-md bg-green-600 py-2 px-5 rounded-full
-            drop-shadow-xl border border-transparent hover:bg-transparent hover:border-green-500
-            hover:text-green-500 focus:outline-none mt-5"
+              className="w-full text-white text-md bg-red-600 py-2 px-5 rounded-full
+            drop-shadow-xl border border-transparent hover:bg-transparent hover:border-red-500
+            hover:text-red-500 focus:outline-none mt-5"
             >
               Updated
             </button>
