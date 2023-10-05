@@ -37,8 +37,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappCinemas.sol": {
-      "lastModificationDate": 1696438662706,
-      "contentHash": "50b6720deed4b235f8c9d8d63728ecb0",
+      "lastModificationDate": 1696504855872,
+      "contentHash": "a09195f2af9c709b73bb1cbd5d500b0a",
       "sourceName": "contracts/DappCinemas.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -64,12 +64,8 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/utils/Strings.sol",
         "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
-        "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol",
-        "./Base64.sol"
+        "./DappShared.sol"
       ],
       "versionPragmas": [
         "^0.8.9"
@@ -588,6 +584,85 @@
       ],
       "artifacts": [
         "IERC165"
+      ]
+    },
+    "/Users/daltonic/Sites/dappCinemas/contracts/DappShared.sol": {
+      "lastModificationDate": 1696504903404,
+      "contentHash": "f841072af9b5442f5d4a442de5b2004d",
+      "sourceName": "contracts/DappShared.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "DappShared"
+      ]
+    },
+    "/Users/daltonic/Sites/dappCinemas/contracts/DappTickets.sol": {
+      "lastModificationDate": 1696504874918,
+      "contentHash": "12bd605512c12e49741bfa1de3377a48",
+      "sourceName": "contracts/DappTickets.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "./DappShared.sol",
+        "./DappCinemas.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "DappTickets"
       ]
     }
   }
