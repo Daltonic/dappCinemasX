@@ -41,130 +41,104 @@ describe('Contracts', () => {
     await cinemaContract.grantAccess(ticketContract)
   })
 
-  // describe('Movies', () => {
-  //   beforeEach(async () => {
-  //     await cinemaContract.addMovie(
-  //       name,
-  //       banner,
-  //       imageUrl,
-  //       videoUrl,
-  //       genre,
-  //       description,
-  //       caption,
-  //       casts,
-  //       running,
-  //       released
-  //     )
-  //   })
+  describe('Movies', () => {
+    beforeEach(async () => {
+      await cinemaContract.addMovie(
+        name,
+        banner,
+        imageUrl,
+        videoUrl,
+        genre,
+        description,
+        caption,
+        casts,
+        running,
+        released
+      )
+    })
 
-  //   describe('Success', () => {
-  //     it('should confirm movie creation', async () => {
-  //       result = await cinemaContract.getMovies()
-  //       expect(result).to.have.lengthOf(1)
+    describe('Success', () => {
+      it('should confirm movie creation', async () => {
+        result = await cinemaContract.getMovies()
+        expect(result).to.have.lengthOf(1)
 
-  //       result = await cinemaContract.getMovie(movieId)
-  //       expect(result.name).to.be.equal(name)
-  //     })
+        result = await cinemaContract.getMovie(movieId)
+        expect(result.name).to.be.equal(name)
+      })
 
-  //     it('should confirm movie update', async () => {
-  //       result = await cinemaContract.getMovie(movieId)
-  //       expect(result.name).to.be.equal(name)
+      it('should confirm movie update', async () => {
+        result = await cinemaContract.getMovie(movieId)
+        expect(result.name).to.be.equal(name)
 
-  //       const newName = 'Matrix X'
-  //       await cinemaContract.updateMovie(
-  //         movieId,
-  //         newName,
-  //         banner,
-  //         imageUrl,
-  //         videoUrl,
-  //         genre,
-  //         description,
-  //         caption,
-  //         casts,
-  //         running,
-  //         released
-  //       )
+        const newName = 'Matrix X'
+        await cinemaContract.updateMovie(
+          movieId,
+          newName,
+          banner,
+          imageUrl,
+          videoUrl,
+          genre,
+          description,
+          caption,
+          casts,
+          running,
+          released
+        )
 
-  //       result = await cinemaContract.getMovie(movieId)
-  //       expect(result.name).to.be.equal(newName)
-  //     })
+        result = await cinemaContract.getMovie(movieId)
+        expect(result.name).to.be.equal(newName)
+      })
 
-  //     it('should confirm movie deletion', async () => {
-  //       result = await cinemaContract.getMovies()
-  //       expect(result).to.have.lengthOf(1)
+      it('should confirm movie deletion', async () => {
+        result = await cinemaContract.getMovies()
+        expect(result).to.have.lengthOf(1)
 
-  //       result = await cinemaContract.getMovie(movieId)
-  //       expect(result.deleted).to.be.equal(false)
+        result = await cinemaContract.getMovie(movieId)
+        expect(result.deleted).to.be.equal(false)
 
-  //       await cinemaContract.deleteMovie(movieId)
+        await cinemaContract.deleteMovie(movieId)
 
-  //       result = await cinemaContract.getMovies()
-  //       expect(result).to.have.lengthOf(0)
+        result = await cinemaContract.getMovies()
+        expect(result).to.have.lengthOf(0)
 
-  //       result = await cinemaContract.getMovie(movieId)
-  //       expect(result.deleted).to.be.equal(true)
-  //     })
-  //   })
-  // })
+        result = await cinemaContract.getMovie(movieId)
+        expect(result.deleted).to.be.equal(true)
+      })
+    })
+  })
 
-  // describe('Timeslots', () => {
-  //   beforeEach(async () => {
-  //     await cinemaContract.addMovie(
-  //       name,
-  //       banner,
-  //       imageUrl,
-  //       videoUrl,
-  //       genre,
-  //       description,
-  //       caption,
-  //       casts,
-  //       running,
-  //       released
-  //     )
+  describe('Timeslots', () => {
+    beforeEach(async () => {
+      await cinemaContract.addMovie(
+        name,
+        banner,
+        imageUrl,
+        videoUrl,
+        genre,
+        description,
+        caption,
+        casts,
+        running,
+        released
+      )
 
-  //     await cinemaContract.addTimeSlot(
-  //       movieId,
-  //       ticketCost,
-  //       startTime,
-  //       endTime,
-  //       capacity,
-  //       day
-  //     )
-  //   })
+      await cinemaContract.addTimeSlot(
+        movieId,
+        ticketCost,
+        startTime,
+        endTime,
+        capacity,
+        day
+      )
+    })
 
-  //   describe('Success', () => {
-  //     it('should confirm slot creation', async () => {
-  //       result = await cinemaContract.getTimeSlots(movieId)
-  //       expect(result).to.have.lengthOf(1)
-  //     })
-
-  //     it('should confirm slot deletion', async () => {
-  //       result = await cinemaContract.getTimeSlots(movieId)
-  //       expect(result).to.have.lengthOf(1)
-
-  //       result = await cinemaContract.getTimeSlot(slotId)
-  //       expect(result.deleted).to.be.equal(false)
-
-  //       await cinemaContract.deleteTimeSlot(slotId)
-
-  //       result = await cinemaContract.getTimeSlots(movieId)
-  //       expect(result).to.have.lengthOf(0)
-
-  //       result = await cinemaContract.getTimeSlot(slotId)
-  //       expect(result.deleted).to.be.equal(true)
-  //     })
-
-  //     it('should confirm slot completion', async () => {
-  //       result = await cinemaContract.getTimeSlot(slotId)
-  //       expect(result.completed).to.be.equal(false)
-
-  //       await cinemaContract.completeTimeSlot(slotId)
-
-  //       result = await cinemaContract.getTimeSlot(slotId)
-  //       expect(result.completed).to.be.equal(true)
-  //     })
-  //   })
-  // })
+    describe('Success', () => {
+      it('should confirm slot creation', async () => {
+        result = await cinemaContract.getTimeSlots(movieId)
+        expect(result).to.have.lengthOf(1)
+      })
+    })
+  })
 
   describe('Tickets', () => {
     beforeEach(async () => {
