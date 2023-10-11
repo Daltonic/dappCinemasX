@@ -22,14 +22,14 @@ describe('Contracts', () => {
 
   // Slot varibales
   const slotId = 1
-  const ticketCost = 100
+  const ticketCost = 0.5
   const startTime = Math.floor(Date.now()) // Current Unix timestamp
   const endTime = Math.floor(Date.now()) + 7200 // Current Unix timestamp + 2 hours
   const capacity = 50
   const day = Math.floor(Date.now())
 
   beforeEach(async () => {
-    ;[deployer, buyer1, buyer2] = await ethers.getSigners()
+    ;[deployer, buyer1, buyer2, receiver] = await ethers.getSigners()
 
     cinemaContract = await ethers.deployContract('DappCinemas')
     await cinemaContract.waitForDeployment()
@@ -124,7 +124,7 @@ describe('Contracts', () => {
 
       await cinemaContract.addTimeSlot(
         movieId,
-        ticketCost,
+        toWei(ticketCost),
         startTime,
         endTime,
         capacity,
@@ -157,7 +157,7 @@ describe('Contracts', () => {
 
       await cinemaContract.addTimeSlot(
         movieId,
-        ticketCost,
+        toWei(ticketCost),
         startTime,
         endTime,
         capacity,
@@ -201,6 +201,25 @@ describe('Contracts', () => {
 
         result = await ticketContract.getTicketHolders(slotId)
         expect(result).to.have.lengthOf(2)
+      })
+
+      it('should confirm funds withdrawal', async () => {
+        await ticketContract
+          .connect(buyer2)
+          .buyTickets(slotId, 1, { value: toWei(ticketCost) })
+
+        result = await ticketContract.balance()
+        expect(result).to.be.equal(0)
+
+        await ticketContract.completeTickets(slotId)
+
+        const holders = await ticketContract.getTicketHolders(slotId)
+        result = await ticketContract.balance()
+        expect(result).to.be.equal(toWei(holders.length * ticketCost))
+        
+        await ticketContract.withdrawTo(receiver, toWei(holders.length * ticketCost))
+        result = await ticketContract.balance()
+        expect(result).to.be.equal(0)
       })
     })
   })
