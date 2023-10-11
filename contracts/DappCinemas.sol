@@ -9,20 +9,22 @@ contract DappCinemas is DappShared {
     Counters.Counter private _totalMovies;
     Counters.Counter private _totalSlots;
 
-    uint256 public balance;
-    mapping(uint256 => bool) private movieExists;
-    mapping(uint256 => MovieStruct) public movies;
-    mapping(uint256 => TimeSlotStruct) public movieTimeSlot;
+    mapping(uint256 => bool) movieExists;
+    mapping(uint256 => MovieStruct) movies;
+    mapping(uint256 => TimeSlotStruct) movieTimeSlot;
 
-    function hasMovie(uint256 movieId) public view returns (bool) {
-        return movieExists[movieId];
+    bytes32 public constant TICKET_ROLE = keccak256("TICKET_ROLE");
+    address _current_controller;
+
+    function grantAccess(address _dappCinemas) public onlyOwner {
+        _setupRole(TICKET_ROLE, _dappCinemas);
+        _revokeRole(TICKET_ROLE, _current_controller);
+        _current_controller = _dappCinemas;
     }
 
-    function setBalance(uint256 _bal) public {
-        balance = _bal;
-    }
-    
-    function hasSlot(uint256 slotId) public view returns (TimeSlotStruct memory) {
+    function hasSlot(
+        uint256 slotId
+    ) public view returns (TimeSlotStruct memory) {
         return movieTimeSlot[slotId];
     }
 
@@ -55,7 +57,6 @@ contract DappCinemas is DappShared {
         movie.running = _running;
         movie.released = _released;
         movie.timestamp = currentTime();
-        movie.deleted = false;
 
         movies[newMovieId] = movie;
         movieExists[newMovieId] = true;
@@ -133,15 +134,94 @@ contract DappCinemas is DappShared {
         emit Action("Timeslot added");
     }
 
-    function deleteTimeSlot(uint256 _slotId) public onlyOwner {
+    function deleteTimeSlot(uint256 _slotId) public {
+        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
         movieTimeSlot[_slotId].deleted = true;
-
         emit Action("Timeslot deleted");
     }
 
-    function completeTimeSlot(uint256 _slotId) public onlyOwner {
+    function completeTimeSlot(uint256 _slotId) public {
+        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
         movieTimeSlot[_slotId].completed = true;
-
         emit Action("Timeslot completed");
+    }
+
+    function getMovies() public view returns (MovieStruct[] memory Movies) {
+        uint256 totalMovies;
+        for (uint256 i = 1; i <= _totalMovies.current(); i++) {
+            if (!movies[i].deleted) totalMovies++;
+        }
+
+        Movies = new MovieStruct[](totalMovies);
+
+        uint256 index;
+        for (uint256 i = 1; i <= _totalMovies.current(); i++) {
+            if (!movies[i].deleted) {
+                Movies[index++] = movies[i];
+            }
+        }
+    }
+
+    function getMovie(
+        uint256 movieId
+    ) public view returns (MovieStruct memory) {
+        return movies[movieId];
+    }
+
+    function getTimeSlotsByDay(
+        uint256 day
+    ) public view returns (TimeSlotStruct[] memory MovieSlots) {
+        uint256 available;
+        for (uint256 i = 0; i < _totalSlots.current(); i++) {
+            if (
+                movieTimeSlot[i + 1].day == day && !movieTimeSlot[i + 1].deleted
+            ) {
+                available++;
+            }
+        }
+
+        MovieSlots = new TimeSlotStruct[](available);
+
+        uint256 index;
+        for (uint256 i = 0; i < _totalSlots.current(); i++) {
+            if (
+                movieTimeSlot[i + 1].day == day && !movieTimeSlot[i + 1].deleted
+            ) {
+                MovieSlots[index].startTime = movieTimeSlot[i + 1].startTime;
+                MovieSlots[index++].endTime = movieTimeSlot[i + 1].endTime;
+            }
+        }
+    }
+
+    function getTimeSlot(
+        uint256 slotId
+    ) public view returns (TimeSlotStruct memory) {
+        return movieTimeSlot[slotId];
+    }
+
+    function getTimeSlots(
+        uint256 movieId
+    ) public view returns (TimeSlotStruct[] memory MovieSlots) {
+        uint256 available;
+        for (uint256 i = 0; i < _totalSlots.current(); i++) {
+            if (
+                movieTimeSlot[i + 1].movieId == movieId &&
+                !movieTimeSlot[i + 1].deleted
+            ) {
+                available++;
+            }
+        }
+
+        MovieSlots = new TimeSlotStruct[](available);
+
+        uint256 index;
+        for (uint256 i = 0; i < _totalSlots.current(); i++) {
+            if (
+                movieTimeSlot[i + 1].movieId == movieId &&
+                !movieTimeSlot[i + 1].deleted
+            ) {
+                MovieSlots[index++] = movieTimeSlot[i + 1];
+            }
+        }
     }
 }

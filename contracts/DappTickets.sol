@@ -8,12 +8,12 @@ import "./DappCinemas.sol";
 contract DappTickets is DappShared {
     using Counters for Counters.Counter;
     Counters.Counter private _totalTickets;
-
     DappCinemas private dappCinemas;
 
+    uint256 public balance;
     mapping(uint256 => string) private _tokenURIs;
     mapping(uint256 => TicketBuildStruct) public ticketBuild;
-    mapping(uint256 => mapping(uint256 => address[])) ticketHolder;
+    mapping(uint256 => address[]) ticketHolder;
 
     constructor(address _dappCinemas) {
         dappCinemas = DappCinemas(_dappCinemas);
@@ -28,16 +28,19 @@ contract DappTickets is DappShared {
         return bytes(_tokenURI).length > 0 ? _tokenURI : super.uri(tokenId);
     }
 
-    function buyTicket(
-        uint256 movieId,
-        uint256 slotId,
-        uint256 tickets
-    ) public payable {
-        require(
-            dappCinemas.hasMovie(movieId) &&
-                dappCinemas.hasSlot(slotId).movieId == movieId,
-            "Movie not found"
-        );
+    function deleteTickets(uint256 _slotId) public onlyOwner {
+        dappCinemas.deleteTimeSlot(_slotId);
+        refundTickets(_slotId);
+        emit Action("Tickets refunded");
+    }
+
+    function completeTickets(uint256 _slotId) public onlyOwner {
+        dappCinemas.completeTimeSlot(_slotId);
+        invalidateTickets(_slotId);
+        emit Action("Tickets burnt");
+    }
+
+    function buyTickets(uint256 slotId, uint256 tickets) public payable {
         require(
             msg.value >= dappCinemas.hasSlot(slotId).ticketCost * tickets,
             "Insufficient amount"
@@ -60,7 +63,7 @@ contract DappTickets is DappShared {
             ticket.timestamp = currentTime();
 
             ticketBuild[ticket.id].ticket = ticket;
-            ticketHolder[movieId][slotId].push(msg.sender);
+            ticketHolder[slotId].push(msg.sender);
         }
 
         dappCinemas.hasSlot(slotId).seats += tickets;
@@ -104,35 +107,60 @@ contract DappTickets is DappShared {
         _mintBatch(msg.sender, ids, amounts, defaultByteData);
     }
 
-    function useTicket(
-        uint256 movieId,
-        uint256 slotId,
-        uint256[] memory ticketIds
-    ) public onlyOwner {
-        require(ticketIds.length > 0, "Must have at least one ticket Id");
-        require(
-            dappCinemas.hasMovie(movieId) &&
-                dappCinemas.hasSlot(slotId).movieId == movieId,
-            "Movie not found"
-        );
+    function invalidateTickets(uint256 slotId) internal onlyOwner {
+        require(dappCinemas.hasSlot(slotId).id == slotId, "Slot not found");
 
-        for (uint256 i = 0; i < ticketIds.length; i++) {
-            ticketBuild[ticketIds[i]].ticket.used = true;
-            _burn(ticketBuild[ticketIds[i]].ticket.owner, ticketIds[i], 1);
+        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
+            if (ticketBuild[i].ticket.id == i && !ticketBuild[i].ticket.used) {
+                ticketBuild[i].ticket.used = true;
+                balance += ticketBuild[i].ticket.cost;
+            }
         }
     }
 
-    function getMovieTicketHolders(
-        uint256 movieId,
+    function refundTickets(uint256 slotId) internal onlyOwner {
+        require(dappCinemas.hasSlot(slotId).id == slotId, "Slot not found");
+
+        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
+            uint256 _tokenId = ticketBuild[i].ticket.id;
+            uint256 amount = ticketBuild[i].ticket.cost;
+            address owner = ticketBuild[i].ticket.owner;
+
+            if (_tokenId == i && !ticketBuild[i].ticket.used) {
+                ticketBuild[i].ticket.refunded = true;
+                payTo(owner, amount);
+                _burn(owner, _tokenId, 1);
+            }
+        }
+    }
+
+    function getTicketHolders(
         uint256 slotId
-    ) public view returns (address[] memory) {
-        return ticketHolder[movieId][slotId];
+    ) public view returns (address[] memory Holders) {
+        uint256 available;
+        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
+            if (
+                ticketBuild[i].ticket.slotId == slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) available++;
+        }
+
+        Holders = new address[](available);
+
+        uint256 index;
+        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
+            if (
+                ticketBuild[i].ticket.slotId == slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) {
+                Holders[index++] = ticketBuild[i].ticket.owner;
+            }
+        }
     }
 
     function withdrawTo(address to, uint256 amount) public onlyOwner {
-        require(dappCinemas.balance() >= amount, "Insufficient fund");
-        uint256 balance = dappCinemas.balance() - amount;
-        dappCinemas.setBalance(balance);
+        require(balance >= amount, "Insufficient fund");
+        balance -= amount;
         payTo(to, amount);
     }
 }

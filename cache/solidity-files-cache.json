@@ -37,8 +37,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappCinemas.sol": {
-      "lastModificationDate": 1696504855872,
-      "contentHash": "a09195f2af9c709b73bb1cbd5d500b0a",
+      "lastModificationDate": 1697031100074,
+      "contentHash": "b25ab9692b09173e92ad7da286a69dce",
       "sourceName": "contracts/DappCinemas.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -587,8 +587,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappShared.sol": {
-      "lastModificationDate": 1696504903404,
-      "contentHash": "f841072af9b5442f5d4a442de5b2004d",
+      "lastModificationDate": 1696847605805,
+      "contentHash": "c02dac5b7f9d500fcec176be33cba466",
       "sourceName": "contracts/DappShared.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -616,6 +616,7 @@
       "imports": [
         "@openzeppelin/contracts/utils/Strings.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/access/AccessControl.sol",
         "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
         "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol"
       ],
@@ -627,8 +628,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappTickets.sol": {
-      "lastModificationDate": 1696504874918,
-      "contentHash": "12bd605512c12e49741bfa1de3377a48",
+      "lastModificationDate": 1697030791817,
+      "contentHash": "7547a22a5e3193238e3624e558325d85",
       "sourceName": "contracts/DappTickets.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -663,6 +664,81 @@
       ],
       "artifacts": [
         "DappTickets"
+      ]
+    },
+    "/Users/daltonic/Sites/dappCinemas/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
+      "lastModificationDate": 1694438443314,
+      "contentHash": "a2b1ec38a8dad325a596f926890772b8",
+      "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControl.sol",
+        "../utils/Context.sol",
+        "../utils/Strings.sol",
+        "../utils/introspection/ERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AccessControl"
+      ]
+    },
+    "/Users/daltonic/Sites/dappCinemas/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
+      "lastModificationDate": 1694438443314,
+      "contentHash": "57c84298234411cea19c7c284d86be8b",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControl"
       ]
     }
   }
