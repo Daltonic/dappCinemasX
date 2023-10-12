@@ -628,8 +628,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappTickets.sol": {
-      "lastModificationDate": 1697030791817,
-      "contentHash": "7547a22a5e3193238e3624e558325d85",
+      "lastModificationDate": 1697109939945,
+      "contentHash": "d533ee22902f093f77e40d9951709103",
       "sourceName": "contracts/DappTickets.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -657,7 +657,8 @@
       "imports": [
         "@openzeppelin/contracts/utils/Counters.sol",
         "./DappShared.sol",
-        "./DappCinemas.sol"
+        "./DappCinemas.sol",
+        "./Base64.sol"
       ],
       "versionPragmas": [
         "^0.8.9"

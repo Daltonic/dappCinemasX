@@ -5,6 +5,8 @@ const fromWei = (num) => ethers.formatEther(num)
 
 describe('Contracts', () => {
   let cinemaContract, ticketContract, result
+  const token_name = 'Dapp Tickets'
+  const token_symbol = 'DPT'
 
   // Movies variables
   const movieId = 1
@@ -22,7 +24,7 @@ describe('Contracts', () => {
 
   // Slot varibales
   const slotId = 1
-  const ticketCost = 0.5
+  const ticketCost = 0.05
   const startTime = Math.floor(Date.now()) // Current Unix timestamp
   const endTime = Math.floor(Date.now()) + 7200 // Current Unix timestamp + 2 hours
   const capacity = 50
@@ -36,6 +38,8 @@ describe('Contracts', () => {
 
     ticketContract = await ethers.deployContract('DappTickets', [
       cinemaContract,
+      token_name,
+      token_symbol,
     ])
     await ticketContract.waitForDeployment()
     await cinemaContract.grantAccess(ticketContract)
@@ -216,8 +220,11 @@ describe('Contracts', () => {
         const holders = await ticketContract.getTicketHolders(slotId)
         result = await ticketContract.balance()
         expect(result).to.be.equal(toWei(holders.length * ticketCost))
-        
-        await ticketContract.withdrawTo(receiver, toWei(holders.length * ticketCost))
+
+        await ticketContract.withdrawTo(
+          receiver,
+          toWei(holders.length * ticketCost)
+        )
         result = await ticketContract.balance()
         expect(result).to.be.equal(0)
       })

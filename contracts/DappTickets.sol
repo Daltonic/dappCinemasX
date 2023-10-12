@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./DappShared.sol";
 import "./DappCinemas.sol";
+import "./Base64.sol";
 
 contract DappTickets is DappShared {
     using Counters for Counters.Counter;
@@ -11,21 +12,21 @@ contract DappTickets is DappShared {
     DappCinemas private dappCinemas;
 
     uint256 public balance;
+    string public name;
+    string public symbol;
+
     mapping(uint256 => string) private _tokenURIs;
     mapping(uint256 => TicketBuildStruct) public ticketBuild;
     mapping(uint256 => address[]) ticketHolder;
 
-    constructor(address _dappCinemas) {
+    constructor(
+        address _dappCinemas,
+        string memory _name,
+        string memory _symbol
+    ) {
         dappCinemas = DappCinemas(_dappCinemas);
-    }
-
-    function setTokenURI(uint256 tokenId, string memory _tokenURI) internal {
-        _tokenURIs[tokenId] = _tokenURI;
-    }
-
-    function uri(uint256 tokenId) public view override returns (string memory) {
-        string memory _tokenURI = _tokenURIs[tokenId];
-        return bytes(_tokenURI).length > 0 ? _tokenURI : super.uri(tokenId);
+        name = _name;
+        symbol = _symbol;
     }
 
     function deleteTickets(uint256 _slotId) public onlyOwner {
@@ -83,7 +84,7 @@ contract DappTickets is DappShared {
             _tokenId++;
             string memory ticketNumber = Strings.toString(_tokenId);
             string memory ticketValue = string(
-                abi.encodePacked("DPC #", ticketNumber)
+                abi.encodePacked(symbol, " #", ticketNumber)
             );
             string
                 memory description = "These NFTs are actually tickets for Dapp Cinemas.";
@@ -98,7 +99,7 @@ contract DappTickets is DappShared {
             );
             ticketBuild[_tokenId].value = ticketValue;
 
-            setTokenURI(_tokenId, uri(_tokenId));
+            _setTokenURI(_tokenId);
             ids[i] = _tokenId;
             amounts[i] = 1;
         }
@@ -162,5 +163,63 @@ contract DappTickets is DappShared {
         require(balance >= amount, "Insufficient fund");
         balance -= amount;
         payTo(to, amount);
+    }
+
+    function _setTokenURI(uint256 tokenId) internal virtual {
+        _tokenURIs[tokenId] = uri(tokenId);
+    }
+
+    function uri(uint256 tokenId) public view override returns (string memory) {
+        return buildMetadata(tokenId);
+    }
+
+    function buildImage(uint256 _tid) internal view returns (string memory) {
+        TicketBuildStruct memory currentTicket = ticketBuild[_tid];
+
+        return
+            Base64.encode(
+                bytes(
+                    abi.encodePacked(
+                        '<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">',
+                        '<rect height="500" width="500" fill="hsl(',
+                        currentTicket.bgHue,
+                        ', 50%, 25%)"/>',
+                        '<text x="50%" y="50%" dominant-baseline="middle" fill="hsl(',
+                        currentTicket.textHue,
+                        ', 100%, 80%)" text-anchor="middle" font-size="41">',
+                        currentTicket.value,
+                        "</text>",
+                        "</svg>"
+                    )
+                )
+            );
+    }
+
+    function buildMetadata(uint256 _tid) internal view returns (string memory) {
+        TicketBuildStruct memory currentTicket = ticketBuild[_tid];
+        return
+            string(
+                abi.encodePacked(
+                    "data:application/json;base64,",
+                    Base64.encode(
+                        bytes(
+                            abi.encodePacked(
+                                '{"name":"',
+                                currentTicket.name,
+                                '", "description":"',
+                                currentTicket.description,
+                                '", "image": "',
+                                "data:image/svg+xml;base64,",
+                                buildImage(_tid),
+                                '", "attributes": [{"trait_type": "Background Hue", "value": "',
+                                currentTicket.bgHue,
+                                '"}, {"trait_type": "Text Hue", "value": "',
+                                currentTicket.textHue,
+                                '"}]}'
+                            )
+                        )
+                    )
+                )
+            );
     }
 }

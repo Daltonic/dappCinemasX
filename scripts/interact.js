@@ -96,7 +96,7 @@ async function main() {
     // await createTimeSlot(cinemaContract, movieId, ticketCost)
 
     // Buys ticket
-    await buyTicket(ticketContract, slotId, ticketCost)
+    // await buyTicket(ticketContract, slotId, ticketCost)
 
     // Reading results
     await getMovies(cinemaContract)

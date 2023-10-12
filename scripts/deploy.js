@@ -3,6 +3,9 @@ const fs = require('fs')
 
 async function deployContracts() {
   let cinemaContract, ticketContract
+  const token_name = 'Dapp Tickets'
+  const token_symbol = 'DPT'
+
   try {
     // Deploy contract #1
     cinemaContract = await ethers.deployContract('DappCinemas')
@@ -11,6 +14,8 @@ async function deployContracts() {
     // Deploy contract #2
     ticketContract = await ethers.deployContract('DappTickets', [
       cinemaContract,
+      token_name,
+      token_symbol,
     ])
     await ticketContract.waitForDeployment()
 
