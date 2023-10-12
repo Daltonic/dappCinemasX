@@ -1,14 +1,15 @@
 const { expect } = require('chai')
+const { ethers } = require('hardhat')
 
 const toWei = (num) => ethers.parseEther(num.toString())
 const fromWei = (num) => ethers.formatEther(num)
 
 describe('Contracts', () => {
-  let cinemaContract, ticketContract, result
+  let cinemaContract, ticketContract, ticketContract2, result
   const token_name = 'Dapp Tickets'
   const token_symbol = 'DPT'
 
-  // Movies variables
+  // Movie Params
   const movieId = 1
   const name = 'The Matrix'
   const banner = 'https://example.com/matrix-banner.jpg'
@@ -19,10 +20,10 @@ describe('Contracts', () => {
     'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.'
   const caption = 'Welcome to the Real World.'
   const casts = 'Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss'
-  const running = 136 // Running time in minutes
-  const released = 915148800000 // Release date as Unix timestamp (March 31, 1999)
+  const running = 136
+  const released = 915148800000
 
-  // Slot varibales
+  // Slot params
   const slotId = 1
   const ticketCost = 0.05
   const startTime = Math.floor(Date.now()) // Current Unix timestamp
@@ -42,42 +43,86 @@ describe('Contracts', () => {
       token_symbol,
     ])
     await ticketContract.waitForDeployment()
+
+    ticketContract2 = await ethers.deployContract('DappTickets', [
+      cinemaContract,
+      token_name + ' Plus',
+      token_symbol + 'P',
+    ])
+    await ticketContract2.waitForDeployment()
     await cinemaContract.grantAccess(ticketContract)
   })
 
-  describe('Movies', () => {
-    beforeEach(async () => {
-      await cinemaContract.addMovie(
-        name,
-        banner,
-        imageUrl,
-        videoUrl,
-        genre,
-        description,
-        caption,
-        casts,
-        running,
-        released
-      )
-    })
-
-    describe('Success', () => {
-      it('should confirm movie creation', async () => {
-        result = await cinemaContract.getMovies()
-        expect(result).to.have.lengthOf(1)
-
-        result = await cinemaContract.getMovie(movieId)
-        expect(result.name).to.be.equal(name)
+    describe('Movie Management', () => {
+      beforeEach(async () => {
+        await cinemaContract.addMovie(
+          name,
+          banner,
+          imageUrl,
+          videoUrl,
+          genre,
+          description,
+          caption,
+          casts,
+          running,
+          released
+        )
       })
 
-      it('should confirm movie update', async () => {
-        result = await cinemaContract.getMovie(movieId)
-        expect(result.name).to.be.equal(name)
+      describe('Success', () => {
+        it('should confirm movie creation', async () => {
+          result = await cinemaContract.getMovies()
+          expect(result).to.have.lengthOf(1)
 
-        const newName = 'Matrix X'
-        await cinemaContract.updateMovie(
-          movieId,
-          newName,
+          result = await cinemaContract.getMovie(movieId)
+          expect(result.name).to.be.equal(name)
+        })
+
+        it('should confirm movie update', async () => {
+          result = await cinemaContract.getMovie(movieId)
+          expect(result.name).to.be.equal(name)
+
+          const newName = 'Matrix X'
+          await cinemaContract.updateMovie(
+            movieId,
+            newName,
+            banner,
+            imageUrl,
+            videoUrl,
+            genre,
+            description,
+            caption,
+            casts,
+            running,
+            released
+          )
+
+          result = await cinemaContract.getMovie(movieId)
+          expect(result.name).to.be.equal(newName)
+        })
+
+        it('should confirm movie deletion', async () => {
+          result = await cinemaContract.getMovies()
+          expect(result).to.have.lengthOf(1)
+
+          result = await cinemaContract.getMovie(movieId)
+          expect(result.deleted).to.be.equal(false)
+
+          await cinemaContract.deleteMovie(movieId)
+
+          result = await cinemaContract.getMovies()
+          expect(result).to.have.lengthOf(0)
+
+          result = await cinemaContract.getMovie(movieId)
+          expect(result.deleted).to.be.equal(true)
+        })
+      })
+    })
+
+    describe('Timeslots Management', () => {
+      beforeEach(async () => {
+        await cinemaContract.addMovie(
+          name,
           banner,
           imageUrl,
           videoUrl,
@@ -89,62 +134,25 @@ describe('Contracts', () => {
           released
         )
 
-        result = await cinemaContract.getMovie(movieId)
-        expect(result.name).to.be.equal(newName)
+        await cinemaContract.addTimeSlot(
+          movieId,
+          toWei(ticketCost),
+          startTime,
+          endTime,
+          capacity,
+          day
+        )
       })
 
-      it('should confirm movie deletion', async () => {
-        result = await cinemaContract.getMovies()
-        expect(result).to.have.lengthOf(1)
-
-        result = await cinemaContract.getMovie(movieId)
-        expect(result.deleted).to.be.equal(false)
-
-        await cinemaContract.deleteMovie(movieId)
-
-        result = await cinemaContract.getMovies()
-        expect(result).to.have.lengthOf(0)
-
-        result = await cinemaContract.getMovie(movieId)
-        expect(result.deleted).to.be.equal(true)
+      describe('Success', () => {
+        it('should confirm slot creation', async () => {
+          result = await cinemaContract.getTimeSlots(movieId)
+          expect(result).to.have.lengthOf(1)
+        })
       })
     })
-  })
 
-  describe('Timeslots', () => {
-    beforeEach(async () => {
-      await cinemaContract.addMovie(
-        name,
-        banner,
-        imageUrl,
-        videoUrl,
-        genre,
-        description,
-        caption,
-        casts,
-        running,
-        released
-      )
-
-      await cinemaContract.addTimeSlot(
-        movieId,
-        toWei(ticketCost),
-        startTime,
-        endTime,
-        capacity,
-        day
-      )
-    })
-
-    describe('Success', () => {
-      it('should confirm slot creation', async () => {
-        result = await cinemaContract.getTimeSlots(movieId)
-        expect(result).to.have.lengthOf(1)
-      })
-    })
-  })
-
-  describe('Tickets', () => {
+  describe('Tickets Management', () => {
     beforeEach(async () => {
       await cinemaContract.addMovie(
         name,
@@ -174,60 +182,99 @@ describe('Contracts', () => {
     })
 
     describe('Success', () => {
-      it('should confirm ticket creation', async () => {
-        result = await ticketContract.getTicketHolders(slotId)
+        it('should confirm ticket creation', async () => {
+          result = await ticketContract.getTicketHolders(slotId)
+          expect(result).to.have.lengthOf(1)
+        })
+
+        it('should confirm tickets deletion', async () => {
+          await ticketContract
+            .connect(buyer2)
+            .buyTickets(slotId, 1, { value: toWei(ticketCost) })
+
+          result = await ticketContract.getTicketHolders(slotId)
+          expect(result).to.have.lengthOf(2)
+
+          await ticketContract.deleteTickets(slotId)
+
+          result = await ticketContract.getTicketHolders(slotId)
+          expect(result).to.have.lengthOf(0)
+        })
+
+        it('should confirm tickets completion', async () => {
+          await ticketContract
+            .connect(buyer2)
+            .buyTickets(slotId, 1, { value: toWei(ticketCost) })
+
+          result = await ticketContract.getTicketHolders(slotId)
+          expect(result).to.have.lengthOf(2)
+
+          await ticketContract.completeTickets(slotId)
+
+          result = await ticketContract.getTicketHolders(slotId)
+          expect(result).to.have.lengthOf(2)
+        })
+
+      it('should confirm tickets contract switch', async () => {
+        await cinemaContract.addMovie(
+            name,
+            banner,
+            imageUrl,
+            videoUrl,
+            genre,
+            description,
+            caption,
+            casts,
+            running,
+            released
+          )
+    
+          await cinemaContract.addTimeSlot(
+            movieId,
+            toWei(ticketCost),
+            startTime,
+            endTime,
+            capacity,
+            day
+          )
+
+          await cinemaContract.grantAccess(ticketContract2)
+    
+          await ticketContract2
+            .connect(buyer1)
+            .buyTickets(slotId, 1, { value: toWei(ticketCost) })
+
+        result = await ticketContract2.getTicketHolders(slotId)
+        expect(result).to.have.lengthOf(1)
+
+        await ticketContract2.completeTickets(slotId)
+
+        result = await ticketContract2.getTicketHolders(slotId)
         expect(result).to.have.lengthOf(1)
       })
 
-      it('should confirm tickets deletion', async () => {
-        await ticketContract
-          .connect(buyer2)
-          .buyTickets(slotId, 1, { value: toWei(ticketCost) })
+        it('should confirm fund withdrawal', async () => {
+          await ticketContract
+            .connect(buyer2)
+            .buyTickets(slotId, 1, { value: toWei(ticketCost) })
 
-        result = await ticketContract.getTicketHolders(slotId)
-        expect(result).to.have.lengthOf(2)
+          result = await ticketContract.balance()
+          expect(result).to.be.equal(0)
 
-        await ticketContract.deleteTickets(slotId)
+          await ticketContract.completeTickets(slotId)
 
-        result = await ticketContract.getTicketHolders(slotId)
-        expect(result).to.have.lengthOf(0)
-      })
+          const holders = await ticketContract.getTicketHolders(slotId)
+          result = await ticketContract.balance()
+          expect(result).to.be.equal(toWei(holders.length * ticketCost))
 
-      it('should confirm tickets completion', async () => {
-        await ticketContract
-          .connect(buyer2)
-          .buyTickets(slotId, 1, { value: toWei(ticketCost) })
+          await ticketContract.withdrawTo(
+            receiver,
+            toWei(holders.length * ticketCost)
+          )
 
-        result = await ticketContract.getTicketHolders(slotId)
-        expect(result).to.have.lengthOf(2)
-
-        await ticketContract.completeTickets(slotId)
-
-        result = await ticketContract.getTicketHolders(slotId)
-        expect(result).to.have.lengthOf(2)
-      })
-
-      it('should confirm funds withdrawal', async () => {
-        await ticketContract
-          .connect(buyer2)
-          .buyTickets(slotId, 1, { value: toWei(ticketCost) })
-
-        result = await ticketContract.balance()
-        expect(result).to.be.equal(0)
-
-        await ticketContract.completeTickets(slotId)
-
-        const holders = await ticketContract.getTicketHolders(slotId)
-        result = await ticketContract.balance()
-        expect(result).to.be.equal(toWei(holders.length * ticketCost))
-
-        await ticketContract.withdrawTo(
-          receiver,
-          toWei(holders.length * ticketCost)
-        )
-        result = await ticketContract.balance()
-        expect(result).to.be.equal(0)
-      })
+          result = await ticketContract.balance()
+          expect(result).to.be.equal(0)
+        })
     })
   })
 })

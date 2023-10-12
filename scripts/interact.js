@@ -4,7 +4,6 @@ const fs = require('fs')
 const toWei = (num) => ethers.parseEther(num.toString())
 
 async function createMovie(cinemaContract) {
-  const movieId = 1
   const name = 'The Matrix'
   const banner = 'https://example.com/matrix-banner.jpg'
   const imageUrl = 'https://example.com/matrix-image.jpg'
@@ -32,11 +31,6 @@ async function createMovie(cinemaContract) {
   await tx.wait()
 }
 
-async function getMovies(cinemaContract) {
-  const result = await cinemaContract.getMovies()
-  console.log('Movies:', result)
-}
-
 async function createTimeSlot(cinemaContract, movieId, ticketCost) {
   const startTime = Math.floor(Date.now()) // Current Unix timestamp
   const endTime = Math.floor(Date.now()) + 7200 // Current Unix timestamp + 2 hours
@@ -54,16 +48,21 @@ async function createTimeSlot(cinemaContract, movieId, ticketCost) {
   await tx.wait()
 }
 
-async function getTimeslots(cinemaContract, movieId) {
-  const result = await cinemaContract.getTimeSlots(movieId)
-  console.log('Time Slots:', result)
-}
-
 async function buyTicket(ticketContract, slotId, ticketCost) {
   const tx = await ticketContract.buyTickets(slotId, 1, {
     value: toWei(ticketCost),
   })
   await tx.wait()
+}
+
+async function getMovies(cinemaContract) {
+  const result = await cinemaContract.getMovies()
+  console.log('Movies:', result)
+}
+
+async function getTimeslots(cinemaContract, movieId) {
+  const result = await cinemaContract.getTimeSlots(movieId)
+  console.log('Time Slots:', result)
 }
 
 async function getTickets(ticketContract, slotId) {
@@ -74,29 +73,29 @@ async function getTickets(ticketContract, slotId) {
 async function main() {
   let cinemaContract, ticketContract
   try {
-    // Load contract addresses
     const contractAddresses = fs.readFileSync(
       './contracts/contractAddress.json',
       'utf8'
     )
+
     const { cinemaContract: cinemaAddress, ticketContract: ticketAddress } =
       JSON.parse(contractAddresses)
 
-    // Connect to deployed contracts
     cinemaContract = await ethers.getContractAt('DappCinemas', cinemaAddress)
     ticketContract = await ethers.getContractAt('DappTickets', ticketAddress)
+
     const movieId = 1
     const slotId = 1
-    const ticketCost = 0.05
+    const ticketCost = 0.01
 
     // Creates movie
-    // await createMovie(cinemaContract)
+    await createMovie(cinemaContract)
 
     // Creates timeslot
-    // await createTimeSlot(cinemaContract, movieId, ticketCost)
+    await createTimeSlot(cinemaContract, movieId, ticketCost)
 
     // Buys ticket
-    // await buyTicket(ticketContract, slotId, ticketCost)
+    await buyTicket(ticketContract, slotId, ticketCost)
 
     // Reading results
     await getMovies(cinemaContract)
@@ -105,7 +104,7 @@ async function main() {
 
     console.log('Contract interaction completed successfully.')
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Unhandled error:', error)
   }
 }
 

@@ -2,12 +2,43 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./DappShared.sol";
 
-contract DappCinemas is DappShared {
+contract DappCinemas is DappShared, AccessControl {
     using Counters for Counters.Counter;
     Counters.Counter private _totalMovies;
     Counters.Counter private _totalSlots;
+
+    struct MovieStruct {
+        uint256 id;
+        string name;
+        string banner;
+        string imageUrl;
+        string videoUrl;
+        string genre;
+        string description;
+        string caption;
+        string casts;
+        uint256 running;
+        uint256 released;
+        uint256 timestamp;
+        bool deleted;
+    }
+
+    struct TimeSlotStruct {
+        uint256 id;
+        uint256 movieId;
+        uint256 ticketCost;
+        uint256 startTime;
+        uint256 endTime;
+        uint256 capacity;
+        uint256 seats;
+        bool deleted;
+        bool completed;
+        uint256 day;
+        uint256 balance;
+    }
 
     mapping(uint256 => bool) movieExists;
     mapping(uint256 => MovieStruct) movies;
@@ -16,10 +47,10 @@ contract DappCinemas is DappShared {
     bytes32 public constant TICKET_ROLE = keccak256("TICKET_ROLE");
     address _current_controller;
 
-    function grantAccess(address _dappCinemas) public onlyOwner {
-        _setupRole(TICKET_ROLE, _dappCinemas);
+    function grantAccess(address _dappTicket) public onlyOwner {
+        _setupRole(TICKET_ROLE, _dappTicket);
         _revokeRole(TICKET_ROLE, _current_controller);
-        _current_controller = _dappCinemas;
+        _current_controller = _dappTicket;
     }
 
     function hasSlot(
@@ -28,7 +59,6 @@ contract DappCinemas is DappShared {
         return movieTimeSlot[slotId];
     }
 
-    // Movie related functions
     function addMovie(
         string memory _name,
         string memory _banner,
@@ -102,7 +132,6 @@ contract DappCinemas is DappShared {
         emit Action("Movie deleted");
     }
 
-    // Timeslot related functions
     function addTimeSlot(
         uint256 _movieId,
         uint256 _ticketCost,
@@ -135,13 +164,19 @@ contract DappCinemas is DappShared {
     }
 
     function deleteTimeSlot(uint256 _slotId) public {
-        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
+        require(
+            hasRole(TICKET_ROLE, msg.sender),
+            "Caller is not a ticket contract"
+        );
         movieTimeSlot[_slotId].deleted = true;
         emit Action("Timeslot deleted");
     }
 
     function completeTimeSlot(uint256 _slotId) public {
-        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
+        require(
+            hasRole(TICKET_ROLE, msg.sender),
+            "Caller is not a ticket contract"
+        );
         movieTimeSlot[_slotId].completed = true;
         emit Action("Timeslot completed");
     }

@@ -1,15 +1,39 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./DappShared.sol";
 import "./DappCinemas.sol";
 import "./Base64.sol";
 
-contract DappTickets is DappShared {
+contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
     using Counters for Counters.Counter;
     Counters.Counter private _totalTickets;
     DappCinemas private dappCinemas;
+
+    struct TicketStruct {
+        uint256 id;
+        uint256 movieId;
+        uint256 slotId;
+        address owner;
+        uint256 cost;
+        uint256 timestamp;
+        uint256 day;
+        bool used;
+        bool refunded;
+    }
+
+    struct TicketBuildStruct {
+        string name;
+        string description;
+        string bgHue;
+        string textHue;
+        string value;
+        TicketStruct ticket;
+    }
 
     uint256 public balance;
     string public name;
@@ -23,7 +47,7 @@ contract DappTickets is DappShared {
         address _dappCinemas,
         string memory _name,
         string memory _symbol
-    ) {
+    ) ERC1155("") {
         dappCinemas = DappCinemas(_dappCinemas);
         name = _name;
         symbol = _symbol;
@@ -99,7 +123,7 @@ contract DappTickets is DappShared {
             );
             ticketBuild[_tokenId].value = ticketValue;
 
-            _setTokenURI(_tokenId);
+            _tokenURIs[_tokenId] = uri(_tokenId);
             ids[i] = _tokenId;
             amounts[i] = 1;
         }
@@ -165,10 +189,6 @@ contract DappTickets is DappShared {
         payTo(to, amount);
     }
 
-    function _setTokenURI(uint256 tokenId) internal virtual {
-        _tokenURIs[tokenId] = uri(tokenId);
-    }
-
     function uri(uint256 tokenId) public view override returns (string memory) {
         return buildMetadata(tokenId);
     }
@@ -221,5 +241,23 @@ contract DappTickets is DappShared {
                     )
                 )
             );
+    }
+
+    function payTo(address to, uint256 amount) internal {
+        (bool success, ) = payable(to).call{value: amount}("");
+        require(success);
+    }
+
+    function randomNum(
+        uint256 _mod,
+        uint256 _seed,
+        uint256 _salt
+    ) internal view returns (uint256) {
+        uint256 num = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, msg.sender, _seed, _salt)
+            )
+        ) % _mod;
+        return num;
     }
 }

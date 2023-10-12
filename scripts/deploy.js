@@ -3,8 +3,8 @@ const fs = require('fs')
 
 async function deployContracts() {
   let cinemaContract, ticketContract
-  const token_name = 'Dapp Tickets'
-  const token_symbol = 'DPT'
+  const token_name = 'Dapp X'
+  const token_symbol = 'DPX'
 
   try {
     // Deploy contract #1
