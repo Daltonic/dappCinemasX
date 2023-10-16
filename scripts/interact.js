@@ -4,7 +4,7 @@ const fs = require('fs')
 const toWei = (num) => ethers.parseEther(num.toString())
 
 async function createMovie(cinemaContract) {
-  const name = 'The Matrix'
+  const name = 'The Matrix Reborn'
   const banner = 'https://example.com/matrix-banner.jpg'
   const imageUrl = 'https://example.com/matrix-image.jpg'
   const videoUrl = 'https://example.com/matrix-trailer.mp4'
@@ -72,6 +72,7 @@ async function getTickets(ticketContract, slotId) {
 
 async function main() {
   let cinemaContract, ticketContract
+
   try {
     const contractAddresses = fs.readFileSync(
       './contracts/contractAddress.json',
@@ -84,7 +85,7 @@ async function main() {
     cinemaContract = await ethers.getContractAt('DappCinemas', cinemaAddress)
     ticketContract = await ethers.getContractAt('DappTickets', ticketAddress)
 
-    const movieId = 1
+    const movieId = 2
     const slotId = 1
     const ticketCost = 0.01
 

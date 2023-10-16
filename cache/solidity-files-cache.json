@@ -741,6 +741,49 @@
       "artifacts": [
         "DappCinemas"
       ]
+    },
+    "/Users/daltonic/Sites/dappCinemas/contracts/DappTickets2.sol": {
+      "lastModificationDate": 1697214109596,
+      "contentHash": "8bdd0119ea25a8440e2cb1e34f974005",
+      "sourceName": "contracts/DappTickets2.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol",
+        "./DappShared.sol",
+        "./DappCinemas.sol",
+        "./Base64.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "DappTickets2"
+      ]
     }
   }
 }
