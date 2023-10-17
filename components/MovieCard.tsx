@@ -8,7 +8,7 @@ import { AiOutlineInfoCircle } from 'react-icons/ai'
 const MovieCard: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
   return (
     <div
-      className="relative block overflow-hidden shadow-lg
+      className="relative overflow-hidden shadow-lg
         hover:shadow-xl transition duration-300 transform"
     >
       <div className="flex">

@@ -20,8 +20,8 @@ contract DappCinemas is DappShared, AccessControl {
         string description;
         string caption;
         string casts;
-        uint256 running;
-        uint256 released;
+        string running;
+        string released;
         uint256 timestamp;
         bool deleted;
     }
@@ -68,8 +68,8 @@ contract DappCinemas is DappShared, AccessControl {
         string memory _description,
         string memory _caption,
         string memory _casts,
-        uint256 _running,
-        uint256 _released
+        string memory _running,
+        string memory _released
     ) public onlyOwner {
         _totalMovies.increment();
         uint256 newMovieId = _totalMovies.current();
@@ -104,8 +104,8 @@ contract DappCinemas is DappShared, AccessControl {
         string memory _description,
         string memory _caption,
         string memory _casts,
-        uint256 _running,
-        uint256 _released
+        string memory _running,
+        string memory _released
     ) public onlyOwner {
         require(movieExists[_movieId], "Movie does not exist");
 

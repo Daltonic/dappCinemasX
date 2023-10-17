@@ -1,11 +1,18 @@
 import { Banner, Contact, FeaturedMovie, Offers } from '@/components'
 import MovieCards from '@/components/MovieCards'
+import { getMovies } from '@/services/blockchain'
+import { globalActions } from '@/store/globalSlices'
 import { generateMovieData } from '@/utils/fakeData'
-import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
+import { FeaturedStruct, MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
-  const movies = moviesData
+  const { setMovies } = globalActions
+  const dispatch = useDispatch()
+
+  dispatch(setMovies(moviesData))
+  const { movies } = useSelector((states: RootState) => states.globalStates)
 
   const getRandomMovie = (movies: any) => {
     const randomIndex = Math.floor(Math.random() * movies.length)
@@ -77,7 +84,8 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
 export default Page
 
 export const getServerSideProps = async () => {
-  const moviesData: MovieStruct[] = generateMovieData(5)
+  const moviesData: MovieStruct[] = await getMovies()
+  // const moviesData: MovieStruct[] = generateMovieData(5)
   return {
     props: { moviesData: JSON.parse(JSON.stringify(moviesData)) },
   }

@@ -45,13 +45,23 @@ const MovieCards: React.FC<{ movies: MovieStruct[]; title: string }> = ({
         {title}
       </h2>
 
-      <Slider {...settings}>
-        {movies.map((movie: MovieStruct, i: number) => (
-          <div key={i} className="px-2 py-4">
-            <MovieCard movie={movie} />
-          </div>
-        ))}
-      </Slider>
+      {movies.length > 3 ? (
+        <Slider {...settings}>
+          {movies.map((movie: MovieStruct, i: number) => (
+            <div key={i} className="px-2 py-4">
+              <MovieCard movie={movie} />
+            </div>
+          ))}
+        </Slider>
+      ) : (
+        <div>
+          {movies.map((movie: MovieStruct, i: number) => (
+            <div key={i} className="px-2 py-4 w-1/3">
+              <MovieCard movie={movie} />
+            </div>
+          ))}
+        </div>
+      )}
     </>
   )
 }

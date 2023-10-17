@@ -1,3 +1,4 @@
+import { createMovie } from '@/services/blockchain'
 import { MovieParams } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import { ChangeEvent, FormEvent, useState } from 'react'
@@ -5,14 +6,16 @@ import { toast } from 'react-toastify'
 
 const Page: NextPage = () => {
   const [movie, setMovie] = useState<MovieParams>({
-    poster: '',
-    banner: '',
     name: '',
+    banner: '',
+    imageUrl: '',
+    videoUrl: '',
     genre: '',
     casts: '',
     description: '',
+    caption: '',
     released: '',
-    duration: '',
+    running: '',
   })
 
   const handleChange = (
@@ -25,7 +28,7 @@ const Page: NextPage = () => {
     }))
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     for (let key in movie) {
@@ -35,20 +38,36 @@ const Page: NextPage = () => {
       }
     }
 
-    console.log(movie)
-    resetForm()
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        createMovie(movie)
+          .then((tx: any) => {
+            console.log(movie)
+            resetForm()
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Movie created successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   const resetForm = () => {
     setMovie({
-      poster: '',
-      banner: '',
       name: '',
+      banner: '',
+      imageUrl: '',
+      videoUrl: '',
       genre: '',
       casts: '',
       description: '',
+      caption: '',
       released: '',
-      duration: '',
+      running: '',
     })
   }
 
@@ -65,36 +84,6 @@ const Page: NextPage = () => {
               className="block w-full text-sm text-slate-500 bg-transparent
               border-0 focus:outline-none focus:ring-0"
               type="text"
-              name="poster"
-              placeholder="Movie poster URL"
-              value={movie.poster}
-              onChange={handleChange}
-              pattern="https?://.+(\.png|\.jpg|\.jpeg|\.gif)"
-              title="Please enter a valid image URL (http(s)://...(.png|.jpg|.jpeg|.gif))"
-              required
-            />
-          </div>
-
-          <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
-            <input
-              className="block w-full text-sm text-slate-500 bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-              type="text"
-              name="banner"
-              placeholder="Movie banner URL"
-              value={movie.banner}
-              onChange={handleChange}
-              pattern="https?://.+(\.png|\.jpg|\.jpeg|\.gif)"
-              title="Please enter a valid image URL (http(s)://...(.png|.jpg|.jpeg|.gif))"
-              required
-            />
-          </div>
-
-          <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
-            <input
-              className="block w-full text-sm text-slate-500 bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-              type="text"
               name="name"
               placeholder="Movie name"
               value={movie.name}
@@ -103,43 +92,107 @@ const Page: NextPage = () => {
             />
           </div>
 
-          <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
-            <input
-              className="block w-full text-sm text-slate-500 bg-transparent
+          <div className="flex justify-between items-center flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
               border-0 focus:outline-none focus:ring-0"
-              type="text"
-              name="released"
-              placeholder="Movie release date e.g. 1st March 2024"
-              value={movie.released}
-              onChange={handleChange}
-              required
-            />
+                type="text"
+                name="caption"
+                placeholder="Movie caption"
+                value={movie.caption}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
+              border-0 focus:outline-none focus:ring-0"
+                type="text"
+                name="genre"
+                placeholder="Movie genre e.g. action, romance, sc-fi"
+                value={movie.genre}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
-          <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
-            <input
-              className="block w-full text-sm text-slate-500 bg-transparent
+          <div className="flex justify-between items-center flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
               border-0 focus:outline-none focus:ring-0"
-              type="text"
-              name="duration"
-              placeholder="Movie durations e.g. 1hr 30min"
-              value={movie.duration}
-              onChange={handleChange}
-              required
-            />
+                type="text"
+                name="imageUrl"
+                placeholder="Movie imageUrl URL"
+                value={movie.imageUrl}
+                onChange={handleChange}
+                pattern="https?://.+(\.png|\.jpg|\.jpeg|\.gif)"
+                title="Please enter a valid image URL (http(s)://...(.png|.jpg|.jpeg|.gif))"
+                required
+              />
+            </div>
+
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
+              border-0 focus:outline-none focus:ring-0"
+                type="text"
+                name="banner"
+                placeholder="Movie banner URL"
+                value={movie.banner}
+                onChange={handleChange}
+                pattern="https?://.+(\.png|\.jpg|\.jpeg|\.gif)"
+                title="Please enter a valid image URL (http(s)://...(.png|.jpg|.jpeg|.gif))"
+                required
+              />
+            </div>
+
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
+              border-0 focus:outline-none focus:ring-0"
+                type="text"
+                name="videoUrl"
+                placeholder="Movie video URL"
+                value={movie.videoUrl}
+                onChange={handleChange}
+                pattern="https?://.+"
+                title="Please enter a valid video URL https?://.+(\.mp4|\.mov|\.avi|\.flv|\.wmv|\.mkv)"
+                required
+              />
+            </div>
           </div>
 
-          <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
-            <input
-              className="block w-full text-sm text-slate-500 bg-transparent
+          <div className="flex justify-between items-center flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
               border-0 focus:outline-none focus:ring-0"
-              type="text"
-              name="genre"
-              placeholder="Movie genre e.g. action, romance, sc-fi"
-              value={movie.genre}
-              onChange={handleChange}
-              required
-            />
+                type="text"
+                name="released"
+                placeholder="Movie release date e.g. 1st March 2024"
+                value={movie.released}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
+              <input
+                className="block w-full text-sm text-slate-500 bg-transparent
+              border-0 focus:outline-none focus:ring-0"
+                type="text"
+                name="running"
+                placeholder="Movie runnings e.g. 1hr 30min"
+                value={movie.running}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
           <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">

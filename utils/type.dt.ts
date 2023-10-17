@@ -6,7 +6,7 @@ export interface MovieStruct {
   banner?: string
   caption?: string
   casts?: string
-  relased?: string
+  released?: string
   running?: string
   description: string
   timestamp: number
@@ -14,14 +14,16 @@ export interface MovieStruct {
 }
 
 export interface MovieParams {
-  poster: string
-  banner: string
   name: string
+  banner: string
+  imageUrl: string
+  videoUrl: string
   genre: string
-  casts: string
   description: string
+  caption: string
+  casts: string
+  running: string
   released: string
-  duration: string
 }
 
 export interface FeaturedStruct {

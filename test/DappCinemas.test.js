@@ -20,8 +20,8 @@ describe('Contracts', () => {
     'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.'
   const caption = 'Welcome to the Real World.'
   const casts = 'Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss'
-  const running = 136
-  const released = 915148800000
+  const running = '142 minutes'
+  const released = 'March 2nd, 2023'
 
   // Slot params
   const slotId = 1
