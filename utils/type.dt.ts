@@ -82,6 +82,7 @@ export interface GlobalState {
   bookModal: string
   deleteModal: string
   deleteSlotModal: string
+  finishSlotModal: string
   withdrawalModal: string
   findHolderModal: string
   holders: string[]

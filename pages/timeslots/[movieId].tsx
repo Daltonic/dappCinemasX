@@ -1,4 +1,4 @@
-import { DeleteSlot, TimeslotsTable } from '@/components'
+import { DeleteSlot, FinishSlot, TimeslotsTable } from '@/components'
 import { getTimeSlots } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { RootState, TimeSlotStruct } from '@/utils/type.dt'
@@ -43,11 +43,12 @@ const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
             transition duration-300 ease-in-out
             hover:bg-transparent hover:text-red-600"
         >
-          Back to slots
+          Back to Movies
         </Link>
       </div>
 
       <DeleteSlot />
+      <FinishSlot />
     </div>
   )
 }

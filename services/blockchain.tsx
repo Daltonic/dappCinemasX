@@ -208,6 +208,27 @@ const deleteSlot = async (slot: TimeSlotStruct) => {
   }
 }
 
+const finishSlot = async (slot: TimeSlotStruct) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.dappTickets.completeTickets(slot.id)
+
+    await tx.wait()
+    const timeSlots = await getTimeSlots(slot.movieId)
+    store.dispatch(setTimeslots(timeSlots))
+
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const getTimeSlots = async (movieId: number): Promise<TimeSlotStruct[]> => {
   const contract = await getEthereumContract()
   const timeSlots = await contract.dappCinemas.getTimeSlots(movieId)
@@ -269,6 +290,7 @@ export {
   getMovie,
   createSlot,
   deleteSlot,
+  finishSlot,
   getTimeSlots,
   getActiveTimeSlots,
 }
