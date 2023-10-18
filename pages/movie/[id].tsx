@@ -8,6 +8,7 @@ import {
   TimeSlotStruct,
 } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 interface PageProps {
@@ -16,17 +17,22 @@ interface PageProps {
 }
 
 const Page: NextPage<PageProps> = ({ movieData, slotsData }) => {
-  const { setMovie } = globalActions
+  const { setMovie, setTimeslots } = globalActions
   const dispatch = useDispatch()
-  dispatch(setMovie(movieData))
+  const { movie, timeslots } = useSelector(
+    (states: RootState) => states.globalStates
+  )
 
-  const { movie } = useSelector((states: RootState) => states.globalStates)
+  useEffect(() => {
+    dispatch(setMovie(movieData))
+    dispatch(setTimeslots(slotsData))
+  }, [dispatch, setMovie, setTimeslots, movieData, slotsData])
 
   return movie ? (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
       <Banner movie={movie as FeaturedStruct} ticket />
       <Details movie={movie} />
-      {slotsData.length > 0 && <TimeslotList slots={slotsData} />}
+      {slotsData.length > 0 && <TimeslotList slots={timeslots} />}
       <BookModal movie={movie} />
     </div>
   ) : (

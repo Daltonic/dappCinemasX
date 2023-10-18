@@ -1,21 +1,30 @@
 import { DeleteSlot, TimeslotsTable } from '@/components'
 import { getTimeSlots } from '@/services/blockchain'
-import { TimeSlotStruct } from '@/utils/type.dt'
+import { globalActions } from '@/store/globalSlices'
+import { RootState, TimeSlotStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
-  const slots = slotsData
+  const dispatch = useDispatch()
+  const { setTimeslots } = globalActions
+  const { timeslots } = useSelector((states: RootState) => states.globalStates)
+
   const router = useRouter()
   const { movieId } = router.query
+
+  useEffect(() => {
+    dispatch(setTimeslots(slotsData))
+  }, [dispatch, setTimeslots, slotsData])
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
       <h3 className="my-3 text-3xl font-bold">Manage Timeslots</h3>
 
-      <TimeslotsTable slots={slots} />
+      <TimeslotsTable slots={timeslots} />
 
       <div className="flex justify-center items-center space-x-2 mt-4">
         <Link
