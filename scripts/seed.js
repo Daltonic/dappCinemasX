@@ -1,3 +1,4 @@
+const { faker } = require('@faker-js/faker')
 const { ethers } = require('hardhat')
 const fs = require('fs')
 
@@ -99,21 +100,24 @@ async function createMovie(cinemaContract, movie) {
   await tx.wait()
 }
 
-async function createTimeSlot(cinemaContract, movieId, ticketCost) {
-  const startTime = Math.floor(Date.now()) // Current Unix timestamp
-  const endTime = Math.floor(Date.now()) + 7200 // Current Unix timestamp + 2 hours
-  const capacity = 50
-  const day = Math.floor(Date.now())
+async function createTimeSlot(cinemaContract, movieId, count) {
+  for (let i = 0; i < count; i++) {
+    const startTime = faker.date.future().getTime()
+    const endTime =
+      startTime + faker.number.int({ min: 1, max: 3 }) * 60 * 60 * 1000
+    const ticketCost = faker.number.float({ min: 0.02, max: 0.5 })
+    const capacity = faker.number.int({ min: 50, max: 200 })
 
-  const tx = await cinemaContract.addTimeSlot(
-    movieId,
-    toWei(ticketCost),
-    startTime,
-    endTime,
-    capacity,
-    day
-  )
-  await tx.wait()
+    const tx = await cinemaContract.addTimeSlot(
+      movieId,
+      [toWei(ticketCost)],
+      [startTime],
+      [endTime],
+      [capacity],
+      [startTime]
+    )
+    await tx.wait()
+  }
 }
 
 async function buyTicket(ticketContract, slotId, ticketCost) {
@@ -158,16 +162,21 @@ async function main() {
     const ticketCost = 0.01
 
     // Creates movie
-    movies.forEach(async (movie, i) => await createMovie(cinemaContract, movie))
+    // movies.forEach(async (movie, i) => {
+    //   await createMovie(cinemaContract, movie)
+    // })
 
     // Creates timeslot
-    // await createTimeSlot(cinemaContract, movieId, ticketCost)
+    movies.forEach(async (movie, i) => {
+      const count = faker.number.int({ min: 1, max: 4 })
+      await createTimeSlot(cinemaContract, i + 1, count)
+    })
 
     // Buys ticket
     // await buyTicket(ticketContract, slotId, ticketCost)
 
     // Reading results
-    await getMovies(cinemaContract)
+    // await getMovies(cinemaContract)
     // await getTimeslots(cinemaContract, movieId)
     // await getTickets(ticketContract, slotId)
 

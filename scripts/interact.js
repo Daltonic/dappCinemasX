@@ -100,7 +100,7 @@ async function main() {
 
     // Reading results
     // await getMovies(cinemaContract)
-    await getTimeslots(cinemaContract, 3)
+    // await getTimeslots(cinemaContract, movieId)
     // await getTickets(ticketContract, slotId)
 
     console.log('Contract interaction completed successfully.')

@@ -193,6 +193,14 @@ const getTimeSlots = async (movieId: number): Promise<TimeSlotStruct[]> => {
   return structuredSlots(timeSlots)
 }
 
+const getActiveTimeSlots = async (
+  movieId: number
+): Promise<TimeSlotStruct[]> => {
+  const contract = await getEthereumContract()
+  const timeSlots = await contract.dappCinemas.getActiveTimeSlots(movieId)
+  return structuredSlots(timeSlots)
+}
+
 const loadData = async () => {}
 
 const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
@@ -239,5 +247,6 @@ export {
   getMovies,
   getMovie,
   createSlot,
-  getTimeSlots
+  getTimeSlots,
+  getActiveTimeSlots,
 }

@@ -262,4 +262,32 @@ contract DappCinemas is DappShared, AccessControl {
             }
         }
     }
+    
+    function getActiveTimeSlots(
+        uint256 movieId
+    ) public view returns (TimeSlotStruct[] memory MovieSlots) {
+        uint256 available;
+        for (uint256 i = 0; i < _totalSlots.current(); i++) {
+            if (
+                movieTimeSlot[i + 1].movieId == movieId &&
+                !movieTimeSlot[i + 1].deleted &&
+                !movieTimeSlot[i + 1].completed
+            ) {
+                available++;
+            }
+        }
+
+        MovieSlots = new TimeSlotStruct[](available);
+
+        uint256 index;
+        for (uint256 i = 0; i < _totalSlots.current(); i++) {
+            if (
+                movieTimeSlot[i + 1].movieId == movieId &&
+                !movieTimeSlot[i + 1].deleted &&
+                !movieTimeSlot[i + 1].completed
+            ) {
+                MovieSlots[index++] = movieTimeSlot[i + 1];
+            }
+        }
+    }
 }

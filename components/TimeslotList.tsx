@@ -1,4 +1,5 @@
 import { globalActions } from '@/store/globalSlices'
+import { formatDate, formatTime } from '@/utils/helper'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -13,7 +14,8 @@ const TimeslotList: React.FC<{ slots: any[] }> = ({ slots }) => {
         {slots.map((slot: any, i: number) => (
           <li key={i} className="mb-2">
             <div className="flex items-center">
-              {slot.startTime} - {slot.endTime}
+              {formatDate(slot.day)} @{formatTime(slot.startTime)} -{' '}
+              {formatTime(slot.endTime)}
             </div>
           </li>
         ))}

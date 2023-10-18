@@ -9,6 +9,7 @@ export const generateMovieData = (n: number): MovieStruct[] => {
       id: i + 1,
       name: faker.word.words(5),
       imageUrl: faker.image.urlPicsumPhotos(),
+      videoUrl: faker.image.urlPicsumPhotos(),
       genre: faker.word.words(3),
       caption: faker.word.words(3),
       description: faker.lorem.paragraph(),
