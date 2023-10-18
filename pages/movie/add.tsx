@@ -42,7 +42,7 @@ const Page: NextPage = () => {
       new Promise<void>((resolve, reject) => {
         createMovie(movie)
           .then((tx: any) => {
-            console.log(movie)
+            console.log(tx)
             resetForm()
             resolve(tx)
           })

@@ -15,6 +15,7 @@ export interface MovieStruct {
 }
 
 export interface MovieParams {
+  id?: number,
   name: string
   banner: string
   imageUrl: string

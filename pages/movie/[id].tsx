@@ -1,6 +1,5 @@
 import { Banner, BookModal, Details, TimeslotList } from '@/components'
 import { getMovie } from '@/services/blockchain'
-import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
 
@@ -16,7 +15,7 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
       <Banner movie={movie as FeaturedStruct} ticket />
       <Details movie={movie} />
-      <TimeslotList slots={timeSlots} />
+      <TimeslotList slots={timeSlots} movieId={movie.id} />
       <BookModal movie={movie} />
     </div>
   )
@@ -24,7 +23,9 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
 
 export default Page
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const { id } = context.query
   const movieData: MovieStruct = await getMovie(Number(id))
   return {

@@ -3,6 +3,7 @@ import address from '@/contracts/contractAddress.json'
 import dappCinemasAbi from '@/artifacts/contracts/DappCinemas.sol/DappCinemas.json'
 import dappTicketsAbi from '@/artifacts/contracts/DappTickets.sol/DappTickets.json'
 import { MovieParams, MovieStruct } from '@/utils/type.dt'
+import { store } from '@/store'
 
 const toWei = (num: number) => ethers.parseEther(num.toString())
 const fromWei = (num: number) => ethers.formatEther(num)
@@ -87,6 +88,37 @@ const createMovie = async (movie: MovieParams) => {
   }
 }
 
+const updateMovie = async (movie: MovieParams) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.dappCinemas.updateMovie(
+      movie.id,
+      movie.name,
+      movie.banner,
+      movie.imageUrl,
+      movie.videoUrl,
+      movie.genre,
+      movie.description,
+      movie.caption,
+      movie.casts,
+      movie.running,
+      movie.released
+    )
+
+    await tx.wait()
+
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const getMovies = async (): Promise<MovieStruct[]> => {
   const contract = await getEthereumContract()
   const movies = await contract.dappCinemas.getMovies()
@@ -120,4 +152,4 @@ const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
-export { createMovie, loadData, getMovies, getMovie }
+export { createMovie, updateMovie, loadData, getMovies, getMovie }
