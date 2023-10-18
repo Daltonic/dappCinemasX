@@ -4,6 +4,10 @@ import DatePicker from 'react-datepicker'
 import { formatTime } from '@/utils/helper'
 import { NextPage } from 'next'
 import { AiOutlinePlus } from 'react-icons/ai'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
+import { createSlot } from '@/services/blockchain'
+import { TimeSlotParams } from '@/utils/type.dt'
 
 type Slot = {
   startTime: number
@@ -26,6 +30,9 @@ const Page: NextPage = () => {
   const [endTimes, setEndTimes] = useState<number[]>([])
   const [capacities, setCapacities] = useState<number[]>([])
   const [viewingDays, setViewingDays] = useState<number[]>([])
+
+  const router = useRouter()
+  const { movieId } = router.query
 
   const initAvailableSlot = useCallback(() => {
     const timestamps: number[] = []
@@ -136,7 +143,31 @@ const Page: NextPage = () => {
     )
       return
 
-    console.log('Saved!')
+    const timeSlotParams: TimeSlotParams = {
+      movieId: Number(movieId),
+      ticketCosts,
+      startTimes,
+      endTimes,
+      capacities,
+      days: viewingDays,
+    }
+
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        createSlot(timeSlotParams)
+          .then((tx: any) => {
+            console.log(tx)
+            router.push('/timeslots/' + movieId)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Movie deleted successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   return (

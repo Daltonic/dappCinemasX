@@ -15,7 +15,7 @@ export interface MovieStruct {
 }
 
 export interface MovieParams {
-  id?: number,
+  id?: number
   name: string
   banner: string
   imageUrl: string
@@ -34,6 +34,15 @@ export interface FeaturedStruct {
   banner: string
   caption: string
   description?: string
+}
+
+export interface TimeSlotParams {
+  movieId: number,
+  ticketCosts: string[]
+  startTimes: number[]
+  endTimes: number[]
+  capacities: number[]
+  days: number[]
 }
 
 export interface TimeSlotStruct {

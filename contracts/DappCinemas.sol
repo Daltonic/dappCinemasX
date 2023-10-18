@@ -134,31 +134,34 @@ contract DappCinemas is DappShared, AccessControl {
 
     function addTimeSlot(
         uint256 _movieId,
-        uint256 _ticketCost,
-        uint256 _startTime,
-        uint256 _endTime,
-        uint256 _capacity,
-        uint256 _day
+        uint256[] memory _ticketCosts,
+        uint256[] memory _startTimes,
+        uint256[] memory _endTimes,
+        uint256[] memory _capacities,
+        uint256[] memory _days
     ) public onlyOwner {
         require(movieExists[_movieId], "Movie does not exist");
+        require(_ticketCosts.length > 0, "Ticket costs cannot be null");
+        require(_startTimes.length > 0, "Start times cannot be null");
+        require(_endTimes.length > 0, "End times cannot be null");
+        require(_capacities.length > 0, "Capacities cannot be null");
+        require(_days.length > 0, "Days cannot be null");
 
-        _totalSlots.increment();
-        uint256 newSlotId = _totalSlots.current();
+        for (uint i = 0; i < _ticketCosts.length; i++) {
+            _totalSlots.increment();
+            uint256 newSlotId = _totalSlots.current();
 
-        TimeSlotStruct memory timeSlot;
-        timeSlot.id = newSlotId;
-        timeSlot.movieId = _movieId;
-        timeSlot.ticketCost = _ticketCost;
-        timeSlot.startTime = _startTime;
-        timeSlot.endTime = _endTime;
-        timeSlot.capacity = _capacity;
-        timeSlot.seats = 0;
-        timeSlot.deleted = false;
-        timeSlot.completed = false;
-        timeSlot.day = _day;
-        timeSlot.balance = 0;
+            TimeSlotStruct memory timeSlot;
+            timeSlot.id = newSlotId;
+            timeSlot.movieId = _movieId;
+            timeSlot.ticketCost = _ticketCosts[i];
+            timeSlot.startTime = _startTimes[i];
+            timeSlot.endTime = _endTimes[i];
+            timeSlot.capacity = _capacities[i];
+            timeSlot.day = _days[i];
 
-        movieTimeSlot[newSlotId] = timeSlot;
+            movieTimeSlot[newSlotId] = timeSlot;
+        }
 
         emit Action("Timeslot added");
     }
