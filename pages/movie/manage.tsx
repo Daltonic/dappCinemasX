@@ -1,15 +1,21 @@
 import { DeleteMovie, MoviesTable, Withdrawal } from '@/components'
+import { getMovies } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { generateMovieData } from '@/utils/fakeData'
-import { MovieStruct } from '@/utils/type.dt'
+import { MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
-  const movies = moviesData
   const dispatch = useDispatch()
-  const { setWithdrawalModal } = globalActions
+  const { setWithdrawalModal, setMovies } = globalActions
+
+  const { movies } = useSelector((states: RootState) => states.globalStates)
+
+  useEffect(() => {
+    dispatch(setMovies(moviesData))
+  }, [dispatch, setMovies, moviesData])
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
@@ -45,7 +51,7 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
 export default Page
 
 export const getServerSideProps = async () => {
-  const moviesData: MovieStruct[] = generateMovieData(5)
+  const moviesData: MovieStruct[] = await getMovies()
   return {
     props: { moviesData: JSON.parse(JSON.stringify(moviesData)) },
   }

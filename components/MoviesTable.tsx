@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { MovieActions } from '.'
+import { formatDate } from '@/utils/helper'
 
 const MoviesTable: React.FC<{ movies: MovieStruct[] }> = ({ movies }) => {
   return (
@@ -58,7 +59,7 @@ const MoviesTable: React.FC<{ movies: MovieStruct[] }> = ({ movies }) => {
                 <Link href={'/movie/' + movie.id}>{movie.name}</Link>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">{movie.genre}</td>
-              <td className="px-6 py-4 whitespace-nowrap">12.45 pm</td>
+              <td className="px-6 py-4 whitespace-nowrap">{formatDate(movie.timestamp)}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <MovieActions movie={movie} index={i} />
               </td>

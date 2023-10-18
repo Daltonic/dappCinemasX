@@ -85,7 +85,7 @@ async function main() {
     cinemaContract = await ethers.getContractAt('DappCinemas', cinemaAddress)
     ticketContract = await ethers.getContractAt('DappTickets', ticketAddress)
 
-    const movieId = 2
+    const movieId = 1
     const slotId = 1
     const ticketCost = 0.01
 
@@ -93,15 +93,15 @@ async function main() {
     await createMovie(cinemaContract)
 
     // Creates timeslot
-    await createTimeSlot(cinemaContract, movieId, ticketCost)
+    // await createTimeSlot(cinemaContract, movieId, ticketCost)
 
     // Buys ticket
-    await buyTicket(ticketContract, slotId, ticketCost)
+    // await buyTicket(ticketContract, slotId, ticketCost)
 
     // Reading results
-    await getMovies(cinemaContract)
-    await getTimeslots(cinemaContract, movieId)
-    await getTickets(ticketContract, slotId)
+    // await getMovies(cinemaContract)
+    // await getTimeslots(cinemaContract, movieId)
+    // await getTickets(ticketContract, slotId)
 
     console.log('Contract interaction completed successfully.')
   } catch (error) {
