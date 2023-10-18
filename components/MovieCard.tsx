@@ -58,7 +58,7 @@ const MovieCard: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
                 maxLength: 21,
               })}
             </Link>
-            <small className=" mb-2">01 hours 46 minutes</small>
+            <small className=" mb-2">{movie.running}</small>
 
             <p className="flex flex-col text-gray-600 text-sm space-y-1 mt-2 max-h-44 overflow-hidden">
               <span>

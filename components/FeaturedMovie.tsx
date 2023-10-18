@@ -12,7 +12,7 @@ const FeaturedMovie: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
         <div className="flex flex-col md:flex-row">
           <div
             className="md:w-2/5 bg-cover bg-cente bg-no-repeat h-[30rem] object-cover relative"
-            style={{ backgroundImage: 'url(' + movie.imageUrl + ')' }}
+            style={{ backgroundImage: 'url(' + movie.banner + ')' }}
           >
             <div
               className="absolute bottom-0 left-0 right-0 h-full

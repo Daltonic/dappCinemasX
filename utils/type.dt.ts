@@ -1,9 +1,10 @@
 export interface MovieStruct {
   id: number
   name: string
-  imageUrl: string
-  genre: string
   banner?: string
+  imageUrl: string
+  videoUrl: string
+  genre: string
   caption?: string
   casts?: string
   released?: string
@@ -29,7 +30,7 @@ export interface MovieParams {
 export interface FeaturedStruct {
   id: number
   name: string
-  imageUrl: string
+  banner: string
   caption: string
   description?: string
 }

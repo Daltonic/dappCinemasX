@@ -11,7 +11,7 @@ const Banner: React.FC<{ movie: FeaturedStruct; ticket?: boolean }> = ({
 
   return (
     <div
-      style={{ backgroundImage: 'url(' + movie.imageUrl + ')' }}
+      style={{ backgroundImage: 'url(' + movie.banner + ')' }}
       className="w-full h-full rounded-3xl bg-no-repeat bg-cover bg-center mt-8 mb-4 relative"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-75 rounded-3xl"></div>

@@ -1,7 +1,8 @@
 import { Banner, BookModal, Details, TimeslotList } from '@/components'
+import { getMovie } from '@/services/blockchain'
 import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct } from '@/utils/type.dt'
-import { NextPage } from 'next'
+import { GetServerSidePropsContext, NextPage } from 'next'
 
 const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
   const movie = movieData
@@ -23,8 +24,9 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
 
 export default Page
 
-export const getServerSideProps = async () => {
-  const movieData: MovieStruct = generateMovieData(1)[0]
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const { id } = context.query
+  const movieData: MovieStruct = await getMovie(Number(id))
   return {
     props: { movieData: JSON.parse(JSON.stringify(movieData)) },
   }

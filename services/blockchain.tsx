@@ -93,6 +93,12 @@ const getMovies = async (): Promise<MovieStruct[]> => {
   return structuredMovies(movies)
 }
 
+const getMovie = async (movieId: number): Promise<MovieStruct> => {
+  const contract = await getEthereumContract()
+  const movie = await contract.dappCinemas.getMovie(movieId)
+  return structuredMovies([movie])[0]
+}
+
 const loadData = async () => {}
 
 const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
@@ -102,6 +108,7 @@ const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
       name: movie.name,
       banner: movie.banner,
       imageUrl: movie.imageUrl,
+      videoUrl: movie.videoUrl,
       genre: movie.genre,
       caption: movie.caption,
       casts: movie.casts,
@@ -113,4 +120,4 @@ const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
-export { createMovie, loadData, getMovies }
+export { createMovie, loadData, getMovies, getMovie }

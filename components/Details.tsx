@@ -17,7 +17,7 @@ const Details: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
             <Plyr
               source={{
                 type: 'video',
-                sources: [{ src: 'JzmmS6ieq7I', provider: 'youtube' }],
+                sources: [{ src: movie.videoUrl, provider: 'youtube' }],
               }}
             />
           </div>
@@ -27,9 +27,8 @@ const Details: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
               <strong>Genre:</strong> Action
             </span>
             <span>
-              <strong>Cast:</strong> 50 Cent, Andy Garcia, Dolph Ludngren, Iko
-              Uwais, Jason Statham, Megan Fox, Randy Couture, Sylvester
-              Stallone, Tony Jaa
+              <strong>Cast:</strong>
+              {movie.casts}
             </span>
           </p>
         </div>
