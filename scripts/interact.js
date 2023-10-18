@@ -90,7 +90,7 @@ async function main() {
     const ticketCost = 0.01
 
     // Creates movie
-    await createMovie(cinemaContract)
+    // await createMovie(cinemaContract)
 
     // Creates timeslot
     // await createTimeSlot(cinemaContract, movieId, ticketCost)
@@ -100,7 +100,7 @@ async function main() {
 
     // Reading results
     // await getMovies(cinemaContract)
-    // await getTimeslots(cinemaContract, movieId)
+    await getTimeslots(cinemaContract, 3)
     // await getTickets(ticketContract, slotId)
 
     console.log('Contract interaction completed successfully.')

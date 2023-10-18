@@ -2,7 +2,12 @@ import { ethers } from 'ethers'
 import address from '@/contracts/contractAddress.json'
 import dappCinemasAbi from '@/artifacts/contracts/DappCinemas.sol/DappCinemas.json'
 import dappTicketsAbi from '@/artifacts/contracts/DappTickets.sol/DappTickets.json'
-import { MovieParams, MovieStruct, TimeSlotParams } from '@/utils/type.dt'
+import {
+  MovieParams,
+  MovieStruct,
+  TimeSlotParams,
+  TimeSlotStruct,
+} from '@/utils/type.dt'
 import { store } from '@/store'
 import { globalActions } from '@/store/globalSlices'
 
@@ -182,6 +187,12 @@ const createSlot = async (data: TimeSlotParams) => {
   }
 }
 
+const getTimeSlots = async (movieId: number): Promise<TimeSlotStruct[]> => {
+  const contract = await getEthereumContract()
+  const timeSlots = await contract.dappCinemas.getTimeSlots(movieId)
+  return structuredSlots(timeSlots)
+}
+
 const loadData = async () => {}
 
 const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
@@ -203,6 +214,23 @@ const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
+const structuredSlots = (slots: TimeSlotStruct[]): TimeSlotStruct[] =>
+  slots
+    .map((slot) => ({
+      id: Number(slot.id),
+      movieId: Number(slot.movieId),
+      ticketCost: Number(fromWei(slot.ticketCost)),
+      startTime: Number(slot.startTime),
+      endTime: Number(slot.endTime),
+      capacity: Number(slot.capacity),
+      seats: Number(slot.seats),
+      deleted: slot.deleted,
+      completed: slot.completed,
+      day: Number(slot.day),
+      balance: Number(fromWei(slot.balance)),
+    }))
+    .sort((a, b) => b.startTime - a.startTime)
+
 export {
   createMovie,
   updateMovie,
@@ -211,4 +239,5 @@ export {
   getMovies,
   getMovie,
   createSlot,
+  getTimeSlots
 }

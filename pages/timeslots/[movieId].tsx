@@ -1,7 +1,8 @@
 import { DeleteSlot, TimeslotsTable } from '@/components'
+import { getTimeSlots } from '@/services/blockchain'
 import { generateFakeTimeSlots } from '@/utils/fakeData'
 import { TimeSlotStruct } from '@/utils/type.dt'
-import { NextPage } from 'next'
+import { GetServerSidePropsContext, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -45,8 +46,12 @@ const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
 
 export default Page
 
-export const getServerSideProps = async () => {
-  const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(5)
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { movieId } = context.query
+  const slotsData: TimeSlotStruct[] = await getTimeSlots(Number(movieId))
+  // const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(5)
 
   return {
     props: { slotsData: JSON.parse(JSON.stringify(slotsData)) },
