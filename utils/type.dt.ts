@@ -78,6 +78,7 @@ export interface TruncateParams {
 }
 
 export interface GlobalState {
+  balance: number
   wallet: string
   owner: string
   bookModal: string

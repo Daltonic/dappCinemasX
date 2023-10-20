@@ -5,13 +5,16 @@ import { MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { FaEthereum } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
   const dispatch = useDispatch()
   const { setWithdrawalModal, setMovies } = globalActions
 
-  const { movies } = useSelector((states: RootState) => states.globalStates)
+  const { movies, balance } = useSelector(
+    (states: RootState) => states.globalStates
+  )
 
   useEffect(() => {
     dispatch(setMovies(moviesData))
@@ -34,12 +37,12 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
         </Link>
         <button
           className="bg-red-600 font-bold text-white border-2 border-red-600
-            py-2 px-8 rounded-full
+            py-2 px-8 rounded-full flex justify-center items-center space-x-1
             transition duration-300 ease-in-out
             hover:bg-transparent hover:text-red-600"
           onClick={() => dispatch(setWithdrawalModal('scale-100'))}
         >
-          Withdraw
+          <span>Withdraw</span> <FaEthereum /> {balance.toFixed(2)}
         </button>
       </div>
       <Withdrawal />

@@ -624,8 +624,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappTickets.sol": {
-      "lastModificationDate": 1697800396984,
-      "contentHash": "3d2e89e60cb57a3319236b45afefd413",
+      "lastModificationDate": 1697816644797,
+      "contentHash": "d6456514e232b01f7eb8e1691965e7c8",
       "sourceName": "contracts/DappTickets.sol",
       "solcConfig": {
         "version": "0.8.19",

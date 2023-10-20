@@ -1,6 +1,7 @@
 import { GlobalState } from '@/utils/type.dt'
 
 export const globalStates: GlobalState = {
+  balance: 0,
   wallet: '',
   owner: '',
   bookModal: 'scale-0',

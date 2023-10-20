@@ -1,13 +1,15 @@
+import { withdrawal } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { RootState } from '@/utils/type.dt'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const Withdrawal: React.FC = () => {
   const dispatch = useDispatch()
   const { setWithdrawalModal } = globalActions
-  const { withdrawalModal } = useSelector(
+  const { withdrawalModal, balance } = useSelector(
     (states: RootState) => states.globalStates
   )
   const [transfer, setTransfer] = useState({
@@ -27,7 +29,22 @@ const Withdrawal: React.FC = () => {
     e.preventDefault()
     if (!transfer.account || !transfer.amount) return
 
-    console.log(transfer)
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        withdrawal(transfer.account, Number(transfer.amount))
+          .then((tx: any) => {
+            console.log(tx)
+            closeModal()
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Money transfered successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -87,8 +104,9 @@ const Withdrawal: React.FC = () => {
               type="number"
               step={0.01}
               min={0.01}
+              max={balance.toFixed(2)}
               name="amount"
-              placeholder="Amount (ETH)"
+              placeholder={`Amount (Max ${balance.toFixed(2)} ETH)`}
               value={transfer.amount}
               onChange={handleChange}
               required

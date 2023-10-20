@@ -10,6 +10,9 @@ export const globalActions = {
   setOwner: (state: GlobalState, action: PayloadAction<string>) => {
     state.owner = action.payload
   },
+  setBalance: (state: GlobalState, action: PayloadAction<number>) => {
+    state.balance = action.payload
+  },
   setWallet: (state: GlobalState, action: PayloadAction<string>) => {
     state.wallet = action.payload
   },

@@ -129,7 +129,10 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
         require(dappCinemas.getTimeSlot(slotId).id == slotId, "Slot not found");
 
         for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (ticketBuild[i].ticket.id == i && !ticketBuild[i].ticket.used) {
+            if (
+                ticketBuild[i].ticket.slotId == slotId &&
+                !ticketBuild[i].ticket.used
+            ) {
                 ticketBuild[i].ticket.used = true;
                 balance += ticketBuild[i].ticket.cost;
             }
@@ -140,11 +143,14 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
         require(dappCinemas.getTimeSlot(slotId).id == slotId, "Slot not found");
 
         for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            uint256 _tokenId = ticketBuild[i].ticket.id;
-            uint256 amount = ticketBuild[i].ticket.cost;
-            address owner = ticketBuild[i].ticket.owner;
+            if (
+                ticketBuild[i].ticket.slotId == slotId &&
+                !ticketBuild[i].ticket.used
+            ) {
+                uint256 _tokenId = ticketBuild[i].ticket.id;
+                uint256 amount = ticketBuild[i].ticket.cost;
+                address owner = ticketBuild[i].ticket.owner;
 
-            if (_tokenId == i && !ticketBuild[i].ticket.used) {
                 ticketBuild[i].ticket.refunded = true;
                 payTo(owner, amount);
                 _burn(owner, _tokenId, 1);

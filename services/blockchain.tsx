@@ -15,7 +15,7 @@ import { globalActions } from '@/store/globalSlices'
 const toWei = (num: number) => ethers.parseEther(num.toString())
 const fromWei = (num: number) => ethers.formatEther(num)
 
-const { setMovies, setTimeslots, setOwner } = globalActions
+const { setMovies, setTimeslots, setOwner, setBalance } = globalActions
 
 const Contract = {
   dappCinemasAddress: address.cinemaContract,
@@ -223,6 +223,9 @@ const finishSlot = async (slot: TimeSlotStruct) => {
     const timeSlots = await getTimeSlots(slot.movieId)
     store.dispatch(setTimeslots(timeSlots))
 
+    const balance = await contract.dappTickets.balance()
+    store.dispatch(setBalance(Number(fromWei(balance))))
+
     return Promise.resolve(tx)
   } catch (error) {
     reportError(error)
@@ -279,10 +282,37 @@ const getTimeSlotsHolders = async (slotId: number): Promise<string[]> => {
   return holders
 }
 
+const withdrawal = async (receiver: string, amount: number) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.dappTickets.withdrawTo(receiver, toWei(amount))
+
+    await tx.wait()
+    const movies = await getMovies()
+    store.dispatch(setMovies(movies))
+
+    const balance = await contract.dappTickets.balance()
+    store.dispatch(setBalance(Number(fromWei(balance))))
+
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const loadData = async () => {
   const contract = await getEthereumContract()
   const owner = await contract.dappCinemas.owner()
+  const balance = await contract.dappTickets.balance()
+
   store.dispatch(setOwner(owner))
+  store.dispatch(setBalance(Number(fromWei(balance))))
 }
 
 const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
@@ -350,4 +380,5 @@ export {
   getActiveTimeSlots,
   getTimeSlotsTickets,
   getTimeSlotsHolders,
+  withdrawal,
 }
