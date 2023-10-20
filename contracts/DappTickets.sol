@@ -66,37 +66,30 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
     }
 
     function buyTickets(uint256 slotId, uint256 tickets) public payable {
-        require(
-            msg.value >= dappCinemas.hasSlot(slotId).ticketCost * tickets,
-            "Insufficient amount"
-        );
-        require(
-            dappCinemas.hasSlot(slotId).capacity >
-                dappCinemas.hasSlot(slotId).seats,
-            "Out of capacity"
-        );
+        TimeSlotStruct memory slot = dappCinemas.getTimeSlot(slotId);
+
+        require(msg.value >= slot.ticketCost * tickets, "Insufficient amount");
+        require(slot.capacity > slot.seats, "Out of capacity");
 
         for (uint256 i = 0; i < tickets; i++) {
             _totalTickets.increment();
             TicketStruct memory ticket;
 
             ticket.id = _totalTickets.current();
-            ticket.cost = dappCinemas.hasSlot(slotId).ticketCost;
-            ticket.day = dappCinemas.hasSlot(slotId).day;
+            ticket.cost = slot.ticketCost;
+            ticket.day = slot.day;
             ticket.slotId = slotId;
             ticket.owner = msg.sender;
             ticket.timestamp = currentTime();
-
             ticketBuild[ticket.id].ticket = ticket;
             ticketHolder[slotId].push(msg.sender);
         }
 
-        dappCinemas.hasSlot(slotId).seats += tickets;
-        dappCinemas.hasSlot(slotId).balance +=
-            dappCinemas.hasSlot(slotId).ticketCost *
-            tickets;
+        slot.seats += tickets;
+        slot.balance += slot.ticketCost * tickets;
 
         mintBatch(tickets);
+        dappCinemas.setTimeSlot(slot);
     }
 
     function mintBatch(uint256 _numOfTickets) internal {
@@ -133,7 +126,7 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
     }
 
     function invalidateTickets(uint256 slotId) internal onlyOwner {
-        require(dappCinemas.hasSlot(slotId).id == slotId, "Slot not found");
+        require(dappCinemas.getTimeSlot(slotId).id == slotId, "Slot not found");
 
         for (uint256 i = 1; i <= _totalTickets.current(); i++) {
             if (ticketBuild[i].ticket.id == i && !ticketBuild[i].ticket.used) {
@@ -144,7 +137,7 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
     }
 
     function refundTickets(uint256 slotId) internal onlyOwner {
-        require(dappCinemas.hasSlot(slotId).id == slotId, "Slot not found");
+        require(dappCinemas.getTimeSlot(slotId).id == slotId, "Slot not found");
 
         for (uint256 i = 1; i <= _totalTickets.current(); i++) {
             uint256 _tokenId = ticketBuild[i].ticket.id;

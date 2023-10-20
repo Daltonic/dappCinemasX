@@ -624,8 +624,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappTickets.sol": {
-      "lastModificationDate": 1697131004955,
-      "contentHash": "364c6644fa0b964675c526ac81906094",
+      "lastModificationDate": 1697798054675,
+      "contentHash": "467f4dae3ab2af58f769c8fa8ce6c115",
       "sourceName": "contracts/DappTickets.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -667,8 +667,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappShared.sol": {
-      "lastModificationDate": 1697130993019,
-      "contentHash": "bcf50421ff9a927c407f0ba130fa907d",
+      "lastModificationDate": 1697797758674,
+      "contentHash": "2c5ecf529ab3d108fae00340dd54d389",
       "sourceName": "contracts/DappShared.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -704,8 +704,8 @@
       ]
     },
     "/Users/daltonic/Sites/dappCinemas/contracts/DappCinemas.sol": {
-      "lastModificationDate": 1697652211527,
-      "contentHash": "4e12f59b3e790db3de9bce49c39e2d33",
+      "lastModificationDate": 1697797761484,
+      "contentHash": "6ef261071542c8a710b10c0620aca0bf",
       "sourceName": "contracts/DappCinemas.sol",
       "solcConfig": {
         "version": "0.8.19",

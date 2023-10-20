@@ -2,6 +2,9 @@ import { GlobalState, MovieStruct, TimeSlotStruct } from '@/utils/type.dt'
 import { PayloadAction } from '@reduxjs/toolkit'
 
 export const globalActions = {
+  setOwner: (state: GlobalState, action: PayloadAction<string>) => {
+    state.owner = action.payload
+  },
   setWallet: (state: GlobalState, action: PayloadAction<string>) => {
     state.wallet = action.payload
   },

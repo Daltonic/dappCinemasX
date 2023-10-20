@@ -26,20 +26,6 @@ contract DappCinemas is DappShared, AccessControl {
         bool deleted;
     }
 
-    struct TimeSlotStruct {
-        uint256 id;
-        uint256 movieId;
-        uint256 ticketCost;
-        uint256 startTime;
-        uint256 endTime;
-        uint256 capacity;
-        uint256 seats;
-        bool deleted;
-        bool completed;
-        uint256 day;
-        uint256 balance;
-    }
-
     mapping(uint256 => bool) movieExists;
     mapping(uint256 => MovieStruct) movies;
     mapping(uint256 => TimeSlotStruct) movieTimeSlot;
@@ -51,12 +37,6 @@ contract DappCinemas is DappShared, AccessControl {
         _setupRole(TICKET_ROLE, _dappTicket);
         _revokeRole(TICKET_ROLE, _current_controller);
         _current_controller = _dappTicket;
-    }
-
-    function hasSlot(
-        uint256 slotId
-    ) public view returns (TimeSlotStruct memory) {
-        return movieTimeSlot[slotId];
     }
 
     function addMovie(
@@ -184,6 +164,14 @@ contract DappCinemas is DappShared, AccessControl {
         emit Action("Timeslot completed");
     }
 
+    function setTimeSlot(TimeSlotStruct memory slot) public {
+        require(
+            hasRole(TICKET_ROLE, msg.sender),
+            "Caller is not a ticket contract"
+        );
+        movieTimeSlot[slot.id] = slot;
+    }
+
     function getMovies() public view returns (MovieStruct[] memory Movies) {
         uint256 totalMovies;
         for (uint256 i = 1; i <= _totalMovies.current(); i++) {
@@ -262,7 +250,7 @@ contract DappCinemas is DappShared, AccessControl {
             }
         }
     }
-    
+
     function getActiveTimeSlots(
         uint256 movieId
     ) public view returns (TimeSlotStruct[] memory MovieSlots) {

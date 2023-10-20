@@ -120,11 +120,13 @@ async function createTimeSlot(cinemaContract, movieId, count) {
   }
 }
 
-async function buyTicket(ticketContract, slotId, ticketCost) {
-  const tx = await ticketContract.buyTickets(slotId, 1, {
-    value: toWei(ticketCost),
-  })
-  await tx.wait()
+async function buyTicket(ticketContract, slotId, ticketCost, count) {
+  for (let i = 0; i < count; i++) {
+    const tx = await ticketContract.buyTickets(slotId, 1, {
+      value: toWei(ticketCost),
+    })
+    await tx.wait()
+  }
 }
 
 async function getMovies(cinemaContract) {
@@ -159,7 +161,7 @@ async function main() {
 
     const movieId = 1
     const slotId = 1
-    const ticketCost = 0.01
+    const ticketCost = 0.5
 
     // Creates movie
     // movies.forEach(async (movie, i) => {
@@ -167,13 +169,13 @@ async function main() {
     // })
 
     // Creates timeslot
-    movies.forEach(async (movie, i) => {
-      const count = faker.number.int({ min: 1, max: 4 })
-      await createTimeSlot(cinemaContract, i + 1, count)
-    })
+    // movies.forEach(async (movie, i) => {
+    //   const count = faker.number.int({ min: 1, max: 4 })
+    //   await createTimeSlot(cinemaContract, i + 1, count)
+    // })
 
     // Buys ticket
-    // await buyTicket(ticketContract, slotId, ticketCost)
+    // await buyTicket(ticketContract, slotId, ticketCost, 5)
 
     // Reading results
     // await getMovies(cinemaContract)

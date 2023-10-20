@@ -79,6 +79,7 @@ export interface TruncateParams {
 
 export interface GlobalState {
   wallet: string
+  owner: string
   bookModal: string
   deleteModal: string
   deleteSlotModal: string

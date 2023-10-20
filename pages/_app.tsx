@@ -9,11 +9,13 @@ import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'
 import { Footer, Header, NavBtn, Spacer } from '@/components'
+import { loadData } from '@/services/blockchain'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState<boolean>(false)
 
   useEffect(() => {
+    loadData()
     setShowChild(true)
   }, [])
 

@@ -14,7 +14,7 @@ import { globalActions } from '@/store/globalSlices'
 const toWei = (num: number) => ethers.parseEther(num.toString())
 const fromWei = (num: number) => ethers.formatEther(num)
 
-const { setMovies, setTimeslots } = globalActions
+const { setMovies, setTimeslots, setOwner } = globalActions
 
 const Contract = {
   dappCinemasAddress: address.cinemaContract,
@@ -229,6 +229,29 @@ const finishSlot = async (slot: TimeSlotStruct) => {
   }
 }
 
+const bookSlot = async (slot: TimeSlotStruct, tickets: number) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.dappTickets.buyTickets(slot.id, tickets, {
+      value: toWei(slot.ticketCost * tickets),
+    })
+
+    await tx.wait()
+    const timeSlots = await getActiveTimeSlots(slot.movieId)
+    store.dispatch(setTimeslots(timeSlots))
+
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const getTimeSlots = async (movieId: number): Promise<TimeSlotStruct[]> => {
   const contract = await getEthereumContract()
   const timeSlots = await contract.dappCinemas.getTimeSlots(movieId)
@@ -243,7 +266,11 @@ const getActiveTimeSlots = async (
   return structuredSlots(timeSlots)
 }
 
-const loadData = async () => {}
+const loadData = async () => {
+  const contract = await getEthereumContract()
+  const owner = await contract.dappCinemas.owner()
+  store.dispatch(setOwner(owner))
+}
 
 const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
   movies
@@ -291,6 +318,7 @@ export {
   createSlot,
   deleteSlot,
   finishSlot,
+  bookSlot,
   getTimeSlots,
   getActiveTimeSlots,
 }

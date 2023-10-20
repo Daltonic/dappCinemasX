@@ -33,7 +33,7 @@ const Page: NextPage<PageProps> = ({ movieData, slotsData }) => {
       <Banner movie={movie as FeaturedStruct} ticket />
       <Details movie={movie} />
       {slotsData.length > 0 && <TimeslotList slots={timeslots} />}
-      <BookModal movie={movie} />
+      <BookModal timeSlots={timeslots} />
     </div>
   ) : (
     <div>Loading...</div>
