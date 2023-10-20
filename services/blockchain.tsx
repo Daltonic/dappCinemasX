@@ -5,6 +5,7 @@ import dappTicketsAbi from '@/artifacts/contracts/DappTickets.sol/DappTickets.js
 import {
   MovieParams,
   MovieStruct,
+  TicketStruct,
   TimeSlotParams,
   TimeSlotStruct,
 } from '@/utils/type.dt'
@@ -266,6 +267,18 @@ const getActiveTimeSlots = async (
   return structuredSlots(timeSlots)
 }
 
+const getTimeSlotsTickets = async (slotId: number): Promise<TicketStruct[]> => {
+  const contract = await getEthereumContract()
+  const tickets = await contract.dappTickets.getTickets(slotId)
+  return structuredTickets(tickets)
+}
+
+const getTimeSlotsHolders = async (slotId: number): Promise<string[]> => {
+  const contract = await getEthereumContract()
+  const holders = await contract.dappTickets.getTicketHolders(slotId)
+  return holders
+}
+
 const loadData = async () => {
   const contract = await getEthereumContract()
   const owner = await contract.dappCinemas.owner()
@@ -308,6 +321,20 @@ const structuredSlots = (slots: TimeSlotStruct[]): TimeSlotStruct[] =>
     }))
     .sort((a, b) => b.startTime - a.startTime)
 
+const structuredTickets = (slots: TicketStruct[]): TicketStruct[] =>
+  slots
+    .map((slot) => ({
+      id: Number(slot.id),
+      movieId: Number(slot.movieId),
+      slotId: Number(slot.slotId),
+      cost: Number(fromWei(slot.cost)),
+      timestamp: Number(slot.timestamp),
+      day: Number(slot.day),
+      owner: slot.owner,
+      refunded: slot.refunded,
+    }))
+    .sort((a, b) => b.timestamp - a.timestamp)
+
 export {
   createMovie,
   updateMovie,
@@ -321,4 +348,6 @@ export {
   bookSlot,
   getTimeSlots,
   getActiveTimeSlots,
+  getTimeSlotsTickets,
+  getTimeSlotsHolders,
 }

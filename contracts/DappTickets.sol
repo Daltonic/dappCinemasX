@@ -176,6 +176,30 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
         }
     }
 
+    function getTickets(
+        uint256 slotId
+    ) public view returns (TicketStruct[] memory Tickets) {
+        uint256 available;
+        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
+            if (
+                ticketBuild[i].ticket.slotId == slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) available++;
+        }
+
+        Tickets = new TicketStruct[](available);
+
+        uint256 index;
+        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
+            if (
+                ticketBuild[i].ticket.slotId == slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) {
+                Tickets[index++] = ticketBuild[i].ticket;
+            }
+        }
+    }
+
     function withdrawTo(address to, uint256 amount) public onlyOwner {
         require(balance >= amount, "Insufficient fund");
         balance -= amount;

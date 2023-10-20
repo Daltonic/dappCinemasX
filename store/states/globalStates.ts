@@ -14,4 +14,5 @@ export const globalStates: GlobalState = {
   movie: null,
   timeslots: [],
   timeslot: null,
+  tickets: [],
 }

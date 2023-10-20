@@ -1,4 +1,9 @@
-import { GlobalState, MovieStruct, TimeSlotStruct } from '@/utils/type.dt'
+import {
+  GlobalState,
+  MovieStruct,
+  TicketStruct,
+  TimeSlotStruct,
+} from '@/utils/type.dt'
 import { PayloadAction } from '@reduxjs/toolkit'
 
 export const globalActions = {
@@ -46,5 +51,8 @@ export const globalActions = {
     action: PayloadAction<TimeSlotStruct | null>
   ) => {
     state.timeslot = action.payload
+  },
+  setTickets: (state: GlobalState, action: PayloadAction<TicketStruct[]>) => {
+    state.tickets = action.payload
   },
 }

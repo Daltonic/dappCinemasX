@@ -91,6 +91,7 @@ export interface GlobalState {
   movie: MovieStruct | null
   timeslots: TimeSlotStruct[]
   timeslot: TimeSlotStruct | null
+  tickets: TicketStruct[]
 }
 
 export interface RootState {

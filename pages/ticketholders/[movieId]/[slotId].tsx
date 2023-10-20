@@ -1,21 +1,30 @@
 import { FindHolder } from '@/components'
+import { getTimeSlotsHolders, getTimeSlotsTickets } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { generateTickets } from '@/utils/fakeData'
 import { truncate } from '@/utils/helper'
-import { TicketStruct } from '@/utils/type.dt'
-import { NextPage } from 'next'
+import { RootState, TicketStruct } from '@/utils/type.dt'
+import { GetServerSidePropsContext, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
+interface PageStruct {
+  ticketsData: TicketStruct[]
+  holdersData: string[]
+}
+
+const Page: NextPage<PageStruct> = ({ ticketsData, holdersData }) => {
   const router = useRouter()
-  const { movieId, slotId } = router.query
+  const { movieId } = router.query
   const dispatch = useDispatch()
+  const { setFindHolderModal, setTickets, setHolders } = globalActions
+  const { tickets } = useSelector((states: RootState) => states.globalStates)
 
-  const { setFindHolderModal } = globalActions
-  const tickets = ticketsData
+  useEffect(() => {
+    dispatch(setTickets(ticketsData))
+    dispatch(setHolders(holdersData))
+  }, [dispatch, setTickets, setHolders, ticketsData, holdersData])
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
@@ -93,10 +102,17 @@ const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
 
 export default Page
 
-export const getServerSideProps = async () => {
-  const ticketsData: TicketStruct[] = generateTickets(5)
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { slotId } = context.query
+  const ticketsData: TicketStruct[] = await getTimeSlotsTickets(Number(slotId))
+  const holdersData: string[] = await getTimeSlotsHolders(Number(slotId))
 
   return {
-    props: { ticketsData: JSON.parse(JSON.stringify(ticketsData)) },
+    props: {
+      ticketsData: JSON.parse(JSON.stringify(ticketsData)),
+      holdersData: JSON.parse(JSON.stringify(holdersData)),
+    },
   }
 }
