@@ -1,10 +1,8 @@
-import { withdrawal } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { RootState } from '@/utils/type.dt'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
 
 const Withdrawal: React.FC = () => {
   const dispatch = useDispatch()
@@ -29,22 +27,7 @@ const Withdrawal: React.FC = () => {
     e.preventDefault()
     if (!transfer.account || !transfer.amount) return
 
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        withdrawal(transfer.account, Number(transfer.amount))
-          .then((tx: any) => {
-            console.log(tx)
-            closeModal()
-            resolve(tx)
-          })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Money transfered successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+    console.log(transfer)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,6 +1,6 @@
 import { DeleteSlot, FinishSlot, TimeslotsTable } from '@/components'
-import { getTimeSlots } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
+import { generateFakeTimeSlots } from '@/utils/fakeData'
 import { RootState, TimeSlotStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import Link from 'next/link'
@@ -59,7 +59,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { movieId } = context.query
-  const slotsData: TimeSlotStruct[] = await getTimeSlots(Number(movieId))
+  const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(Number(movieId))
 
   return {
     props: { slotsData: JSON.parse(JSON.stringify(slotsData)) },

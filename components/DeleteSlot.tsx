@@ -1,11 +1,9 @@
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState, TimeSlotStruct } from '@/utils/type.dt'
+import { RootState } from '@/utils/type.dt'
 import { globalActions } from '@/store/globalSlices'
 import { formatDate } from '@/utils/helper'
-import { toast } from 'react-toastify'
-import { deleteSlot } from '@/services/blockchain'
 
 const DeleteSlot = () => {
   const { deleteSlotModal, timeslot } = useSelector(
@@ -20,22 +18,7 @@ const DeleteSlot = () => {
   }
 
   const handleDelete = async () => {
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        deleteSlot(timeslot as TimeSlotStruct)
-          .then((tx: any) => {
-            console.log(tx)
-            closeModal()
-            resolve(tx)
-          })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Timeslot deleted successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+    console.log(timeslot)
   }
 
   return (

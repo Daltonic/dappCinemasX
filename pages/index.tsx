@@ -1,7 +1,7 @@
 import { Banner, Contact, FeaturedMovie, Offers } from '@/components'
 import MovieCards from '@/components/MovieCards'
-import { getMovies } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
+import { generateMovieData } from '@/utils/fakeData'
 import { FeaturedStruct, MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -83,7 +83,7 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
 export default Page
 
 export const getServerSideProps = async () => {
-  const moviesData: MovieStruct[] = await getMovies()
+  const moviesData: MovieStruct[] = generateMovieData(5)
   return {
     props: { moviesData: JSON.parse(JSON.stringify(moviesData)) },
   }

@@ -1,11 +1,9 @@
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState, TimeSlotStruct } from '@/utils/type.dt'
+import { RootState } from '@/utils/type.dt'
 import { globalActions } from '@/store/globalSlices'
 import { formatDate } from '@/utils/helper'
-import { toast } from 'react-toastify'
-import { finishSlot } from '@/services/blockchain'
 
 const FinishSlot: React.FC = () => {
   const { finishSlotModal, timeslot } = useSelector(
@@ -20,22 +18,7 @@ const FinishSlot: React.FC = () => {
   }
 
   const handleFinish = async () => {
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        finishSlot(timeslot as TimeSlotStruct)
-          .then((tx: any) => {
-            console.log(tx)
-            closeModal()
-            resolve(tx)
-          })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Timeslot completed successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+    console.log(timeslot)
   }
 
   return (

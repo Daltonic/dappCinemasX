@@ -1,6 +1,6 @@
 import { DeleteMovie, MoviesTable, Withdrawal } from '@/components'
-import { getMovies } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
+import { generateMovieData } from '@/utils/fakeData'
 import { MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Link from 'next/link'
@@ -54,7 +54,7 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
 export default Page
 
 export const getServerSideProps = async () => {
-  const moviesData: MovieStruct[] = await getMovies()
+  const moviesData: MovieStruct[] = generateMovieData(5)
   return {
     props: { moviesData: JSON.parse(JSON.stringify(moviesData)) },
   }

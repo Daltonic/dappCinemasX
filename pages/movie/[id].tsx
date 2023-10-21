@@ -1,6 +1,6 @@
 import { Banner, BookModal, Details, TimeslotList } from '@/components'
-import { getActiveTimeSlots, getMovie } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
+import { generateFakeTimeSlots, generateMovieData } from '@/utils/fakeData'
 import {
   FeaturedStruct,
   MovieStruct,
@@ -46,8 +46,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { id } = context.query
-  const movieData: MovieStruct = await getMovie(Number(id))
-  const slotsData: TimeSlotStruct[] = await getActiveTimeSlots(Number(id))
+  const movieData: MovieStruct = generateMovieData(1)[0]
+  const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(Number(id))
 
   return {
     props: {
