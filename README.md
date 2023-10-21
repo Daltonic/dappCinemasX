@@ -1,38 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DappCinemas
 
-## Getting Started
+DappCinemas is a web3 application for managing a cinema. It's built with Next.js and uses Ethereum blockchain for backend operations.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Display of featured movies and banners
+- Movie management (add, delete, update movies)
+- Time slot management for movies
+- Ticket booking system
+- Contact information display
+- Ethereum blockchain integration for secure transactions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Components
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The application is composed of several components including:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- Banner: Displays the banner for the cinema.
+- Booking Modal: Handles the booking of tickets.
+- Connect Button: Allows users to connect to their Ethereum wallets.
+- Contact: Displays the contact information of the cinema.
+- Movie Deletion: Handles the deletion of movies.
+- Slot Deletion: Handles the deletion of time slots.
+- Movie Details: Displays the details of a movie.
+- Featured Movie: Displays the featured movie.
+- Find Holders: Finds the holders of a particular movie ticket.
+- Finish Slots: Handles the finishing of slots.
+- Footer: Displays the footer of the application.
+- Header: Displays the header of the application.
+- Menu: Handles the navigation menu of the application.
+- Movie Actions: Handles the actions that can be performed on a movie.
+- Movie Cards: Displays the movie cards.
+- Movie Table: Displays the table of movies.
+- Navigation Button: Handles the navigation buttons of the application.
+- Offers: Displays the offers available.
+- Spacer: Provides spacing between components.
+- Subscribe Button: Handles the subscription to the cinema.
+- Theater Player: Handles the theater player for playing movie trailers.
+- Timeslot Actions: Handles the actions that can be performed on a time slot.
+- Timeslot List: Displays the list of time slots.
+- Timeslot Table: Displays the table of time slots.
+- Withdrawal: Handles the withdrawal of funds.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To get started with the project, follow these steps:
 
-## Learn More
+1. Clone the repository.
+2. Install the dependencies using `npm install`.
+3. Start the development server using `npm run dev`.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-To learn more about Next.js, take a look at the following resources:
+## Blockchain Integration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application uses Ethereum blockchain for backend operations. It interacts with two smart contracts: `cinemaContract` and `ticketContract`. The addresses of these contracts are stored in `contractAddress.json`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+The `blockchain.tsx` file in the `services` directory contains the functions for interacting with the blockchain. It uses ethers.js library for this purpose.
 
-## Deploy on Vercel
+## Store
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application uses Redux for state management. The `store` directory contains the actions and states for global management.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Utils
+
+The `utils` directory contains fake data, helper functions, and type definitions used across the application.
