@@ -1,24 +1,15 @@
-import { RiErrorWarningFill } from 'react-icons/ri'
-import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/utils/type.dt'
-import { globalActions } from '@/store/globalSlices'
+import { RiErrorWarningFill } from "react-icons/ri";
+import { FaTimes } from "react-icons/fa";
 
 const DeleteMovie: React.FC = () => {
-  const { deleteModal, movie } = useSelector(
-    (states: RootState) => states.globalStates
-  )
-  const dispatch = useDispatch()
-  const { setDeleteModal, setMovie } = globalActions
+  const deleteModal = "scale-0",
+    movie = null;
 
-  const closeModal = () => {
-    dispatch(setDeleteModal('scale-0'))
-    dispatch(setMovie(null))
-  }
+  const closeModal = () => {};
 
   const handleSubmit = async () => {
-    console.log(movie)
-  }
+    console.log(movie);
+  };
 
   return (
     <div
@@ -39,8 +30,8 @@ const DeleteMovie: React.FC = () => {
           <div className="flex flex-col justify-center items-center rounded-xl mt-5 mb-5">
             <RiErrorWarningFill className="text-6xl text-red-700 " />
             <p className="p-2">
-              Are you sure you want to delete{' '}
-              <span className="italic">{`"${movie?.name}"`}</span>
+              Are you sure you want to delete{" "}
+              <span className="italic">{`"INSERT MOVIE NAME"`}</span>
             </p>
           </div>
 
@@ -55,7 +46,7 @@ const DeleteMovie: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DeleteMovie
+export default DeleteMovie;

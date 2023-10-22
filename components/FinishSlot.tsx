@@ -1,25 +1,15 @@
-import { RiErrorWarningFill } from 'react-icons/ri'
-import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/utils/type.dt'
-import { globalActions } from '@/store/globalSlices'
-import { formatDate } from '@/utils/helper'
+import { RiErrorWarningFill } from "react-icons/ri";
+import { FaTimes } from "react-icons/fa";
 
 const FinishSlot: React.FC = () => {
-  const { finishSlotModal, timeslot } = useSelector(
-    (states: RootState) => states.globalStates
-  )
-  const dispatch = useDispatch()
-  const { setFinishSlotModal, setTimeslot } = globalActions
+  const finishSlotModal = "scale-0",
+    timeslot = null;
 
-  const closeModal = () => {
-    dispatch(setFinishSlotModal('scale-0'))
-    dispatch(setTimeslot(null))
-  }
+  const closeModal = () => {};
 
   const handleFinish = async () => {
-    console.log(timeslot)
-  }
+    console.log(timeslot);
+  };
 
   return (
     <div
@@ -43,7 +33,8 @@ const FinishSlot: React.FC = () => {
             <p className="text-center p-2">
               Are you sure, this is irriversible! <br />
               <span className="font-semibold">
-                {timeslot ? formatDate(timeslot.day) : 'N/A'}
+                {/* {timeslot ? formatDate(timeslot.day) : 'N/A'} */}
+                N/A
               </span>
             </p>
           </div>
@@ -59,7 +50,7 @@ const FinishSlot: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FinishSlot
+export default FinishSlot;

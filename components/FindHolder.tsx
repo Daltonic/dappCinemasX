@@ -1,45 +1,36 @@
-import { useState } from 'react'
-import { FaTimes } from 'react-icons/fa'
-import { TbSearch } from 'react-icons/tb'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/utils/type.dt'
-import { globalActions } from '@/store/globalSlices'
+import { useState } from "react";
+import { FaTimes } from "react-icons/fa";
+import { TbSearch } from "react-icons/tb";
 
 const FindHolder = () => {
-  const { holders, findHolderModal } = useSelector(
-    (states: RootState) => states.globalStates
-  )
+  const holders: string[] = [],
+    findHolderModal = "scale-0";
 
-  const dispatch = useDispatch()
-  const { setFindHolderModal } = globalActions
+  const [address, setAddress] = useState("");
+  const [addresses, setAddresses] = useState<string[]>([]);
 
-  const [address, setAddress] = useState('')
-  const [addresses, setAddresses] = useState<string[]>([])
-
-  const closeModal = () => {
-    dispatch(setFindHolderModal('scale-0'))
-  }
+  const closeModal = () => {};
 
   const handleSearch = (characters: string) => {
-    const sanitizedCharacters = characters.trim().toLowerCase()
-    setAddress(sanitizedCharacters)
-    setAddresses([])
+    const sanitizedCharacters = characters.trim().toLowerCase();
+    setAddress(sanitizedCharacters);
+    setAddresses([]);
 
-    if (sanitizedCharacters !== '') {
+    if (sanitizedCharacters !== "") {
       for (let i = 0; i < holders.length; i++) {
-        const walletAddress = holders[i].toLowerCase()
-        if (walletAddress.trim() !== '') {
-          const regex = /^0x[a-fA-F0-9]{40}$/
+        const walletAddress = holders[i].toLowerCase();
+        if (walletAddress.trim() !== "") {
+          const regex = /^0x[a-fA-F0-9]{40}$/;
           if (
             regex.test(walletAddress) &&
             walletAddress.includes(sanitizedCharacters)
           ) {
-            setAddresses((prevState) => [walletAddress, ...prevState])
+            setAddresses((prevState) => [walletAddress, ...prevState]);
           }
         }
       }
     }
-  }
+  };
 
   return (
     <div
@@ -89,7 +80,7 @@ const FindHolder = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FindHolder
+export default FindHolder;

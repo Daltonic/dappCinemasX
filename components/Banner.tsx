@@ -1,17 +1,12 @@
-import { globalActions } from '@/store/globalSlices'
-import { FeaturedStruct } from '@/utils/type.dt'
-import { useDispatch } from 'react-redux'
+import { FeaturedStruct } from "@/utils/type.dt";
 
 const Banner: React.FC<{ movie: FeaturedStruct; ticket?: boolean }> = ({
   movie,
   ticket,
 }) => {
-  const dispatch = useDispatch()
-  const { setBookModal } = globalActions
-
   return (
     <div
-      style={{ backgroundImage: 'url(' + movie.banner + ')' }}
+      style={{ backgroundImage: "url(" + movie.banner + ")" }}
       className="w-full h-full rounded-3xl bg-no-repeat bg-cover bg-center mt-8 mb-4 relative"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-75 rounded-3xl"></div>
@@ -36,7 +31,6 @@ const Banner: React.FC<{ movie: FeaturedStruct; ticket?: boolean }> = ({
             py-2 px-8 rounded-full
             transition duration-300 ease-in-out
             hover:bg-transparent hover:text-red-600"
-              onClick={() => dispatch(setBookModal('scale-100'))}
             >
               Buy Ticket
             </button>
@@ -44,7 +38,7 @@ const Banner: React.FC<{ movie: FeaturedStruct; ticket?: boolean }> = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Banner
+export default Banner;

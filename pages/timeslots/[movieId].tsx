@@ -1,24 +1,14 @@
-import { DeleteSlot, FinishSlot, TimeslotsTable } from '@/components'
-import { globalActions } from '@/store/globalSlices'
-import { generateFakeTimeSlots } from '@/utils/fakeData'
-import { RootState, TimeSlotStruct } from '@/utils/type.dt'
-import { GetServerSidePropsContext, NextPage } from 'next'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { DeleteSlot, FinishSlot, TimeslotsTable } from "@/components";
+import { generateFakeTimeSlots } from "@/utils/fakeData";
+import { TimeSlotStruct } from "@/utils/type.dt";
+import { GetServerSidePropsContext, NextPage } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
-  const dispatch = useDispatch()
-  const { setTimeslots } = globalActions
-  const { timeslots } = useSelector((states: RootState) => states.globalStates)
-
-  const router = useRouter()
-  const { movieId } = router.query
-
-  useEffect(() => {
-    dispatch(setTimeslots(slotsData))
-  }, [dispatch, setTimeslots, slotsData])
+  const timeslots = slotsData;
+  const router = useRouter();
+  const { movieId } = router.query;
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
@@ -50,18 +40,18 @@ const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
       <DeleteSlot />
       <FinishSlot />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { movieId } = context.query
-  const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(Number(movieId))
+  const { movieId } = context.query;
+  const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(Number(movieId));
 
   return {
     props: { slotsData: JSON.parse(JSON.stringify(slotsData)) },
-  }
-}
+  };
+};

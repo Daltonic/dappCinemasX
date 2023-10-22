@@ -1,9 +1,7 @@
-import { globalActions } from '@/store/globalSlices'
-import { RootState, TimeSlotStruct } from '@/utils/type.dt'
+import { TimeSlotStruct } from '@/utils/type.dt'
 import React, { useState, Fragment, useEffect, FormEvent } from 'react'
 import { FaEthereum, FaTimes } from 'react-icons/fa'
 import { Listbox, Transition } from '@headlessui/react'
-import { useDispatch, useSelector } from 'react-redux'
 import { BsChevronExpand, BsCheck2 } from 'react-icons/bs'
 import { formatDate, formatTime } from '@/utils/helper'
 import { toast } from 'react-toastify'
@@ -11,14 +9,11 @@ import { toast } from 'react-toastify'
 const BookModal: React.FC<{ timeSlots: TimeSlotStruct[] }> = ({
   timeSlots,
 }) => {
-  const { bookModal } = useSelector((states: RootState) => states.globalStates)
+  const bookModal = 'scale-0'
   const [tickets, setTickets] = useState('')
-  const dispatch = useDispatch()
-  const { setBookModal } = globalActions
   const [selected, setSelected] = useState<TimeSlotStruct>(timeSlots[0])
 
   const closeModal = () => {
-    dispatch(setBookModal('scale-0'))
   }
 
   useEffect(() => {

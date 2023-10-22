@@ -1,42 +1,35 @@
-import { globalActions } from '@/store/globalSlices'
-import { RootState } from '@/utils/type.dt'
-import { ChangeEvent, FormEvent, useState } from 'react'
-import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
+import { ChangeEvent, FormEvent, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 
 const Withdrawal: React.FC = () => {
-  const dispatch = useDispatch()
-  const { setWithdrawalModal } = globalActions
-  const { withdrawalModal, balance } = useSelector(
-    (states: RootState) => states.globalStates
-  )
+  const withdrawalModal = "scale-0",
+    balance = 0;
   const [transfer, setTransfer] = useState({
-    account: '',
-    amount: '',
-  })
+    account: "",
+    amount: "",
+  });
 
   const closeModal = () => {
-    dispatch(setWithdrawalModal('scale-0'))
     setTransfer({
-      account: '',
-      amount: '',
-    })
-  }
+      account: "",
+      amount: "",
+    });
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!transfer.account || !transfer.amount) return
+    e.preventDefault();
+    if (!transfer.account || !transfer.amount) return;
 
-    console.log(transfer)
-  }
+    console.log(transfer);
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setTransfer((prevMovie) => ({
       ...prevMovie,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   return (
     <div
@@ -59,7 +52,7 @@ const Withdrawal: React.FC = () => {
           <div className="flex flex-col justify-center items-center rounded-xl mt-5 mb-5">
             <div className="flex justify-center items-center rounded-full overflow-hidden h-10 w-64 shadow-md shadow-slate-300 p-4">
               <p className="text-slate-700">
-                {' '}
+                {" "}
                 Dapp <span className="text-red-700">Cinemas</span>
               </p>
             </div>
@@ -107,7 +100,7 @@ const Withdrawal: React.FC = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Withdrawal
+export default Withdrawal;
