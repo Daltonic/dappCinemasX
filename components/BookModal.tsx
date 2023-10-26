@@ -1,19 +1,25 @@
-import { TimeSlotStruct } from '@/utils/type.dt'
+import { RootState, TimeSlotStruct } from '@/utils/type.dt'
 import React, { useState, Fragment, useEffect, FormEvent } from 'react'
 import { FaEthereum, FaTimes } from 'react-icons/fa'
 import { Listbox, Transition } from '@headlessui/react'
 import { BsChevronExpand, BsCheck2 } from 'react-icons/bs'
 import { formatDate, formatTime } from '@/utils/helper'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import { globalActions } from '@/store/globalSlices'
 
 const BookModal: React.FC<{ timeSlots: TimeSlotStruct[] }> = ({
   timeSlots,
 }) => {
-  const bookModal = 'scale-0'
   const [tickets, setTickets] = useState('')
   const [selected, setSelected] = useState<TimeSlotStruct>(timeSlots[0])
+  const { bookModal } = useSelector((states: RootState) => states.globalStates)
+
+  const { setBookModal } = globalActions
+  const dispatch = useDispatch()
 
   const closeModal = () => {
+    dispatch(setBookModal('scale-0'))
   }
 
   useEffect(() => {

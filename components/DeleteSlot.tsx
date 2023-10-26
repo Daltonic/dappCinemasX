@@ -1,15 +1,26 @@
-import { RiErrorWarningFill } from "react-icons/ri";
-import { FaTimes } from "react-icons/fa";
+import { RiErrorWarningFill } from 'react-icons/ri'
+import { FaTimes } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/utils/type.dt'
+import { globalActions } from '@/store/globalSlices'
+import { formatDate } from '@/utils/helper'
 
 const DeleteSlot = () => {
-  const deleteSlotModal = "scale-0",
-    timeslot = null;
+  const { deleteSlotModal, timeslot } = useSelector(
+    (states: RootState) => states.globalStates
+  )
 
-  const closeModal = () => {};
+  const { setDeleteSlotModal, setTimeSlot } = globalActions
+  const dispatch = useDispatch()
+
+  const closeModal = () => {
+    dispatch(setDeleteSlotModal('scale-0'))
+    dispatch(setTimeSlot(null))
+  }
 
   const handleDelete = async () => {
-    console.log(timeslot);
-  };
+    console.log(timeslot)
+  }
 
   return (
     <div
@@ -33,8 +44,7 @@ const DeleteSlot = () => {
             <p className="text-center p-2">
               Are you sure you want to delete slot for <br />
               <span className="font-semibold">
-                {/* {timeslot ? formatDate(timeslot.day) : 'N/A'} */}
-                N/A
+                {timeslot ? formatDate(timeslot.day) : 'N/A'}
               </span>
             </p>
           </div>
@@ -50,7 +60,7 @@ const DeleteSlot = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DeleteSlot;
+export default DeleteSlot

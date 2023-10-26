@@ -37,7 +37,7 @@ export interface FeaturedStruct {
 }
 
 export interface TimeSlotParams {
-  movieId: number,
+  movieId: number
   ticketCosts: string[]
   startTimes: number[]
   endTimes: number[]
@@ -78,21 +78,18 @@ export interface TruncateParams {
 }
 
 export interface GlobalState {
-  balance: number
-  wallet: string
-  owner: string
-  bookModal: string
-  deleteModal: string
-  deleteSlotModal: string
-  finishSlotModal: string
-  withdrawalModal: string
-  findHolderModal: string
-  holders: string[]
   movies: MovieStruct[]
   movie: MovieStruct | null
   timeslots: TimeSlotStruct[]
   timeslot: TimeSlotStruct | null
   tickets: TicketStruct[]
+  holders: string[]
+  bookModal: string
+  deleteModal: string
+  deleteSlotModal: string
+  findHoldersModal: string
+  withdrawalModal: string
+  balance: number
 }
 
 export interface RootState {

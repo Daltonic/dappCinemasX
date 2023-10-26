@@ -1,41 +1,50 @@
-import { useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import { TbSearch } from "react-icons/tb";
+import { globalActions } from '@/store/globalSlices'
+import { RootState } from '@/utils/type.dt'
+import { useState } from 'react'
+import { FaTimes } from 'react-icons/fa'
+import { TbSearch } from 'react-icons/tb'
+import { useDispatch, useSelector } from 'react-redux'
 
 const FindHolder = () => {
-  const holders: string[] = [],
-    findHolderModal = "scale-0";
+  const { findHoldersModal, holders } = useSelector(
+    (states: RootState) => states.globalStates
+  )
 
-  const [address, setAddress] = useState("");
-  const [addresses, setAddresses] = useState<string[]>([]);
+  const { setFindHoldersModal } = globalActions
+  const dispatch = useDispatch()
 
-  const closeModal = () => {};
+  const closeModal = () => {
+    dispatch(setFindHoldersModal('scale-0'))
+  }
+
+  const [address, setAddress] = useState('')
+  const [addresses, setAddresses] = useState<string[]>([])
 
   const handleSearch = (characters: string) => {
-    const sanitizedCharacters = characters.trim().toLowerCase();
-    setAddress(sanitizedCharacters);
-    setAddresses([]);
+    const sanitizedCharacters = characters.trim().toLowerCase()
+    setAddress(sanitizedCharacters)
+    setAddresses([])
 
-    if (sanitizedCharacters !== "") {
+    if (sanitizedCharacters !== '') {
       for (let i = 0; i < holders.length; i++) {
-        const walletAddress = holders[i].toLowerCase();
-        if (walletAddress.trim() !== "") {
-          const regex = /^0x[a-fA-F0-9]{40}$/;
+        const walletAddress = holders[i].toLowerCase()
+        if (walletAddress.trim() !== '') {
+          const regex = /^0x[a-fA-F0-9]{40}$/
           if (
             regex.test(walletAddress) &&
             walletAddress.includes(sanitizedCharacters)
           ) {
-            setAddresses((prevState) => [walletAddress, ...prevState]);
+            setAddresses((prevState) => [walletAddress, ...prevState])
           }
         }
       }
     }
-  };
+  }
 
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
-      bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${findHolderModal}`}
+      bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${findHoldersModal}`}
     >
       <div className="bg-white shadow-lg shadow-slate-900 rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <div className="flex flex-col">
@@ -80,7 +89,7 @@ const FindHolder = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FindHolder;
+export default FindHolder

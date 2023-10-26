@@ -1,16 +1,24 @@
-import { Menu } from "@headlessui/react";
-import { FiEdit } from "react-icons/fi";
-import { FaRegCalendarCheck } from "react-icons/fa";
-import { BsTrash3 } from "react-icons/bs";
-import { BiDotsVerticalRounded } from "react-icons/bi";
-import Link from "next/link";
-import { MovieStruct } from "@/utils/type.dt";
+import { Menu } from '@headlessui/react'
+import { FiEdit } from 'react-icons/fi'
+import { FaRegCalendarCheck } from 'react-icons/fa'
+import { BsTrash3 } from 'react-icons/bs'
+import { BiDotsVerticalRounded } from 'react-icons/bi'
+import Link from 'next/link'
+import { MovieStruct } from '@/utils/type.dt'
+import { globalActions } from '@/store/globalSlices'
+import { useDispatch } from 'react-redux'
 
 const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
   movie,
   index,
 }) => {
-  const openDeleteMovie = () => {};
+  const { setDeleteModal, setMovie } = globalActions
+  const dispatch = useDispatch()
+
+  const openDeleteMovie = () => {
+    dispatch(setMovie(movie))
+    dispatch(setDeleteModal('scale-100'))
+  }
 
   return (
     <Menu as="div" className="relative text-left">
@@ -35,7 +43,7 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
             <Link
               href={`/movie/edit/` + movie.id}
               className={`flex justify-start items-center space-x-1 ${
-                active ? "bg-gray-200 text-black" : "text-gray-900"
+                active ? 'bg-gray-200 text-black' : 'text-gray-900'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
             >
               <FiEdit size={17} />
@@ -46,9 +54,9 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
         <Menu.Item>
           {({ active }) => (
             <Link
-              href={"/timeslots/" + movie.id}
+              href={'/timeslots/' + movie.id}
               className={`flex justify-start items-center space-x-1 ${
-                active ? "bg-gray-200 text-black" : "text-gray-900"
+                active ? 'bg-gray-200 text-black' : 'text-gray-900'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
             >
               <FaRegCalendarCheck size={17} />
@@ -60,7 +68,7 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
           {({ active }) => (
             <button
               className={`flex justify-start items-center space-x-1 ${
-                active ? "bg-red-500 text-white" : "text-red-500"
+                active ? 'bg-red-500 text-white' : 'text-red-500'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
               onClick={openDeleteMovie}
             >
@@ -71,7 +79,7 @@ const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
         </Menu.Item>
       </Menu.Items>
     </Menu>
-  );
-};
+  )
+}
 
-export default MovieActions;
+export default MovieActions

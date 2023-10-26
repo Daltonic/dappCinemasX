@@ -1,17 +1,25 @@
-import { Menu } from "@headlessui/react";
-import { TfiTicket } from "react-icons/tfi";
-import { BsFileEarmarkCheck, BsTrash3 } from "react-icons/bs";
-import { BiDotsVerticalRounded } from "react-icons/bi";
-import Link from "next/link";
-import { TimeSlotStruct } from "@/utils/type.dt";
+import { Menu } from '@headlessui/react'
+import { TfiTicket } from 'react-icons/tfi'
+import { BsFileEarmarkCheck, BsTrash3 } from 'react-icons/bs'
+import { BiDotsVerticalRounded } from 'react-icons/bi'
+import Link from 'next/link'
+import { TimeSlotStruct } from '@/utils/type.dt'
+import { globalActions } from '@/store/globalSlices'
+import { useDispatch } from 'react-redux'
 
 const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
   slot,
   index,
 }) => {
-  const openDeleteSlot = () => {};
+  const { setDeleteSlotModal, setTimeSlot } = globalActions
+  const dispatch = useDispatch()
 
-  const openFinishSlot = () => {};
+  const openDeleteSlot = () => {
+    dispatch(setTimeSlot(slot))
+    dispatch(setDeleteSlotModal('scale-100'))
+  }
+
+  const openFinishSlot = () => {}
 
   return (
     <Menu as="div" className="relative text-left">
@@ -37,7 +45,7 @@ const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
               {({ active }) => (
                 <button
                   className={`flex justify-start items-center space-x-1 ${
-                    active ? "bg-red-500 text-white" : "text-red-500"
+                    active ? 'bg-red-500 text-white' : 'text-red-500'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   onClick={openDeleteSlot}
                 >
@@ -50,7 +58,7 @@ const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
               {({ active }) => (
                 <button
                   className={`flex justify-start items-center space-x-1 ${
-                    active ? "bg-gray-200 text-black" : "text-gray-900"
+                    active ? 'bg-gray-200 text-black' : 'text-gray-900'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   onClick={openFinishSlot}
                 >
@@ -67,7 +75,7 @@ const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
             <Link
               href={`/ticketholders/${slot.movieId}/${slot.id}`}
               className={`flex justify-start items-center space-x-1 ${
-                active ? "bg-gray-200 text-black" : "text-gray-900"
+                active ? 'bg-gray-200 text-black' : 'text-gray-900'
               } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
             >
               <TfiTicket size={17} />
@@ -77,7 +85,7 @@ const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
         </Menu.Item>
       </Menu.Items>
     </Menu>
-  );
-};
+  )
+}
 
-export default TimeslotActions;
+export default TimeslotActions
