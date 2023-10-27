@@ -165,6 +165,7 @@ contract DappCinemas is DappShared, AccessControl {
             slot.ticketCost = _ticketCosts[i];
             slot.startTime = _startTimes[i];
             slot.endTime = _endTimes[i];
+            slot.capacity = _capacities[i];
             slot.day = _days[i];
 
             movieTimeSlot[slotId] = slot;

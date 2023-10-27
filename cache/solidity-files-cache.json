@@ -37,7 +37,7 @@
       ]
     },
     "/Users/daltonic/Sites/dc_clone/contracts/DappTickets.sol": {
-      "lastModificationDate": 1698404412433,
+      "lastModificationDate": 1698416696814,
       "contentHash": "cbdb875cc37039ed71c8b4892afc51ca",
       "sourceName": "contracts/DappTickets.sol",
       "solcConfig": {
@@ -117,8 +117,8 @@
       ]
     },
     "/Users/daltonic/Sites/dc_clone/contracts/DappCinemas.sol": {
-      "lastModificationDate": 1698404179935,
-      "contentHash": "3a2282eaae63d1c735989048cc085f68",
+      "lastModificationDate": 1698416803877,
+      "contentHash": "ce0d5e7aa4e88528b99c27b285fa31f1",
       "sourceName": "contracts/DappCinemas.sol",
       "solcConfig": {
         "version": "0.8.19",
