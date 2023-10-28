@@ -1,3 +1,4 @@
+import { getMovie, updateMovie } from '@/services/blockchain'
 import { generateMovieData } from '@/utils/fakeData'
 import { MovieParams, MovieStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
@@ -29,7 +30,21 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
       }
     }
 
-    console.log(movie)
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        updateMovie(movie)
+          .then((tx: any) => {
+            console.log(tx)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Movie updated successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   return (
@@ -202,7 +217,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { id } = context.query
-  const movieData: MovieStruct = generateMovieData(1)[0]
+  const movieData: MovieStruct = await getMovie(Number(id))
   return {
     props: { movieData: JSON.parse(JSON.stringify(movieData)) },
   }

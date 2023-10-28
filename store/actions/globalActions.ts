@@ -37,6 +37,9 @@ export const globalActions = {
   setDeleteSlotModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.deleteSlotModal = action.payload
   },
+  setFinishSlotModal: (state: GlobalState, action: PayloadAction<string>) => {
+    state.finishSlotModal = action.payload
+  },
   setFindHoldersModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.findHoldersModal = action.payload
   },

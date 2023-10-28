@@ -11,15 +11,18 @@ const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
   slot,
   index,
 }) => {
-  const { setDeleteSlotModal, setTimeSlot } = globalActions
+  const { setDeleteSlotModal, setFinishSlotModal, setTimeSlot } = globalActions
   const dispatch = useDispatch()
 
   const openDeleteSlot = () => {
     dispatch(setTimeSlot(slot))
     dispatch(setDeleteSlotModal('scale-100'))
   }
-
-  const openFinishSlot = () => {}
+  
+  const openFinishSlot = () => {
+    dispatch(setTimeSlot(slot))
+    dispatch(setFinishSlotModal('scale-100'))
+  }
 
   return (
     <Menu as="div" className="relative text-left">

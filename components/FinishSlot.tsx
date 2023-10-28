@@ -1,15 +1,43 @@
-import { RiErrorWarningFill } from "react-icons/ri";
-import { FaTimes } from "react-icons/fa";
+import { RiErrorWarningFill } from 'react-icons/ri'
+import { FaTimes } from 'react-icons/fa'
+import { toast } from 'react-toastify'
+import { finishSlot } from '@/services/blockchain'
+import { RootState, TimeSlotStruct } from '@/utils/type.dt'
+import { useDispatch, useSelector } from 'react-redux'
+import { globalActions } from '@/store/globalSlices'
+import { formatDate } from '@/utils/helper'
 
 const FinishSlot: React.FC = () => {
-  const finishSlotModal = "scale-0",
-    timeslot = null;
+  const { finishSlotModal, timeslot } = useSelector(
+    (states: RootState) => states.globalStates
+  )
 
-  const closeModal = () => {};
+  const { setFinishSlotModal, setTimeSlot } = globalActions
+  const dispatch = useDispatch()
+
+  const closeModal = () => {
+    dispatch(setFinishSlotModal('scale-0'))
+    dispatch(setTimeSlot(null))
+  }
 
   const handleFinish = async () => {
-    console.log(timeslot);
-  };
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        finishSlot(timeslot as TimeSlotStruct)
+          .then((tx: any) => {
+            closeModal()
+            console.log(tx)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Slot deleted successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
+  }
 
   return (
     <div
@@ -33,8 +61,7 @@ const FinishSlot: React.FC = () => {
             <p className="text-center p-2">
               Are you sure, this is irriversible! <br />
               <span className="font-semibold">
-                {/* {timeslot ? formatDate(timeslot.day) : 'N/A'} */}
-                N/A
+                {timeslot ? formatDate(timeslot.day) : 'N/A'}
               </span>
             </p>
           </div>
@@ -50,7 +77,7 @@ const FinishSlot: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FinishSlot;
+export default FinishSlot

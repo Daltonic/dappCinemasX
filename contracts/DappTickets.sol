@@ -65,7 +65,7 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
     }
     
     function completeTickets(uint256 _slotId) public onlyOwner {
-        dappCinemas.deleteTimeSlot(_slotId);
+        dappCinemas.completeTimeSlot(_slotId);
         invalidateTickets(_slotId);
         emit Action("Tickets burnt");
     }

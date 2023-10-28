@@ -1,4 +1,5 @@
 import { FindHolder } from '@/components'
+import { getTimeSlotsHolders, getTimeSlotsTickets } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { generateTickets } from '@/utils/fakeData'
 import { truncate } from '@/utils/helper'
@@ -109,8 +110,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { slotId } = context.query
-  const ticketsData: TicketStruct[] = generateTickets(Number(slotId))
-  const holdersData: string[] = ticketsData.map((ticket) => ticket.owner)
+  const ticketsData: TicketStruct[] = await getTimeSlotsTickets(Number(slotId))
+  const holdersData: string[] = await getTimeSlotsHolders(Number(slotId))
 
   return {
     props: {

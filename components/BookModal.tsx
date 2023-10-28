@@ -7,6 +7,7 @@ import { formatDate, formatTime } from '@/utils/helper'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
+import { bookSlot } from '@/services/blockchain'
 
 const BookModal: React.FC<{ timeSlots: TimeSlotStruct[] }> = ({
   timeSlots,
@@ -31,7 +32,22 @@ const BookModal: React.FC<{ timeSlots: TimeSlotStruct[] }> = ({
     if (Number(tickets) < 1)
       return toast.warn('Ticket must be greater than zero')
 
-    console.log(tickets)
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        bookSlot(selected, Number(tickets))
+          .then((tx: any) => {
+            closeModal()
+            console.log(tx)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Slot deleted successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   return (

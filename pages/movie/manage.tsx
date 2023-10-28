@@ -1,6 +1,6 @@
 import { DeleteMovie, MoviesTable, Withdrawal } from '@/components'
+import { getBalance, getMovies } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { generateMovieData } from '@/utils/fakeData'
 import { MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Link from 'next/link'
@@ -8,16 +8,20 @@ import { useEffect } from 'react'
 import { FaEthereum } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 
-const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
+const Page: NextPage<{ moviesData: MovieStruct[]; balanceData: number }> = ({
+  moviesData,
+  balanceData,
+}) => {
   const { movies, balance } = useSelector(
     (states: RootState) => states.globalStates
   )
   const dispatch = useDispatch()
-  const { setMovies, setWithdrawalModal } = globalActions
+  const { setMovies, setWithdrawalModal, setBalance } = globalActions
 
   useEffect(() => {
+    dispatch(setBalance(balanceData))
     dispatch(setMovies(moviesData))
-  }, [dispatch, setMovies, moviesData])
+  }, [dispatch, setMovies, moviesData, setBalance, balanceData])
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
@@ -53,8 +57,12 @@ const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
 export default Page
 
 export const getServerSideProps = async () => {
-  const moviesData: MovieStruct[] = generateMovieData(5)
+  const moviesData: MovieStruct[] = await getMovies()
+  const balanceData: number = await getBalance()
   return {
-    props: { moviesData: JSON.parse(JSON.stringify(moviesData)) },
+    props: {
+      moviesData: JSON.parse(JSON.stringify(moviesData)),
+      balanceData: JSON.parse(JSON.stringify(balanceData)),
+    },
   }
 }

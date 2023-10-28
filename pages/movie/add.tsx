@@ -1,3 +1,4 @@
+import { createMovie } from '@/services/blockchain'
 import { MovieParams } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import { ChangeEvent, FormEvent, useState } from 'react'
@@ -36,7 +37,23 @@ const Page: NextPage = () => {
         return
       }
     }
-    console.log(movie)
+
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        createMovie(movie)
+          .then((tx: any) => {
+            console.log(tx)
+            resetForm()
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Movie created successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   const resetForm = () => {

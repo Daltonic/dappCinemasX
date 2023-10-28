@@ -37,8 +37,8 @@
       ]
     },
     "/Users/daltonic/Sites/dc_clone/contracts/DappTickets.sol": {
-      "lastModificationDate": 1698416696814,
-      "contentHash": "cbdb875cc37039ed71c8b4892afc51ca",
+      "lastModificationDate": 1698507896200,
+      "contentHash": "eadc8c7bc6b7694498ad02a1d34bf844",
       "sourceName": "contracts/DappTickets.sol",
       "solcConfig": {
         "version": "0.8.19",

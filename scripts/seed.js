@@ -164,20 +164,26 @@ async function main() {
     const slotId = 1
     const ticketCost = 0.5
 
-    movies.forEach(async (movie) => {
-      await createMovie(cinemaContract, movie)
-    })
+    // movies.forEach(async (movie) => {
+    //   await createMovie(cinemaContract, movie)
+    // })
 
-    movies.forEach(async (movie, i) => {
-      const count = faker.number.int({ min: 1, max: 4 })
-      await createTimeSlot(cinemaContract, i + 1, count)
-    })
+    // movies.forEach(async (movie, i) => {
+    //   const count = faker.number.int({ min: 1, max: 4 })
+    //   await createTimeSlot(cinemaContract, i + 1, count)
+    // })
 
-    await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+1, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+2, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+3, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+4, ticketCost, 3)
 
-    await getMovies(cinemaContract)
-    await getTimeslots(cinemaContract, movieId)
-    await getTickets(ticketContract, slotId)
+    // await getMovies(cinemaContract)
+    // await getTimeslots(cinemaContract, movieId)
+    // await getTickets(ticketContract, slotId)
   } catch (error) {
     console.error('Unhandled error:', error)
   }

@@ -1,6 +1,6 @@
 import { Banner, BookModal, Details, TimeslotList } from '@/components'
+import { getActiveTimeSlots, getMovie } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { generateFakeTimeSlots, generateMovieData } from '@/utils/fakeData'
 import {
   FeaturedStruct,
   MovieStruct,
@@ -32,8 +32,12 @@ const Page: NextPage<PageProps> = ({ movieData, slotsData }) => {
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
       <Banner movie={movie as FeaturedStruct} ticket />
       <Details movie={movie} />
-      {timeslots.length > 0 && <TimeslotList slots={timeslots} />}
-      <BookModal timeSlots={timeslots} />
+      {timeslots.length > 0 && (
+        <>
+          <TimeslotList slots={timeslots} />
+          <BookModal timeSlots={timeslots} />
+        </>
+      )}
     </div>
   ) : (
     <div>Loading...</div>
@@ -46,8 +50,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { id } = context.query
-  const movieData: MovieStruct = generateMovieData(1)[0]
-  const slotsData: TimeSlotStruct[] = generateFakeTimeSlots(Number(id))
+  const movieData: MovieStruct = await getMovie(Number(id))
+  const slotsData: TimeSlotStruct[] = await getActiveTimeSlots(Number(id))
 
   return {
     props: {

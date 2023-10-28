@@ -2,7 +2,9 @@ import { RiErrorWarningFill } from 'react-icons/ri'
 import { FaTimes } from 'react-icons/fa'
 import { globalActions } from '@/store/globalSlices'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/utils/type.dt'
+import { MovieStruct, RootState } from '@/utils/type.dt'
+import { toast } from 'react-toastify'
+import { deleteMovie } from '@/services/blockchain'
 
 const DeleteMovie: React.FC = () => {
   const { deleteModal, movie } = useSelector(
@@ -17,7 +19,22 @@ const DeleteMovie: React.FC = () => {
   }
 
   const handleSubmit = async () => {
-    console.log(movie)
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        deleteMovie(movie as MovieStruct)
+          .then((tx: any) => {
+            closeModal()
+            console.log(tx)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Movie deleted successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
   }
 
   return (
