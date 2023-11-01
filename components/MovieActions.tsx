@@ -5,15 +5,15 @@ import { BsTrash3 } from 'react-icons/bs'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 import Link from 'next/link'
 import { MovieStruct } from '@/utils/type.dt'
-import { useDispatch } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
+import { useDispatch } from 'react-redux'
 
 const MovieActions: React.FC<{ movie: MovieStruct; index: number }> = ({
   movie,
   index,
 }) => {
+  const { setDeleteModal, setMovie } = globalActions
   const dispatch = useDispatch()
-  const { setMovie, setDeleteModal } = globalActions
 
   const openDeleteMovie = () => {
     dispatch(setMovie(movie))

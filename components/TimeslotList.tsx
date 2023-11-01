@@ -6,8 +6,8 @@ import { FaEthereum } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 
 const TimeslotList: React.FC<{ slots: TimeSlotStruct[] }> = ({ slots }) => {
-  const dispatch = useDispatch()
   const { setBookModal } = globalActions
+  const dispatch = useDispatch()
 
   return (
     <div className="flex flex-col items-center mb-10 w-full sm:w-3/6 mx-auto">
@@ -17,7 +17,8 @@ const TimeslotList: React.FC<{ slots: TimeSlotStruct[] }> = ({ slots }) => {
           <li key={i} className="mb-2">
             <div className="flex items-center">
               {formatDate(slot.day)} @{formatTime(slot.startTime)} -{' '}
-              {formatTime(slot.endTime)} <FaEthereum /> {slot.ticketCost.toFixed(2)}
+              {formatTime(slot.endTime)} <FaEthereum />{' '}
+              {slot.ticketCost.toFixed(2)}
             </div>
           </li>
         ))}

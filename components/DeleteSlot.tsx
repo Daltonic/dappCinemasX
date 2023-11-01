@@ -11,12 +11,13 @@ const DeleteSlot = () => {
   const { deleteSlotModal, timeslot } = useSelector(
     (states: RootState) => states.globalStates
   )
+
+  const { setDeleteSlotModal, setTimeSlot } = globalActions
   const dispatch = useDispatch()
-  const { setDeleteSlotModal, setTimeslot } = globalActions
 
   const closeModal = () => {
     dispatch(setDeleteSlotModal('scale-0'))
-    dispatch(setTimeslot(null))
+    dispatch(setTimeSlot(null))
   }
 
   const handleDelete = async () => {
@@ -24,15 +25,15 @@ const DeleteSlot = () => {
       new Promise<void>((resolve, reject) => {
         deleteSlot(timeslot as TimeSlotStruct)
           .then((tx: any) => {
-            console.log(tx)
             closeModal()
+            console.log(tx)
             resolve(tx)
           })
           .catch((error) => reject(error))
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Timeslot deleted successfully 👌',
+        success: 'Slot deleted successfully 👌',
         error: 'Encountered error 🤯',
       }
     )

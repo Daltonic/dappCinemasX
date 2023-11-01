@@ -2,13 +2,11 @@ import React from 'react'
 import { HiChevronDown } from 'react-icons/hi'
 import { Menu } from '@headlessui/react'
 import Link from 'next/link'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/utils/type.dt'
 import { useAccount } from 'wagmi'
 
 const NavBtn = () => {
   const { address } = useAccount()
-  const { owner } = useSelector((states: RootState) => states.globalStates)
+  const owner = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 
   const menuItems = [
     { href: '/', label: 'Home' },

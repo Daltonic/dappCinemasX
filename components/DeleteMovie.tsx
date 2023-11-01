@@ -1,8 +1,8 @@
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
-import { MovieParams, RootState } from '@/utils/type.dt'
 import { globalActions } from '@/store/globalSlices'
+import { useDispatch, useSelector } from 'react-redux'
+import { MovieStruct, RootState } from '@/utils/type.dt'
 import { toast } from 'react-toastify'
 import { deleteMovie } from '@/services/blockchain'
 
@@ -10,8 +10,8 @@ const DeleteMovie: React.FC = () => {
   const { deleteModal, movie } = useSelector(
     (states: RootState) => states.globalStates
   )
-  const dispatch = useDispatch()
   const { setDeleteModal, setMovie } = globalActions
+  const dispatch = useDispatch()
 
   const closeModal = () => {
     dispatch(setDeleteModal('scale-0'))
@@ -21,10 +21,10 @@ const DeleteMovie: React.FC = () => {
   const handleSubmit = async () => {
     await toast.promise(
       new Promise<void>((resolve, reject) => {
-        deleteMovie(movie as MovieParams)
+        deleteMovie(movie as MovieStruct)
           .then((tx: any) => {
-            console.log(tx)
             closeModal()
+            console.log(tx)
             resolve(tx)
           })
           .catch((error) => reject(error))
@@ -55,9 +55,9 @@ const DeleteMovie: React.FC = () => {
           </div>
           <div className="flex flex-col justify-center items-center rounded-xl mt-5 mb-5">
             <RiErrorWarningFill className="text-6xl text-red-700 " />
-            <p className="p-2">
-              Are you sure you want to delete{' '}
-              <span className="italic">{`"${movie?.name}"`}</span>
+            <p className="text-center p-2">
+              Are you sure you want to delete <br />
+              <span className="italic font-semibold">{movie?.name}</span>
             </p>
           </div>
 

@@ -5,9 +5,9 @@ import { formatTime } from '@/utils/helper'
 import { NextPage } from 'next'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useRouter } from 'next/router'
+import { TimeSlotParams } from '@/utils/type.dt'
 import { toast } from 'react-toastify'
 import { createSlot } from '@/services/blockchain'
-import { TimeSlotParams } from '@/utils/type.dt'
 
 type Slot = {
   startTime: number
@@ -117,6 +117,12 @@ const Page: NextPage = () => {
     setEndTime(null)
     setTicketCost('')
     setCapacity('')
+
+    setTicketCosts([])
+    setStartTimes([])
+    setEndTimes([])
+    setCapacities([])
+    setViewingDays([])
   }
 
   const removeSlot = (index: number) => {
@@ -157,14 +163,14 @@ const Page: NextPage = () => {
         createSlot(timeSlotParams)
           .then((tx: any) => {
             console.log(tx)
-            router.push('/timeslots/' + movieId)
+            resetForm()
             resolve(tx)
           })
           .catch((error) => reject(error))
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Movie deleted successfully 👌',
+        success: 'Movie created successfully 👌',
         error: 'Encountered error 🤯',
       }
     )

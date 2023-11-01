@@ -1,12 +1,13 @@
 import { FindHolder } from '@/components'
 import { getTimeSlotsHolders, getTimeSlotsTickets } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
+import { generateTickets } from '@/utils/fakeData'
 import { truncate } from '@/utils/helper'
 import { RootState, TicketStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 interface PageStruct {
@@ -17,14 +18,17 @@ interface PageStruct {
 const Page: NextPage<PageStruct> = ({ ticketsData, holdersData }) => {
   const router = useRouter()
   const { movieId } = router.query
+
+  const { tickets, holders } = useSelector(
+    (states: RootState) => states.globalStates
+  )
   const dispatch = useDispatch()
-  const { setFindHolderModal, setTickets, setHolders } = globalActions
-  const { tickets } = useSelector((states: RootState) => states.globalStates)
+  const { setTickets, setHolders, setFindHoldersModal } = globalActions
 
   useEffect(() => {
     dispatch(setTickets(ticketsData))
     dispatch(setHolders(holdersData))
-  }, [dispatch, setTickets, setHolders, ticketsData, holdersData])
+  }, [dispatch, setTickets, ticketsData, setHolders, holdersData])
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
@@ -79,7 +83,7 @@ const Page: NextPage<PageStruct> = ({ ticketsData, holdersData }) => {
           className="bg-transparent font-bold border-2 border-red-600
             py-2 px-8 text-red-600 rounded-full hover:text-white
             transition duration-300 ease-in-out hover:bg-red-600"
-          onClick={() => dispatch(setFindHolderModal('scale-100'))}
+          onClick={() => dispatch(setFindHoldersModal('scale-100'))}
         >
           Find Holders
         </button>

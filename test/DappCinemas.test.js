@@ -6,8 +6,6 @@ const fromWei = (num) => ethers.formatEther(num)
 
 describe('Contracts', () => {
   let cinemaContract, ticketContract, ticketContract2, result
-  const token_name = 'Dapp Tickets'
-  const token_symbol = 'DPT'
 
   // Movie Params
   const movieId = 1
@@ -28,7 +26,7 @@ describe('Contracts', () => {
   const ticketCost = 0.05
   const startTime = Math.floor(Date.now()) // Current Unix timestamp
   const endTime = Math.floor(Date.now()) + 7200 // Current Unix timestamp + 2 hours
-  const capacity = 50
+  const capacity = 10
   const day = Math.floor(Date.now())
 
   beforeEach(async () => {
@@ -39,15 +37,15 @@ describe('Contracts', () => {
 
     ticketContract = await ethers.deployContract('DappTickets', [
       cinemaContract,
-      token_name,
-      token_symbol,
+      'Dapp Tickets',
+      'DPT',
     ])
     await ticketContract.waitForDeployment()
 
     ticketContract2 = await ethers.deployContract('DappTickets', [
       cinemaContract,
-      token_name + ' Plus',
-      token_symbol + 'P',
+      'Dapp Tickets',
+      'DPX',
     ])
     await ticketContract2.waitForDeployment()
     await cinemaContract.grantAccess(ticketContract)
@@ -119,7 +117,7 @@ describe('Contracts', () => {
     })
   })
 
-  describe('Timeslots Management', () => {
+  describe('Timeslot Management', () => {
     beforeEach(async () => {
       await cinemaContract.addMovie(
         name,
@@ -150,9 +148,38 @@ describe('Contracts', () => {
         expect(result).to.have.lengthOf(1)
       })
     })
+
+    describe('Failure', () => {
+      it('should confirm slot creation exceptions', async () => {
+        result = await cinemaContract.getTimeSlots(movieId)
+        expect(result).to.have.lengthOf(1)
+
+        await expect(
+          cinemaContract.addTimeSlot(
+            0,
+            [toWei(ticketCost)],
+            [startTime],
+            [endTime],
+            [capacity],
+            [day]
+          )
+        ).to.be.revertedWith('Movie not found')
+
+        await expect(
+          cinemaContract.addTimeSlot(
+            movieId,
+            [toWei(ticketCost)],
+            [],
+            [endTime],
+            [capacity],
+            [day]
+          )
+        ).to.be.revertedWith('Start times cannot be empty')
+      })
+    })
   })
 
-  describe('Tickets Management', () => {
+  describe('Ticket Management', () => {
     beforeEach(async () => {
       await cinemaContract.addMovie(
         name,
@@ -183,11 +210,14 @@ describe('Contracts', () => {
 
     describe('Success', () => {
       it('should confirm ticket creation', async () => {
-        result = await ticketContract.getTicketHolders(slotId)
+        result = await ticketContract.getTickets(slotId)
         expect(result).to.have.lengthOf(1)
       })
 
-      it('should confirm tickets deletion', async () => {
+      it('should confirm ticket deletion', async () => {
+        result = await cinemaContract.getTimeSlots(movieId)
+        expect(result).to.have.lengthOf(1)
+
         await ticketContract
           .connect(buyer2)
           .buyTickets(slotId, 1, { value: toWei(ticketCost) })
@@ -199,9 +229,15 @@ describe('Contracts', () => {
 
         result = await ticketContract.getTicketHolders(slotId)
         expect(result).to.have.lengthOf(0)
+
+        result = await cinemaContract.getTimeSlots(movieId)
+        expect(result).to.have.lengthOf(0)
       })
 
-      it('should confirm tickets completion', async () => {
+      it('should confirm ticket completion', async () => {
+        result = await cinemaContract.getActiveTimeSlots(movieId)
+        expect(result).to.have.lengthOf(1)
+
         await ticketContract
           .connect(buyer2)
           .buyTickets(slotId, 1, { value: toWei(ticketCost) })
@@ -213,47 +249,22 @@ describe('Contracts', () => {
 
         result = await ticketContract.getTicketHolders(slotId)
         expect(result).to.have.lengthOf(2)
+
+        result = await cinemaContract.getActiveTimeSlots(movieId)
+        expect(result).to.have.lengthOf(0)
       })
 
-      it('should confirm tickets contract switch', async () => {
-        await cinemaContract.addMovie(
-          name,
-          banner,
-          imageUrl,
-          videoUrl,
-          genre,
-          description,
-          caption,
-          casts,
-          running,
-          released
-        )
-
-        await cinemaContract.addTimeSlot(
-          movieId,
-          [toWei(ticketCost)],
-          [startTime],
-          [endTime],
-          [capacity],
-          [day]
-        )
-
+      it('should confirm ticket contract switch', async () => {
         await cinemaContract.grantAccess(ticketContract2)
-
         await ticketContract2
-          .connect(buyer1)
+          .connect(buyer2)
           .buyTickets(slotId, 1, { value: toWei(ticketCost) })
 
         result = await ticketContract2.getTicketHolders(slotId)
         expect(result).to.have.lengthOf(1)
-
-        await ticketContract2.completeTickets(slotId)
-
-        result = await ticketContract2.getTicketHolders(slotId)
-        expect(result).to.have.lengthOf(1)
       })
 
-      it('should confirm fund withdrawal', async () => {
+      it('should confirm withdrawal works', async () => {
         await ticketContract
           .connect(buyer2)
           .buyTickets(slotId, 1, { value: toWei(ticketCost) })

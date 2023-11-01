@@ -1,6 +1,4 @@
 import { ToastContainer } from 'react-toastify'
-import { Provider } from 'react-redux'
-import { store } from '@/store'
 import '@/styles/globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -9,13 +7,13 @@ import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { Providers } from '@/services/provider'
 import { Footer, Header, NavBtn, Spacer } from '@/components'
-import { loadData } from '@/services/blockchain'
+import { Provider } from 'react-redux'
+import { store } from '@/store'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState<boolean>(false)
 
   useEffect(() => {
-    loadData()
     setShowChild(true)
   }, [])
 

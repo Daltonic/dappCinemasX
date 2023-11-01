@@ -51,11 +51,21 @@ contract DappCinemas is DappShared, AccessControl {
         string memory _running,
         string memory _released
     ) public onlyOwner {
+        require(bytes(_name).length > 0, "Name cannot be empty");
+        require(bytes(_banner).length > 0, "Banner cannot be empty");
+        require(bytes(_imageUrl).length > 0, "ImageUrl cannot be empty");
+        require(bytes(_videoUrl).length > 0, "VideoUrl cannot be empty");
+        require(bytes(_genre).length > 0, "Genre cannot be empty");
+        require(bytes(_description).length > 0, "Description cannot be empty");
+        require(bytes(_caption).length > 0, "Caption cannot be empty");
+        require(bytes(_running).length > 0, "Running cannot be empty");
+        require(bytes(_released).length > 0, "Released cannot be empty");
+
         _totalMovies.increment();
-        uint256 newMovieId = _totalMovies.current();
+        uint256 movieId = _totalMovies.current();
 
         MovieStruct memory movie;
-        movie.id = newMovieId;
+        movie.id = movieId;
         movie.name = _name;
         movie.banner = _banner;
         movie.imageUrl = _imageUrl;
@@ -68,10 +78,10 @@ contract DappCinemas is DappShared, AccessControl {
         movie.released = _released;
         movie.timestamp = currentTime();
 
-        movies[newMovieId] = movie;
-        movieExists[newMovieId] = true;
+        movies[movieId] = movie;
+        movieExists[movieId] = true;
 
-        emit Action("Movie added");
+        emit Action("Movie Added");
     }
 
     function updateMovie(
@@ -87,8 +97,18 @@ contract DappCinemas is DappShared, AccessControl {
         string memory _running,
         string memory _released
     ) public onlyOwner {
-        require(movieExists[_movieId], "Movie does not exist");
+        require(movieExists[_movieId], "Movie not found");
+        require(bytes(_name).length > 0, "Name cannot be empty");
+        require(bytes(_banner).length > 0, "Banner cannot be empty");
+        require(bytes(_imageUrl).length > 0, "ImageUrl cannot be empty");
+        require(bytes(_videoUrl).length > 0, "VideoUrl cannot be empty");
+        require(bytes(_genre).length > 0, "Genre cannot be empty");
+        require(bytes(_description).length > 0, "Description cannot be empty");
+        require(bytes(_caption).length > 0, "Caption cannot be empty");
+        require(bytes(_running).length > 0, "Running cannot be empty");
+        require(bytes(_released).length > 0, "Released cannot be empty");
 
+        movies[_movieId].id = _movieId;
         movies[_movieId].name = _name;
         movies[_movieId].banner = _banner;
         movies[_movieId].imageUrl = _imageUrl;
@@ -104,12 +124,12 @@ contract DappCinemas is DappShared, AccessControl {
     }
 
     function deleteMovie(uint256 _movieId) public onlyOwner {
-        require(movieExists[_movieId], "Movie does not exist");
+        require(movieExists[_movieId], "Movie not found");
 
         movies[_movieId].deleted = true;
         movieExists[_movieId] = false;
 
-        emit Action("Movie deleted");
+        emit Action("Movie updated");
     }
 
     function addTimeSlot(
@@ -120,161 +140,153 @@ contract DappCinemas is DappShared, AccessControl {
         uint256[] memory _capacities,
         uint256[] memory _days
     ) public onlyOwner {
-        require(movieExists[_movieId], "Movie does not exist");
-        require(_ticketCosts.length > 0, "Ticket costs cannot be null");
-        require(_startTimes.length > 0, "Start times cannot be null");
-        require(_endTimes.length > 0, "End times cannot be null");
-        require(_capacities.length > 0, "Capacities cannot be null");
-        require(_days.length > 0, "Days cannot be null");
+        require(movieExists[_movieId], "Movie not found");
+        require(_ticketCosts.length > 0, "Ticket costs cannot be empty");
+        require(_startTimes.length > 0, "Start times cannot be empty");
+        require(_endTimes.length > 0, "End times cannot be empty");
+        require(_capacities.length > 0, "Capacities cannot be empty");
+        require(_days.length > 0, "Days cannot be empty");
+        require(
+            _ticketCosts.length == _startTimes.length &&
+            _startTimes.length == _endTimes.length &&
+            _endTimes.length == _capacities.length &&
+            _capacities.length == _days.length &&
+            _days.length == _ticketCosts.length,
+            "Unequal array memebers detected"
+        );
 
-        for (uint i = 0; i < _ticketCosts.length; i++) {
+        for(uint256 i = 0; i < _ticketCosts.length; i++) {
             _totalSlots.increment();
-            uint256 newSlotId = _totalSlots.current();
+            uint256 slotId = _totalSlots.current();
 
-            TimeSlotStruct memory timeSlot;
-            timeSlot.id = newSlotId;
-            timeSlot.movieId = _movieId;
-            timeSlot.ticketCost = _ticketCosts[i];
-            timeSlot.startTime = _startTimes[i];
-            timeSlot.endTime = _endTimes[i];
-            timeSlot.capacity = _capacities[i];
-            timeSlot.day = _days[i];
+            TimeSlotStruct memory slot;
+            slot.id = slotId;
+            slot.movieId = _movieId;
+            slot.ticketCost = _ticketCosts[i];
+            slot.startTime = _startTimes[i];
+            slot.endTime = _endTimes[i];
+            slot.capacity = _capacities[i];
+            slot.day = _days[i];
 
-            movieTimeSlot[newSlotId] = timeSlot;
+            movieTimeSlot[slotId] = slot;
         }
 
-        emit Action("Timeslot added");
+        emit Action("Timeslot created");
     }
 
     function deleteTimeSlot(uint256 _slotId) public {
-        require(
-            hasRole(TICKET_ROLE, msg.sender),
-            "Caller is not a ticket contract"
-        );
+        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
+        
         movieTimeSlot[_slotId].deleted = true;
         emit Action("Timeslot deleted");
     }
-
+    
     function completeTimeSlot(uint256 _slotId) public {
-        require(
-            hasRole(TICKET_ROLE, msg.sender),
-            "Caller is not a ticket contract"
-        );
+        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
+        
         movieTimeSlot[_slotId].completed = true;
         emit Action("Timeslot completed");
     }
-
+    
     function setTimeSlot(TimeSlotStruct memory slot) public {
-        require(
-            hasRole(TICKET_ROLE, msg.sender),
-            "Caller is not a ticket contract"
-        );
+        require(hasRole(TICKET_ROLE, msg.sender), "Caller is not a ticket contract");
+        
         movieTimeSlot[slot.id] = slot;
     }
 
     function getMovies() public view returns (MovieStruct[] memory Movies) {
-        uint256 totalMovies;
-        for (uint256 i = 1; i <= _totalMovies.current(); i++) {
-            if (!movies[i].deleted) totalMovies++;
+        uint256 available;
+        for (uint i = 1; i <= _totalMovies.current(); i++) {
+            if(!movies[i].deleted) available++;
         }
 
-        Movies = new MovieStruct[](totalMovies);
+        Movies = new MovieStruct[](available);
 
         uint256 index;
-        for (uint256 i = 1; i <= _totalMovies.current(); i++) {
-            if (!movies[i].deleted) {
-                Movies[index++] = movies[i];
-            }
+        for (uint i = 1; i <= _totalMovies.current(); i++) {
+            if(!movies[i].deleted) Movies[index++] = movies[i];
         }
     }
-
-    function getMovie(
-        uint256 movieId
-    ) public view returns (MovieStruct memory) {
-        return movies[movieId];
+    
+    function getMovie(uint256 _movieId) public view returns (MovieStruct memory) {
+        return movies[_movieId];
     }
 
-    function getTimeSlotsByDay(
-        uint256 day
-    ) public view returns (TimeSlotStruct[] memory MovieSlots) {
+    function getTimeSlotByDay(uint256 _day) public view returns (TimeSlotStruct[] memory Slots) {
         uint256 available;
-        for (uint256 i = 0; i < _totalSlots.current(); i++) {
-            if (
-                movieTimeSlot[i + 1].day == day && !movieTimeSlot[i + 1].deleted
+        for (uint i = 1; i <= _totalSlots.current(); i++) {
+            if(
+                movieTimeSlot[i].day == _day &&
+                !movieTimeSlot[i].deleted
             ) {
                 available++;
             }
         }
 
-        MovieSlots = new TimeSlotStruct[](available);
+        Slots = new TimeSlotStruct[](available);
 
         uint256 index;
-        for (uint256 i = 0; i < _totalSlots.current(); i++) {
-            if (
-                movieTimeSlot[i + 1].day == day && !movieTimeSlot[i + 1].deleted
+        for (uint i = 1; i <= _totalSlots.current(); i++) {
+            if(
+                movieTimeSlot[i].day == _day &&
+                !movieTimeSlot[i].deleted
             ) {
-                MovieSlots[index].startTime = movieTimeSlot[i + 1].startTime;
-                MovieSlots[index++].endTime = movieTimeSlot[i + 1].endTime;
+                Slots[index].startTime = movieTimeSlot[i].startTime;
+                Slots[index++].endTime = movieTimeSlot[i].endTime;
             }
         }
     }
 
-    function getTimeSlot(
-        uint256 slotId
-    ) public view returns (TimeSlotStruct memory) {
-        return movieTimeSlot[slotId];
+    function getTimeSlot(uint256 _slotId) public view returns (TimeSlotStruct memory) {
+        return movieTimeSlot[_slotId];
     }
 
-    function getTimeSlots(
-        uint256 movieId
-    ) public view returns (TimeSlotStruct[] memory MovieSlots) {
+    function getTimeSlots(uint256 _movieId) public view returns (TimeSlotStruct[] memory Slots) {
         uint256 available;
-        for (uint256 i = 0; i < _totalSlots.current(); i++) {
-            if (
-                movieTimeSlot[i + 1].movieId == movieId &&
-                !movieTimeSlot[i + 1].deleted
+        for (uint i = 1; i <= _totalSlots.current(); i++) {
+            if(
+                movieTimeSlot[i].movieId == _movieId &&
+                !movieTimeSlot[i].deleted
             ) {
                 available++;
             }
         }
 
-        MovieSlots = new TimeSlotStruct[](available);
+        Slots = new TimeSlotStruct[](available);
 
         uint256 index;
-        for (uint256 i = 0; i < _totalSlots.current(); i++) {
-            if (
-                movieTimeSlot[i + 1].movieId == movieId &&
-                !movieTimeSlot[i + 1].deleted
+        for (uint i = 1; i <= _totalSlots.current(); i++) {
+            if(
+                movieTimeSlot[i].movieId == _movieId &&
+                !movieTimeSlot[i].deleted
             ) {
-                MovieSlots[index++] = movieTimeSlot[i + 1];
+                Slots[index++] = movieTimeSlot[i];
             }
         }
     }
-
-    function getActiveTimeSlots(
-        uint256 movieId
-    ) public view returns (TimeSlotStruct[] memory MovieSlots) {
+    
+    function getActiveTimeSlots(uint256 _movieId) public view returns (TimeSlotStruct[] memory Slots) {
         uint256 available;
-        for (uint256 i = 0; i < _totalSlots.current(); i++) {
-            if (
-                movieTimeSlot[i + 1].movieId == movieId &&
-                !movieTimeSlot[i + 1].deleted &&
-                !movieTimeSlot[i + 1].completed
+        for (uint i = 1; i <= _totalSlots.current(); i++) {
+            if(
+                movieTimeSlot[i].movieId == _movieId &&
+                !movieTimeSlot[i].deleted &&
+                !movieTimeSlot[i].completed
             ) {
                 available++;
             }
         }
 
-        MovieSlots = new TimeSlotStruct[](available);
+        Slots = new TimeSlotStruct[](available);
 
         uint256 index;
-        for (uint256 i = 0; i < _totalSlots.current(); i++) {
-            if (
-                movieTimeSlot[i + 1].movieId == movieId &&
-                !movieTimeSlot[i + 1].deleted &&
-                !movieTimeSlot[i + 1].completed
+        for (uint i = 1; i <= _totalSlots.current(); i++) {
+            if(
+                movieTimeSlot[i].movieId == _movieId &&
+                !movieTimeSlot[i].deleted &&
+                !movieTimeSlot[i].completed
             ) {
-                MovieSlots[index++] = movieTimeSlot[i + 1];
+                Slots[index++] = movieTimeSlot[i];
             }
         }
     }

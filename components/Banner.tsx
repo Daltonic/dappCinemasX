@@ -6,8 +6,8 @@ const Banner: React.FC<{ movie: FeaturedStruct; ticket?: boolean }> = ({
   movie,
   ticket,
 }) => {
-  const dispatch = useDispatch()
   const { setBookModal } = globalActions
+  const dispatch = useDispatch()
 
   return (
     <div

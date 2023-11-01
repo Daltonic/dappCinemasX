@@ -9,15 +9,14 @@ import {
   TimeSlotParams,
   TimeSlotStruct,
 } from '@/utils/type.dt'
-import { store } from '@/store'
 import { globalActions } from '@/store/globalSlices'
+import { store } from '@/store'
 
 const toWei = (num: number) => ethers.parseEther(num.toString())
 const fromWei = (num: number) => ethers.formatEther(num)
+const { setMovies, setTimeSlots, setBalance } = globalActions
 
-const { setMovies, setTimeslots, setOwner, setBalance } = globalActions
-
-const Contract = {
+const Contracts = {
   dappCinemasAddress: address.cinemaContract,
   dappTicketsAddress: address.ticketContract,
   dappCinemasAbi: dappCinemasAbi.abi,
@@ -29,53 +28,94 @@ let tx: any
 
 if (typeof window !== 'undefined') ethereum = (window as any).ethereum
 
-const getEthereumContract = async () => {
+const getEthereumContracts = async () => {
   const accounts = await ethereum?.request?.({ method: 'eth_accounts' })
+
   if (accounts?.length > 0) {
     const provider = new ethers.BrowserProvider(ethereum)
     const signer = await provider.getSigner()
-    const contract = {
+    const contracts = {
       dappCinemas: new ethers.Contract(
-        Contract.dappCinemasAddress,
-        Contract.dappCinemasAbi,
+        Contracts.dappCinemasAddress,
+        Contracts.dappCinemasAbi,
         signer
       ),
       dappTickets: new ethers.Contract(
-        Contract.dappTicketsAddress,
-        Contract.dappTicketsAbi,
+        Contracts.dappTicketsAddress,
+        Contracts.dappTicketsAbi,
         signer
       ),
     }
-    return contract
+
+    return contracts
   } else {
     const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
     const wallet = ethers.Wallet.createRandom()
     const signer = wallet.connect(provider)
-    const contract = {
+    const contracts = {
       dappCinemas: new ethers.Contract(
-        Contract.dappCinemasAddress,
-        Contract.dappCinemasAbi,
+        Contracts.dappCinemasAddress,
+        Contracts.dappCinemasAbi,
         signer
       ),
       dappTickets: new ethers.Contract(
-        Contract.dappTicketsAddress,
-        Contract.dappTicketsAbi,
+        Contracts.dappTicketsAddress,
+        Contracts.dappTicketsAbi,
         signer
       ),
     }
-    return contract
+
+    return contracts
   }
 }
 
-const createMovie = async (movie: MovieParams) => {
+const getMovies = async (): Promise<MovieStruct[]> => {
+  const contract = await getEthereumContracts()
+  const movies = await contract.dappCinemas.getMovies()
+  return structuredMovies(movies)
+}
+
+const getMovie = async (movieId: number): Promise<MovieStruct> => {
+  const contract = await getEthereumContracts()
+  const movies = await contract.dappCinemas.getMovie(movieId)
+  return structuredMovies([movies])[0]
+}
+
+const getTimeSlots = async (movieId: number): Promise<TimeSlotStruct[]> => {
+  const contract = await getEthereumContracts()
+  const timeslots = await contract.dappCinemas.getTimeSlots(movieId)
+  return structuredSlots(timeslots)
+}
+
+const getActiveTimeSlots = async (
+  movieId: number
+): Promise<TimeSlotStruct[]> => {
+  const contract = await getEthereumContracts()
+  const timeslots = await contract.dappCinemas.getActiveTimeSlots(movieId)
+  return structuredSlots(timeslots)
+}
+
+const getTimeSlotsTickets = async (slotId: number): Promise<TicketStruct[]> => {
+  const contract = await getEthereumContracts()
+  const tickets = await contract.dappTickets.getTickets(slotId)
+  return structuredTickets(tickets)
+}
+
+const getTimeSlotsHolders = async (slotId: number): Promise<string[]> => {
+  const contract = await getEthereumContracts()
+  const holders = await contract.dappTickets.getTicketHolders(slotId)
+  return holders
+}
+
+const createMovie = async (movie: MovieParams): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappCinemas.addMovie(
+    const contract = await getEthereumContracts()
+    tx = await contract.dappCinemas.addMovie(
       movie.name,
       movie.banner,
       movie.imageUrl,
@@ -87,9 +127,7 @@ const createMovie = async (movie: MovieParams) => {
       movie.running,
       movie.released
     )
-
     await tx.wait()
-
     return Promise.resolve(tx)
   } catch (error) {
     reportError(error)
@@ -97,15 +135,15 @@ const createMovie = async (movie: MovieParams) => {
   }
 }
 
-const updateMovie = async (movie: MovieParams) => {
+const updateMovie = async (movie: MovieParams): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappCinemas.updateMovie(
+    const contract = await getEthereumContracts()
+    tx = await contract.dappCinemas.updateMovie(
       movie.id,
       movie.name,
       movie.banner,
@@ -118,9 +156,7 @@ const updateMovie = async (movie: MovieParams) => {
       movie.running,
       movie.released
     )
-
     await tx.wait()
-
     return Promise.resolve(tx)
   } catch (error) {
     reportError(error)
@@ -128,16 +164,15 @@ const updateMovie = async (movie: MovieParams) => {
   }
 }
 
-const deleteMovie = async (movie: MovieParams) => {
+const deleteMovie = async (movie: MovieStruct): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappCinemas.deleteMovie(movie.id)
-
+    const contract = await getEthereumContracts()
+    tx = await contract.dappCinemas.deleteMovie(movie.id)
     await tx.wait()
 
     const movies = await getMovies()
@@ -150,36 +185,43 @@ const deleteMovie = async (movie: MovieParams) => {
   }
 }
 
-const getMovies = async (): Promise<MovieStruct[]> => {
-  const contract = await getEthereumContract()
-  const movies = await contract.dappCinemas.getMovies()
-  return structuredMovies(movies)
-}
-
-const getMovie = async (movieId: number): Promise<MovieStruct> => {
-  const contract = await getEthereumContract()
-  const movie = await contract.dappCinemas.getMovie(movieId)
-  return structuredMovies([movie])[0]
-}
-
-const createSlot = async (data: TimeSlotParams) => {
+const createSlot = async (slot: TimeSlotParams): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappCinemas.addTimeSlot(
-      data.movieId,
-      data.ticketCosts.map((cost) => toWei(Number(cost))),
-      data.startTimes,
-      data.endTimes,
-      data.capacities,
-      data.days
+    const contract = await getEthereumContracts()
+    tx = await contract.dappCinemas.addTimeSlot(
+      slot.movieId,
+      slot.ticketCosts.map((cost) => toWei(Number(cost))),
+      slot.startTimes,
+      slot.endTimes,
+      slot.capacities,
+      slot.days
     )
-
     await tx.wait()
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
+const deleteSlot = async (slot: TimeSlotStruct): Promise<any> => {
+  if (!ethereum) {
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContracts()
+    tx = await contract.dappTickets.deleteTickets(slot.id)
+    await tx.wait()
+
+    const slots = await getTimeSlots(slot.movieId)
+    store.dispatch(setTimeSlots(slots))
 
     return Promise.resolve(tx)
   } catch (error) {
@@ -188,19 +230,19 @@ const createSlot = async (data: TimeSlotParams) => {
   }
 }
 
-const deleteSlot = async (slot: TimeSlotStruct) => {
+const finishSlot = async (slot: TimeSlotStruct): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappTickets.deleteTickets(slot.id)
-
+    const contract = await getEthereumContracts()
+    tx = await contract.dappTickets.completeTickets(slot.id)
     await tx.wait()
-    const timeSlots = await getActiveTimeSlots(slot.movieId)
-    store.dispatch(setTimeslots(timeSlots))
+
+    const slots = await getTimeSlots(slot.movieId)
+    store.dispatch(setTimeSlots(slots))
 
     return Promise.resolve(tx)
   } catch (error) {
@@ -209,45 +251,21 @@ const deleteSlot = async (slot: TimeSlotStruct) => {
   }
 }
 
-const finishSlot = async (slot: TimeSlotStruct) => {
+const bookSlot = async (
+  slot: TimeSlotStruct,
+  tickets: number
+): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappTickets.completeTickets(slot.id)
-
-    await tx.wait()
-    const timeSlots = await getTimeSlots(slot.movieId)
-    store.dispatch(setTimeslots(timeSlots))
-
-    const balance = await contract.dappTickets.balance()
-    store.dispatch(setBalance(Number(fromWei(balance))))
-
-    return Promise.resolve(tx)
-  } catch (error) {
-    reportError(error)
-    return Promise.reject(error)
-  }
-}
-
-const bookSlot = async (slot: TimeSlotStruct, tickets: number) => {
-  if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
-  }
-
-  try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappTickets.buyTickets(slot.id, tickets, {
-      value: toWei(slot.ticketCost * tickets),
+    const contract = await getEthereumContracts()
+    tx = await contract.dappTickets.buyTickets(slot.id, tickets, {
+      value: toWei(slot.ticketCost),
     })
-
     await tx.wait()
-    const timeSlots = await getActiveTimeSlots(slot.movieId)
-    store.dispatch(setTimeslots(timeSlots))
 
     return Promise.resolve(tx)
   } catch (error) {
@@ -256,48 +274,19 @@ const bookSlot = async (slot: TimeSlotStruct, tickets: number) => {
   }
 }
 
-const getTimeSlots = async (movieId: number): Promise<TimeSlotStruct[]> => {
-  const contract = await getEthereumContract()
-  const timeSlots = await contract.dappCinemas.getTimeSlots(movieId)
-  return structuredSlots(timeSlots)
-}
-
-const getActiveTimeSlots = async (
-  movieId: number
-): Promise<TimeSlotStruct[]> => {
-  const contract = await getEthereumContract()
-  const timeSlots = await contract.dappCinemas.getActiveTimeSlots(movieId)
-  return structuredSlots(timeSlots)
-}
-
-const getTimeSlotsTickets = async (slotId: number): Promise<TicketStruct[]> => {
-  const contract = await getEthereumContract()
-  const tickets = await contract.dappTickets.getTickets(slotId)
-  return structuredTickets(tickets)
-}
-
-const getTimeSlotsHolders = async (slotId: number): Promise<string[]> => {
-  const contract = await getEthereumContract()
-  const holders = await contract.dappTickets.getTicketHolders(slotId)
-  return holders
-}
-
-const withdrawal = async (receiver: string, amount: number) => {
+const withdrawal = async (receiver: string, amount: number): Promise<any> => {
   if (!ethereum) {
-    reportError('Please install Metamask')
-    return Promise.reject(new Error('Metamask not installed'))
+    reportError('Please install a browser provider')
+    return Promise.reject(new Error('Browser provider not installed'))
   }
 
   try {
-    const contract = await getEthereumContract()
-    const tx = await contract.dappTickets.withdrawTo(receiver, toWei(amount))
-
+    const contract = await getEthereumContracts()
+    tx = await contract.dappTickets.withdrawTo(receiver, toWei(amount))
     await tx.wait()
-    const movies = await getMovies()
-    store.dispatch(setMovies(movies))
 
-    const balance = await contract.dappTickets.balance()
-    store.dispatch(setBalance(Number(fromWei(balance))))
+    const balance = await getBalance()
+    store.dispatch(setBalance(balance))
 
     return Promise.resolve(tx)
   } catch (error) {
@@ -306,13 +295,10 @@ const withdrawal = async (receiver: string, amount: number) => {
   }
 }
 
-const loadData = async () => {
-  const contract = await getEthereumContract()
-  const owner = await contract.dappCinemas.owner()
+const getBalance = async () => {
+  const contract = await getEthereumContracts()
   const balance = await contract.dappTickets.balance()
-
-  store.dispatch(setOwner(owner))
-  store.dispatch(setBalance(Number(fromWei(balance))))
+  return Number(fromWei(balance))
 }
 
 const structuredMovies = (movies: MovieStruct[]): MovieStruct[] =>
@@ -349,35 +335,35 @@ const structuredSlots = (slots: TimeSlotStruct[]): TimeSlotStruct[] =>
       day: Number(slot.day),
       balance: Number(fromWei(slot.balance)),
     }))
-    .sort((a, b) => b.startTime - a.startTime)
+    .sort((a, b) => a.day - b.day)
 
-const structuredTickets = (slots: TicketStruct[]): TicketStruct[] =>
-  slots
-    .map((slot) => ({
-      id: Number(slot.id),
-      movieId: Number(slot.movieId),
-      slotId: Number(slot.slotId),
-      cost: Number(fromWei(slot.cost)),
-      timestamp: Number(slot.timestamp),
-      day: Number(slot.day),
-      owner: slot.owner,
-      refunded: slot.refunded,
+const structuredTickets = (tickets: TicketStruct[]): TicketStruct[] =>
+  tickets
+    .map((ticket) => ({
+      id: Number(ticket.id),
+      movieId: Number(ticket.movieId),
+      slotId: Number(ticket.slotId),
+      cost: Number(fromWei(ticket.cost)),
+      timestamp: Number(ticket.timestamp),
+      day: Number(ticket.day),
+      owner: ticket.owner,
+      refunded: ticket.refunded,
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
 export {
+  getMovies,
+  getMovie,
+  getTimeSlots,
+  getActiveTimeSlots,
   createMovie,
   updateMovie,
   deleteMovie,
-  loadData,
-  getMovies,
-  getMovie,
   createSlot,
   deleteSlot,
-  finishSlot,
   bookSlot,
-  getTimeSlots,
-  getActiveTimeSlots,
+  finishSlot,
+  getBalance,
   getTimeSlotsTickets,
   getTimeSlotsHolders,
   withdrawal,

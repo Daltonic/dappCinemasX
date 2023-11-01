@@ -1,24 +1,24 @@
+import { globalActions } from '@/store/globalSlices'
+import { RootState } from '@/utils/type.dt'
 import { useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { TbSearch } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/utils/type.dt'
-import { globalActions } from '@/store/globalSlices'
 
 const FindHolder = () => {
-  const { holders, findHolderModal } = useSelector(
+  const { findHoldersModal, holders } = useSelector(
     (states: RootState) => states.globalStates
   )
 
+  const { setFindHoldersModal } = globalActions
   const dispatch = useDispatch()
-  const { setFindHolderModal } = globalActions
+
+  const closeModal = () => {
+    dispatch(setFindHoldersModal('scale-0'))
+  }
 
   const [address, setAddress] = useState('')
   const [addresses, setAddresses] = useState<string[]>([])
-
-  const closeModal = () => {
-    dispatch(setFindHolderModal('scale-0'))
-  }
 
   const handleSearch = (characters: string) => {
     const sanitizedCharacters = characters.trim().toLowerCase()
@@ -44,7 +44,7 @@ const FindHolder = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
-      bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${findHolderModal}`}
+      bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${findHoldersModal}`}
     >
       <div className="bg-white shadow-lg shadow-slate-900 rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <div className="flex flex-col">

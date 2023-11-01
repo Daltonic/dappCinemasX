@@ -7,11 +7,11 @@ async function deployContracts() {
   const token_symbol = 'DPX'
 
   try {
-    // Deploy contract #1
+    // Deploy main contract
     cinemaContract = await ethers.deployContract('DappCinemas')
     await cinemaContract.waitForDeployment()
 
-    // Deploy contract #2
+    // Deploy sub contract
     ticketContract = await ethers.deployContract('DappTickets', [
       cinemaContract,
       token_name,
@@ -19,11 +19,11 @@ async function deployContracts() {
     ])
     await ticketContract.waitForDeployment()
 
-    // Grant contract #2 access to #1
     const tx = await cinemaContract.grantAccess(ticketContract)
     await tx.wait()
 
     console.log('Contracts deployed successfully.')
+
     return { cinemaContract, ticketContract }
   } catch (error) {
     console.error('Error deploying contracts:', error)
@@ -46,8 +46,8 @@ async function saveContractAddresses(cinemaContract, ticketContract) {
       './contracts/contractAddress.json',
       addresses,
       'utf8',
-      (err) => {
-        if (err) {
+      (error) => {
+        if (error) {
           console.error('Error saving contract addresses:', err)
         } else {
           console.log('Deployed contract addresses:', addresses)
@@ -62,15 +62,13 @@ async function saveContractAddresses(cinemaContract, ticketContract) {
 
 async function main() {
   let cinemaContract, ticketContract
+
   try {
-    // Deploy contracts
     const deployedContracts = await deployContracts()
     cinemaContract = deployedContracts.cinemaContract
     ticketContract = deployedContracts.ticketContract
 
-    // Save contract addresses
     await saveContractAddresses(cinemaContract, ticketContract)
-
     console.log('Contract interaction completed successfully.')
   } catch (error) {
     console.error('Unhandled error:', error)

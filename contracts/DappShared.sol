@@ -17,11 +17,10 @@ contract DappShared is Ownable {
         uint256 day;
         uint256 balance;
     }
-    
+
     event Action(string actionType);
 
     function currentTime() internal view returns (uint256) {
-        uint256 newNum = (block.timestamp * 1000) + 1000;
-        return newNum;
+        return (block.timestamp * 1000) + 1000;
     }
 }

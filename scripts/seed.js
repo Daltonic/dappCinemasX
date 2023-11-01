@@ -106,7 +106,7 @@ async function createTimeSlot(cinemaContract, movieId, count) {
     const endTime =
       startTime + faker.number.int({ min: 1, max: 3 }) * 60 * 60 * 1000
     const ticketCost = faker.number.float({ min: 0.02, max: 0.5 })
-    const capacity = faker.number.int({ min: 50, max: 200 })
+    const capacity = faker.number.int({ min: 10, max: 50 })
 
     const tx = await cinemaContract.addTimeSlot(
       movieId,
@@ -116,6 +116,7 @@ async function createTimeSlot(cinemaContract, movieId, count) {
       [capacity],
       [startTime]
     )
+
     await tx.wait()
   }
 }
@@ -163,26 +164,26 @@ async function main() {
     const slotId = 1
     const ticketCost = 0.5
 
-    // Creates movie
-    // movies.forEach(async (movie, i) => {
+    // movies.forEach(async (movie) => {
     //   await createMovie(cinemaContract, movie)
     // })
 
-    // Creates timeslot
-    movies.forEach(async (movie, i) => {
-      const count = faker.number.int({ min: 1, max: 4 })
-      await createTimeSlot(cinemaContract, i + 1, count)
-    })
+    // movies.forEach(async (movie, i) => {
+    //   const count = faker.number.int({ min: 1, max: 4 })
+    //   await createTimeSlot(cinemaContract, i + 1, count)
+    // })
 
-    // Buys ticket
-    // await buyTicket(ticketContract, slotId, ticketCost, 5)
+    // await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+1, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+2, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+3, ticketCost, 3)
+    // await buyTicket(ticketContract, slotId+4, ticketCost, 3)
 
-    // Reading results
     // await getMovies(cinemaContract)
     // await getTimeslots(cinemaContract, movieId)
     // await getTickets(ticketContract, slotId)
-
-    console.log('Contract interaction completed successfully.')
   } catch (error) {
     console.error('Unhandled error:', error)
   }

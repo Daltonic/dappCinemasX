@@ -5,13 +5,26 @@ export const generateMovieData = (n: number): MovieStruct[] => {
   const movies: MovieStruct[] = []
 
   for (let i = 0; i < n; i++) {
+    const releaseDate = faker.date.past()
+    const formattedReleaseDate = `${releaseDate.toLocaleString('default', {
+      month: 'long',
+    })} ${releaseDate.getDate()}, ${releaseDate.getFullYear()}`
+
     const movie: MovieStruct = {
       id: i + 1,
       name: faker.word.words(5),
+      banner: faker.image.urlPicsumPhotos(),
       imageUrl: faker.image.urlPicsumPhotos(),
-      videoUrl: faker.image.urlPicsumPhotos(),
+      videoUrl: 'https://youtu.be/eoOaKN4qCKw?si=G_JwhwfED7ZNzUwq',
       genre: faker.word.words(3),
       caption: faker.word.words(3),
+      casts:
+        'Anshuman Prasad, Roberta Federico, Salim Alrazouk, Alessandro Troso, Géza Kerti',
+      released: formattedReleaseDate,
+      running: `${faker.number.int({ min: 1, max: 3 })}h ${faker.number.int({
+        min: 1,
+        max: 59,
+      })}m`,
       description: faker.lorem.paragraph(),
       timestamp: Date.now(),
       deleted: false,

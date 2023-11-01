@@ -4,14 +4,17 @@ import { getMovies } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { FeaturedStruct, MovieStruct, RootState } from '@/utils/type.dt'
 import { NextPage } from 'next'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Page: NextPage<{ moviesData: MovieStruct[] }> = ({ moviesData }) => {
-  const { setMovies } = globalActions
-  const dispatch = useDispatch()
-
-  dispatch(setMovies(moviesData))
   const { movies } = useSelector((states: RootState) => states.globalStates)
+  const dispatch = useDispatch()
+  const { setMovies } = globalActions
+
+  useEffect(() => {
+    dispatch(setMovies(moviesData))
+  }, [dispatch, setMovies, moviesData])
 
   const getRandomMovie = (movies: any) => {
     const randomIndex = Math.floor(Math.random() * movies.length)

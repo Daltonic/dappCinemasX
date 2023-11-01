@@ -1,22 +1,23 @@
-import { globalActions } from '@/store/globalSlices'
 import { RootState, TimeSlotStruct } from '@/utils/type.dt'
 import React, { useState, Fragment, useEffect, FormEvent } from 'react'
 import { FaEthereum, FaTimes } from 'react-icons/fa'
 import { Listbox, Transition } from '@headlessui/react'
-import { useDispatch, useSelector } from 'react-redux'
 import { BsChevronExpand, BsCheck2 } from 'react-icons/bs'
 import { formatDate, formatTime } from '@/utils/helper'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import { globalActions } from '@/store/globalSlices'
 import { bookSlot } from '@/services/blockchain'
 
 const BookModal: React.FC<{ timeSlots: TimeSlotStruct[] }> = ({
   timeSlots,
 }) => {
-  const { bookModal } = useSelector((states: RootState) => states.globalStates)
   const [tickets, setTickets] = useState('')
-  const dispatch = useDispatch()
-  const { setBookModal } = globalActions
   const [selected, setSelected] = useState<TimeSlotStruct>(timeSlots[0])
+  const { bookModal } = useSelector((states: RootState) => states.globalStates)
+
+  const { setBookModal } = globalActions
+  const dispatch = useDispatch()
 
   const closeModal = () => {
     dispatch(setBookModal('scale-0'))
@@ -35,15 +36,15 @@ const BookModal: React.FC<{ timeSlots: TimeSlotStruct[] }> = ({
       new Promise<void>((resolve, reject) => {
         bookSlot(selected, Number(tickets))
           .then((tx: any) => {
-            console.log(tx)
             closeModal()
+            console.log(tx)
             resolve(tx)
           })
           .catch((error) => reject(error))
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Timeslot booked successfully 👌',
+        success: 'Slot deleted successfully 👌',
         error: 'Encountered error 🤯',
       }
     )

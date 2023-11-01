@@ -41,7 +41,6 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
 
     mapping(uint256 => string) private _tokenURIs;
     mapping(uint256 => TicketBuildStruct) public ticketBuild;
-    mapping(uint256 => address[]) ticketHolder;
 
     constructor(
         address _dappCinemas,
@@ -53,98 +52,30 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
         symbol = _symbol;
     }
 
+    function withdrawTo(address to, uint256 amount) public onlyOwner {
+        require(balance >= amount, "Insuffient fund");
+        balance -= amount;
+        payTo(to, amount);
+    }
+
     function deleteTickets(uint256 _slotId) public onlyOwner {
         dappCinemas.deleteTimeSlot(_slotId);
         refundTickets(_slotId);
         emit Action("Tickets refunded");
     }
-
+    
     function completeTickets(uint256 _slotId) public onlyOwner {
         dappCinemas.completeTimeSlot(_slotId);
         invalidateTickets(_slotId);
         emit Action("Tickets burnt");
     }
 
-    function buyTickets(uint256 slotId, uint256 tickets) public payable {
-        TimeSlotStruct memory slot = dappCinemas.getTimeSlot(slotId);
+    function refundTickets(uint256 _slotId) public onlyOwner {
+        require(dappCinemas.getTimeSlot(_slotId).id == _slotId, "Slot not found");
 
-        require(msg.value >= slot.ticketCost * tickets, "Insufficient amount");
-        require(slot.capacity > slot.seats, "Out of capacity");
-
-        for (uint256 i = 0; i < tickets; i++) {
-            _totalTickets.increment();
-            TicketStruct memory ticket;
-
-            ticket.id = _totalTickets.current();
-            ticket.cost = slot.ticketCost;
-            ticket.day = slot.day;
-            ticket.slotId = slotId;
-            ticket.owner = msg.sender;
-            ticket.timestamp = currentTime();
-            ticketBuild[ticket.id].ticket = ticket;
-            ticketHolder[slotId].push(msg.sender);
-        }
-
-        slot.seats += tickets;
-        slot.balance += slot.ticketCost * tickets;
-
-        mintBatch(tickets);
-        dappCinemas.setTimeSlot(slot);
-    }
-
-    function mintBatch(uint256 _numOfTickets) internal {
-        uint256[] memory ids = new uint256[](_numOfTickets);
-        uint256[] memory amounts = new uint256[](_numOfTickets);
-        uint256 _tokenId = _totalTickets.current() - _numOfTickets;
-
-        for (uint256 i = 0; i < _numOfTickets; i++) {
-            _tokenId++;
-            string memory ticketNumber = Strings.toString(_tokenId);
-            string memory ticketValue = string(
-                abi.encodePacked(symbol, " #", ticketNumber)
-            );
-            string
-                memory description = "These NFTs are actually tickets for Dapp Cinemas.";
-
-            ticketBuild[_tokenId].name = ticketValue;
-            ticketBuild[_tokenId].description = description;
-            ticketBuild[_tokenId].bgHue = Strings.toString(
-                randomNum(361, currentTime(), _tokenId)
-            );
-            ticketBuild[_tokenId].textHue = Strings.toString(
-                randomNum(361, block.timestamp, _tokenId)
-            );
-            ticketBuild[_tokenId].value = ticketValue;
-
-            _tokenURIs[_tokenId] = uri(_tokenId);
-            ids[i] = _tokenId;
-            amounts[i] = 1;
-        }
-
-        bytes memory defaultByteData = abi.encodePacked(ids, amounts);
-        _mintBatch(msg.sender, ids, amounts, defaultByteData);
-    }
-
-    function invalidateTickets(uint256 slotId) internal onlyOwner {
-        require(dappCinemas.getTimeSlot(slotId).id == slotId, "Slot not found");
-
-        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (
-                ticketBuild[i].ticket.slotId == slotId &&
-                !ticketBuild[i].ticket.used
-            ) {
-                ticketBuild[i].ticket.used = true;
-                balance += ticketBuild[i].ticket.cost;
-            }
-        }
-    }
-
-    function refundTickets(uint256 slotId) internal onlyOwner {
-        require(dappCinemas.getTimeSlot(slotId).id == slotId, "Slot not found");
-
-        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (
-                ticketBuild[i].ticket.slotId == slotId &&
+        for (uint i = 1; i <= _totalTickets.current(); i++) {
+            if(
+                ticketBuild[i].ticket.slotId == _slotId &&
                 !ticketBuild[i].ticket.used
             ) {
                 uint256 _tokenId = ticketBuild[i].ticket.id;
@@ -157,67 +88,86 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
             }
         }
     }
+    
+    function invalidateTickets(uint256 _slotId) public onlyOwner {
+        require(dappCinemas.getTimeSlot(_slotId).id == _slotId, "Slot not found");
 
-    function getTicketHolders(
-        uint256 slotId
-    ) public view returns (address[] memory Holders) {
-        uint256 available;
-        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (
-                ticketBuild[i].ticket.slotId == slotId &&
-                !ticketBuild[i].ticket.refunded
-            ) available++;
-        }
-
-        Holders = new address[](available);
-
-        uint256 index;
-        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (
-                ticketBuild[i].ticket.slotId == slotId &&
-                !ticketBuild[i].ticket.refunded
+        for (uint i = 1; i <= _totalTickets.current(); i++) {
+            if(
+                ticketBuild[i].ticket.slotId == _slotId &&
+                !ticketBuild[i].ticket.used
             ) {
-                Holders[index++] = ticketBuild[i].ticket.owner;
+                ticketBuild[i].ticket.used = true;
+                balance += ticketBuild[i].ticket.cost;
             }
         }
     }
 
-    function getTickets(
-        uint256 slotId
-    ) public view returns (TicketStruct[] memory Tickets) {
-        uint256 available;
-        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (
-                ticketBuild[i].ticket.slotId == slotId &&
-                !ticketBuild[i].ticket.refunded
-            ) available++;
+    function buyTickets(uint256 _slotId, uint256 _tickets) public payable {
+        TimeSlotStruct memory slot = dappCinemas.getTimeSlot(_slotId);
+
+        require(msg.value >= slot.ticketCost * _tickets, "Insufficient amount");
+        require(slot.capacity > slot.seats, "Out of seating capacity");
+
+        for (uint i = 0; i < _tickets; i++) {
+            _totalTickets.increment();
+            TicketStruct memory ticket;
+
+            ticket.id = _totalTickets.current();
+            ticket.cost = slot.ticketCost;
+            ticket.slotId = slot.id;
+            ticket.owner = msg.sender;
+            ticket.timestamp = currentTime();
+
+            ticketBuild[ticket.id].ticket = ticket;
         }
 
-        Tickets = new TicketStruct[](available);
+        slot.seats += _tickets;
+        slot.balance += slot.ticketCost * _tickets;
 
-        uint256 index;
-        for (uint256 i = 1; i <= _totalTickets.current(); i++) {
-            if (
-                ticketBuild[i].ticket.slotId == slotId &&
-                !ticketBuild[i].ticket.refunded
-            ) {
-                Tickets[index++] = ticketBuild[i].ticket;
-            }
+        mintBatch(_tickets);
+        dappCinemas.setTimeSlot(slot);
+    }
+
+    function mintBatch(uint256 _numOfTickets) internal {
+        uint256[] memory ids = new uint256[](_numOfTickets);
+        uint256[] memory amounts = new uint256[](_numOfTickets);
+        uint256 _tokenId = _totalTickets.current() - _numOfTickets;
+
+        for (uint i = 0; i < _numOfTickets; i++) {
+            _tokenId++;
+            string memory ticketNumber = Strings.toString(_tokenId);
+            string memory ticketValue = string(
+                abi.encodePacked(symbol, " #", ticketNumber)
+            ); // DPC #1
+            string
+                memory description = "These NFTs are actually tickets for Dapp Cinemas.";
+
+            ticketBuild[_tokenId].name = ticketValue;
+            ticketBuild[_tokenId].value = ticketValue;
+            ticketBuild[_tokenId].description = description;
+            ticketBuild[_tokenId].bgHue = Strings.toString(
+                randomNum(361, currentTime(), _tokenId)
+            );
+            ticketBuild[_tokenId].textHue = Strings.toString(
+                randomNum(361, block.timestamp, _tokenId)
+            );
+
+            _tokenURIs[_tokenId] = uri(_tokenId);
+            ids[i] = _tokenId;
+            amounts[i] = 1;
         }
+
+        bytes memory defaultByteData = abi.encodePacked(ids, amounts);
+        _mintBatch(msg.sender, ids, amounts, defaultByteData);
     }
 
-    function withdrawTo(address to, uint256 amount) public onlyOwner {
-        require(balance >= amount, "Insufficient fund");
-        balance -= amount;
-        payTo(to, amount);
-    }
-
-    function uri(uint256 tokenId) public view override returns (string memory) {
-        return buildMetadata(tokenId);
+    function uri(uint256 _tid) public view override returns (string memory) {
+        return buildMetadata(_tid);
     }
 
     function buildImage(uint256 _tid) internal view returns (string memory) {
-        TicketBuildStruct memory currentTicket = ticketBuild[_tid];
+        TicketBuildStruct memory ticket = ticketBuild[_tid];
 
         return
             Base64.encode(
@@ -225,12 +175,12 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
                     abi.encodePacked(
                         '<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">',
                         '<rect height="500" width="500" fill="hsl(',
-                        currentTicket.bgHue,
+                        ticket.bgHue,
                         ', 50%, 25%)"/>',
                         '<text x="50%" y="50%" dominant-baseline="middle" fill="hsl(',
-                        currentTicket.textHue,
+                        ticket.textHue,
                         ', 100%, 80%)" text-anchor="middle" font-size="41">',
-                        currentTicket.value,
+                        ticket.value,
                         "</text>",
                         "</svg>"
                     )
@@ -239,7 +189,8 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
     }
 
     function buildMetadata(uint256 _tid) internal view returns (string memory) {
-        TicketBuildStruct memory currentTicket = ticketBuild[_tid];
+        TicketBuildStruct memory ticket = ticketBuild[_tid];
+
         return
             string(
                 abi.encodePacked(
@@ -248,16 +199,16 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
                         bytes(
                             abi.encodePacked(
                                 '{"name":"',
-                                currentTicket.name,
+                                ticket.name,
                                 '", "description":"',
-                                currentTicket.description,
+                                ticket.description,
                                 '", "image": "',
                                 "data:image/svg+xml;base64,",
                                 buildImage(_tid),
                                 '", "attributes": [{"trait_type": "Background Hue", "value": "',
-                                currentTicket.bgHue,
+                                ticket.bgHue,
                                 '"}, {"trait_type": "Text Hue", "value": "',
-                                currentTicket.textHue,
+                                ticket.textHue,
                                 '"}]}'
                             )
                         )
@@ -266,9 +217,52 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
             );
     }
 
-    function payTo(address to, uint256 amount) internal {
-        (bool success, ) = payable(to).call{value: amount}("");
-        require(success);
+    function getTickets(uint256 _slotId) public view returns (TicketStruct[] memory Tickets) {
+        uint256 available;
+        for (uint i = 1; i <= _totalTickets.current(); i++) {
+            if(
+                ticketBuild[i].ticket.slotId == _slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) {
+                available++;
+            }
+        }
+
+        Tickets = new TicketStruct[](available);
+
+        uint256 index;
+        for (uint i = 1; i <= _totalTickets.current(); i++) {
+            if(
+                ticketBuild[i].ticket.slotId == _slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) {
+                Tickets[index++] = ticketBuild[i].ticket;
+            }
+        }
+    }
+    
+    function getTicketHolders(uint256 _slotId) public view returns (address[] memory Holders) {
+        uint256 available;
+        for (uint i = 1; i <= _totalTickets.current(); i++) {
+            if(
+                ticketBuild[i].ticket.slotId == _slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) {
+                available++;
+            }
+        }
+
+        Holders = new address[](available);
+
+        uint256 index;
+        for (uint i = 1; i <= _totalTickets.current(); i++) {
+            if(
+                ticketBuild[i].ticket.slotId == _slotId &&
+                !ticketBuild[i].ticket.refunded
+            ) {
+                Holders[index++] = ticketBuild[i].ticket.owner;
+            }
+        }
     }
 
     function randomNum(
@@ -282,5 +276,10 @@ contract DappTickets is DappShared, ERC1155, ERC1155Burnable {
             )
         ) % _mod;
         return num;
+    }
+
+    function payTo(address to, uint256 amount) internal {
+        (bool success, ) = payable(to).call{value: amount}("");
+        require(success);
     }
 }

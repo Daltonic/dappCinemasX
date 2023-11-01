@@ -4,23 +4,23 @@ import { BsFileEarmarkCheck, BsTrash3 } from 'react-icons/bs'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 import Link from 'next/link'
 import { TimeSlotStruct } from '@/utils/type.dt'
-import { useDispatch } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
+import { useDispatch } from 'react-redux'
 
 const TimeslotActions: React.FC<{ slot: TimeSlotStruct; index: number }> = ({
   slot,
   index,
 }) => {
+  const { setDeleteSlotModal, setFinishSlotModal, setTimeSlot } = globalActions
   const dispatch = useDispatch()
-  const { setTimeslot, setDeleteSlotModal, setFinishSlotModal } = globalActions
 
   const openDeleteSlot = () => {
-    dispatch(setTimeslot(slot))
+    dispatch(setTimeSlot(slot))
     dispatch(setDeleteSlotModal('scale-100'))
   }
-
+  
   const openFinishSlot = () => {
-    dispatch(setTimeslot(slot))
+    dispatch(setTimeSlot(slot))
     dispatch(setFinishSlotModal('scale-100'))
   }
 

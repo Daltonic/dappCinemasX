@@ -17,23 +17,27 @@ interface PageProps {
 }
 
 const Page: NextPage<PageProps> = ({ movieData, slotsData }) => {
-  const { setMovie, setTimeslots } = globalActions
-  const dispatch = useDispatch()
   const { movie, timeslots } = useSelector(
     (states: RootState) => states.globalStates
   )
+  const dispatch = useDispatch()
+  const { setMovie, setTimeSlots } = globalActions
 
   useEffect(() => {
     dispatch(setMovie(movieData))
-    dispatch(setTimeslots(slotsData))
-  }, [dispatch, setMovie, setTimeslots, movieData, slotsData])
+    dispatch(setTimeSlots(slotsData))
+  }, [dispatch, setMovie, movieData, setTimeSlots, slotsData])
 
   return movie ? (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">
       <Banner movie={movie as FeaturedStruct} ticket />
       <Details movie={movie} />
-      {slotsData.length > 0 && <TimeslotList slots={timeslots} />}
-      <BookModal timeSlots={timeslots} />
+      {timeslots.length > 0 && (
+        <>
+          <TimeslotList slots={timeslots} />
+          <BookModal timeSlots={timeslots} />
+        </>
+      )}
     </div>
   ) : (
     <div>Loading...</div>

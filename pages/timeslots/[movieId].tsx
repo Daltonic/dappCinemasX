@@ -5,20 +5,20 @@ import { RootState, TimeSlotStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Page: NextPage<{ slotsData: TimeSlotStruct[] }> = ({ slotsData }) => {
-  const dispatch = useDispatch()
-  const { setTimeslots } = globalActions
-  const { timeslots } = useSelector((states: RootState) => states.globalStates)
-
   const router = useRouter()
   const { movieId } = router.query
 
+  const { timeslots } = useSelector((states: RootState) => states.globalStates)
+  const dispatch = useDispatch()
+  const { setTimeSlots } = globalActions
+
   useEffect(() => {
-    dispatch(setTimeslots(slotsData))
-  }, [dispatch, setTimeslots, slotsData])
+    dispatch(setTimeSlots(slotsData))
+  }, [dispatch, setTimeSlots, slotsData])
 
   return (
     <div className="flex flex-col w-full sm:w-4/5 py-4 px-4 sm:px-0 mx-auto">

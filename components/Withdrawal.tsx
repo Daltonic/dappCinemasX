@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
 const Withdrawal: React.FC = () => {
-  const dispatch = useDispatch()
-  const { setWithdrawalModal } = globalActions
-  const { withdrawalModal, balance } = useSelector(
+  const { balance, withdrawalModal } = useSelector(
     (states: RootState) => states.globalStates
   )
+
+  const dispatch = useDispatch()
+  const { setWithdrawalModal } = globalActions
+
   const [transfer, setTransfer] = useState({
     account: '',
     amount: '',
@@ -33,15 +35,15 @@ const Withdrawal: React.FC = () => {
       new Promise<void>((resolve, reject) => {
         withdrawal(transfer.account, Number(transfer.amount))
           .then((tx: any) => {
-            console.log(tx)
             closeModal()
+            console.log(tx)
             resolve(tx)
           })
           .catch((error) => reject(error))
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Money transfered successfully 👌',
+        success: 'Revenue transfered successfully 👌',
         error: 'Encountered error 🤯',
       }
     )

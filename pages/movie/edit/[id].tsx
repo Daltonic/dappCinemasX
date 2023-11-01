@@ -1,4 +1,5 @@
 import { getMovie, updateMovie } from '@/services/blockchain'
+import { generateMovieData } from '@/utils/fakeData'
 import { MovieParams, MovieStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -34,7 +35,6 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
         updateMovie(movie)
           .then((tx: any) => {
             console.log(tx)
-            navigate.push('/movie/' + movie.id)
             resolve(tx)
           })
           .catch((error) => reject(error))
