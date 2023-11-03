@@ -25,6 +25,7 @@ Fullstack NFT Cinemas System is a web3 application built with Next.js and Ethere
 - Ethereum Blockchain Integration
 
 ## Components
+
 ![Dapp Cinemas Manage](./screenshots/5.png)
 ![Dapp Cinemas Detail](./screenshots/4.png)
 
@@ -57,10 +58,18 @@ Fullstack NFT Cinemas System is a web3 application built with Next.js and Ethere
 1. Clone the repository.
 2. Install the dependencies using `npm install`.
 3. Create a `.env` file and add the following keys:
-    `NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8545
+   `NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8545
+
     NEXT_PUBLIC_ALCHEMY_ID=<Replace_with_Alchemey_Project_ID>
+
     NEXT_PUBLIC_PROJECT_ID=<Replace_with_Wallet_Connect_Porject_ID>
+
+    NEXT_PUBLIC_INFURIA_API_KEY=<Replace_with_an_infuria_bucket_API_Key>
+    
+    NEXT_PUBLIC_INFURIA_API_SECRET=<Replace_with_an_infuria_bucket_API_Secret>
+
     NEXTAUTH_URL=http://localhost:3000
+    
     NEXTAUTH_SECRET=somereallysecretsecret
     `
 4. Start hardhat server using `npx hardhat node`.

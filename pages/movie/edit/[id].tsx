@@ -1,14 +1,32 @@
 import { getMovie, updateMovie } from '@/services/blockchain'
-import { generateMovieData } from '@/utils/fakeData'
 import { MovieParams, MovieStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
-import { useRouter } from 'next/router'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
+import { create } from 'ipfs-http-client'
+import Link from 'next/link'
+
+const auth =
+  'Basic ' +
+  Buffer.from(
+    process.env.NEXT_PUBLIC_INFURIA_API_KEY +
+      ':' +
+      process.env.NEXT_PUBLIC_INFURIA_API_SECRET
+  ).toString('base64')
+
+const client = create({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+  headers: {
+    authorization: auth,
+  },
+})
 
 const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
+  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [fileName, setFileName] = useState<string | null>(null)
   const [movie, setMovie] = useState<MovieParams>(movieData as MovieParams)
-  const navigate = useRouter()
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -22,6 +40,27 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (videoFile) {
+      await toast.promise(
+        new Promise<void>(async (resolve, reject) => {
+          const created = await client.add(videoFile)
+          if (created) {
+            const videoUrl = `https://ipfs.io/ipfs/${created.path}`
+            movie.videoUrl = videoUrl
+            console.log(videoUrl)
+            resolve()
+          } else {
+            reject()
+          }
+        }),
+        {
+          pending: 'Uploading movie to IPFS...',
+          success: 'Movie uploaded successfully 👌',
+          error: 'Encountered error 🤯',
+        }
+      )
+    }
 
     for (let key in movie) {
       if (movie[key as keyof typeof movie] === '') {
@@ -45,6 +84,14 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
         error: 'Encountered error 🤯',
       }
     )
+  }
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setVideoFile(e.target.files[0])
+      setFileName(e.target.files[0].name)
+      console.log(e.target.files[0])
+    }
   }
 
   return (
@@ -129,17 +176,20 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
 
             <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
               <input
-                className="block w-full text-sm text-slate-500 bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-                type="text"
+                className="hidden"
+                id="fileInput"
+                type="file"
                 name="videoUrl"
-                placeholder="Movie video URL"
-                value={movie.videoUrl}
-                onChange={handleChange}
-                pattern="https?://.+"
-                title="Please enter a valid video URL https?://.+(\.mp4|\.mov|\.avi|\.flv|\.wmv|\.mkv)"
+                accept=".mp4"
+                onChange={handleFileChange}
                 required
               />
+              <label
+                htmlFor="fileInput"
+                className="block w-full text-sm text-slate-500 bg-transparent border-0 focus:outline-none focus:ring-0 cursor-pointer"
+              >
+                {fileName || 'Change video file'}
+              </label>
             </div>
           </div>
 
@@ -196,7 +246,7 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
             ></textarea>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex flex-col justify-center items-center space-y-4">
             <button
               className="w-full text-white text-md bg-red-600 py-2 px-5 rounded-full
             drop-shadow-xl border border-transparent hover:bg-transparent hover:border-red-500
@@ -204,6 +254,7 @@ const Page: NextPage<{ movieData: MovieStruct }> = ({ movieData }) => {
             >
               Update
             </button>
+            <Link className='text-red-600' href={'/movie/' + movie.id}>View {movie.name}</Link>
           </div>
         </form>
       </div>
