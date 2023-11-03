@@ -14,12 +14,21 @@ const Details: React.FC<{ movie: MovieStruct }> = ({ movie }) => {
           </p>
 
           <div className="mx-auto w-full sm:w-1/2">
-            <Plyr
-              source={{
-                type: 'video',
-                sources: [{ src: movie.videoUrl, provider: 'youtube' }],
-              }}
-            />
+            {movie.videoUrl.includes('youtube') ? (
+              <Plyr
+                source={{
+                  type: 'video',
+                  sources: [{ src: movie.videoUrl, provider: 'youtube' }],
+                }}
+              />
+            ) : (
+              <Plyr
+                source={{
+                  type: 'video',
+                  sources: [{ src: movie.videoUrl, provider: 'html5' }],
+                }}
+              />
+            )}
           </div>
 
           <p className="flex flex-col text-gray-700 text-sm space-y-1 mt-2 max-h-44">

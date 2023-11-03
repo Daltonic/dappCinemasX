@@ -20,6 +20,7 @@
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "ethers": "^6.7.1",
+    "ipfs-http-client": "59.0.0",
     "lokijs": "^1.5.12",
     "moment": "^2.29.4",
     "next": "13.4.19",

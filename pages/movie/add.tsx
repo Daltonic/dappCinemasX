@@ -3,8 +3,28 @@ import { MovieParams } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
+import { create } from 'ipfs-http-client'
+
+const auth =
+  'Basic ' +
+  Buffer.from(
+    process.env.NEXT_PUBLIC_INFURIA_API_KEY +
+      ':' +
+      process.env.NEXT_PUBLIC_INFURIA_API_SECRET
+  ).toString('base64')
+
+const client = create({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+  headers: {
+    authorization: auth,
+  },
+})
 
 const Page: NextPage = () => {
+  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [fileName, setFileName] = useState<string | null>(null);
   const [movie, setMovie] = useState<MovieParams>({
     name: '',
     banner: '',
@@ -31,6 +51,27 @@ const Page: NextPage = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    if (!videoFile) return toast.warn('Select a video')
+
+    await toast.promise(
+      new Promise<void>(async (resolve, reject) => {
+        const created = await client.add(videoFile)
+        if (created) {
+          const videoUrl = `https://ipfs.io/ipfs/${created.path}`
+          movie.videoUrl = videoUrl
+          console.log(videoUrl)
+          resolve()
+        } else {
+          reject()
+        }
+      }),
+      {
+        pending: 'Uploading movie to IPFS...',
+        success: 'Movie uploaded successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
+
     for (let key in movie) {
       if (movie[key as keyof typeof movie] === '') {
         toast.warn(`Please fill in the ${key} field.`)
@@ -55,6 +96,14 @@ const Page: NextPage = () => {
       }
     )
   }
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setVideoFile(e.target.files[0]);
+      setFileName(e.target.files[0].name);
+      console.log(e.target.files[0]);
+    }
+  };
 
   const resetForm = () => {
     setMovie({
@@ -153,17 +202,20 @@ const Page: NextPage = () => {
 
             <div className="flex justify-between items-center rounded-xl p-2 w-full border border-gray-300">
               <input
-                className="block w-full text-sm text-slate-500 bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-                type="text"
+                className="hidden"
+                id="fileInput"
+                type="file"
                 name="videoUrl"
-                placeholder="Movie video URL"
-                value={movie.videoUrl}
-                onChange={handleChange}
-                pattern="https?://.+"
-                title="Please enter a valid video URL https?://.+(\.mp4|\.mov|\.avi|\.flv|\.wmv|\.mkv)"
+                accept=".mp4"
+                onChange={handleFileChange}
                 required
               />
+              <label
+                htmlFor="fileInput"
+                className="block w-full text-sm text-slate-500 bg-transparent border-0 focus:outline-none focus:ring-0 cursor-pointer"
+              >
+                {fileName || 'Select a video file'}
+              </label>
             </div>
           </div>
 
